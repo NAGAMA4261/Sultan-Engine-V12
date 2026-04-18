@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Sultan Global Engine — Hybrid Real-Time Service Marketplace">
+<title>SULTAN GLOBAL ENGINE V12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════ VARIABLES */
+:root{
+--bg:#0b0b0b;--bg2:#101010;--bg3:#161616;--bg4:#1e1e1e;--bg5:#252525;
+--gold:#d4af37;--gold2:#f0d060;--gold3:#9a7d1a;--gold4:rgba(212,175,55,0.12);
+--orange:#ff7a00;--orange2:#ff9a30;--orange3:rgba(255,122,0,0.12);
+--red:#e53935;--green:#2e7d32;--green2:#43a047;--blue:#1565c0;--blue2:#42a5f5;
+--text:#efefef;--text2:#b0b0b0;--text3:#686868;--text4:#3a3a3a;
+--border:#1f1f1f;--border2:#2a2a2a;--border3:#333;
+--r:12px;--r2:8px;--r3:20px;--r4:4px;
+--sh:0 4px 32px rgba(0,0,0,0.7);
+--sh-gold:0 0 24px rgba(212,175,55,0.22);
+--sh-o:0 0 20px rgba(255,122,0,0.18);
+--trans:.22s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+button{font-family:'Rajdhani',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+input,textarea,select{font-family:'Rajdhani',sans-serif;outline:none;border:none}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:2px}
+
+/* ═══════════════════════════════════════════ TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:900;height:54px;
+  background:rgba(11,11,11,.97);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 12px;gap:10px}
+.tb-brand{display:flex;flex-direction:column;flex:1;line-height:1.1}
+.tb-brand .b1{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);letter-spacing:2px;font-weight:900}
+.tb-brand .b2{font-size:.55rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.tb-links{display:flex;gap:6px}
+.tb-link{background:var(--bg4);border:1px solid var(--border3);color:var(--gold);
+  font-size:.58rem;font-weight:700;padding:4px 8px;border-radius:6px;
+  letter-spacing:.5px;transition:var(--trans);white-space:nowrap}
+.tb-link:hover{background:var(--gold);color:var(--bg)}
+.tb-right{display:flex;gap:7px;align-items:center}
+.tb-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;transition:var(--trans)}
+.tb-icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tb-admin-btn{background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.55rem;font-weight:800;
+  padding:5px 10px;border-radius:6px;letter-spacing:1px;transition:var(--trans)}
+.tb-admin-btn:hover{opacity:.88}
+
+/* ═══════════════════════════════════════════ BANNERS */
+#offline-bar{display:none;background:rgba(229,57,53,.12);border-bottom:1px solid rgba(229,57,53,.3);
+  padding:7px 14px;text-align:center;font-size:.72rem;font-weight:700;
+  color:var(--red);letter-spacing:.5px;position:fixed;top:54px;left:0;right:0;z-index:850}
+#pwa-bar{display:none;background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(255,122,0,.1));
+  border-bottom:1px solid var(--gold3);padding:9px 14px;
+  position:fixed;top:54px;left:0;right:0;z-index:850;
+  display:none;align-items:center;gap:10px}
+#pwa-bar.show{display:flex}
+.pwa-text{flex:1;font-size:.75rem;color:var(--text2)}
+.pwa-text strong{color:var(--gold)}
+.pwa-go{background:var(--gold);color:var(--bg);font-size:.68rem;font-weight:800;
+  padding:5px 12px;border-radius:6px;white-space:nowrap}
+.pwa-x{color:var(--text3);font-size:1rem;padding:2px 4px}
+
+/* ═══════════════════════════════════════════ MAIN LAYOUT */
+#main{padding-top:54px;padding-bottom:70px;min-height:100vh}
+#banner-spacer{height:0;transition:height .2s}
+
+/* ═══════════════════════════════════════════ HERO */
+#hero{background:linear-gradient(160deg,#0b0b0b 0%,#120d00 55%,#0b0b0b 100%);
+  padding:22px 14px 18px;text-align:center;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border)}
+#hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(212,175,55,.14) 0%,transparent 65%);
+  pointer-events:none}
+#hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold3),transparent)}
+.hero-crown{font-size:1.8rem;margin-bottom:4px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hero-title{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold);
+  letter-spacing:3px;font-weight:900;line-height:1.2;margin-bottom:3px;position:relative}
+.hero-sub{font-size:.68rem;color:var(--text3);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:14px}
+.hero-loc{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;
+  color:var(--orange);background:var(--orange3);border:1px solid rgba(255,122,0,.2);
+  padding:4px 10px;border-radius:12px;margin-bottom:14px;font-weight:600}
+.search-row{display:flex;gap:7px;max-width:520px;margin:0 auto}
+.search-in{flex:1;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);padding:9px 14px;border-radius:var(--r3);font-size:.86rem;transition:var(--trans)}
+.search-in:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.12)}
+.search-in::placeholder{color:var(--text3)}
+.search-go{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);
+  font-weight:800;padding:9px 16px;border-radius:var(--r3);font-size:.84rem;
+  letter-spacing:.5px;transition:var(--trans);white-space:nowrap}
+.search-go:hover{opacity:.9;transform:scale(1.02)}
+
+/* ═══════════════════════════════════════════ TABS */
+#tabs-wrap{background:var(--bg2);border-bottom:1px solid var(--border);
+  position:sticky;top:54px;z-index:800;overflow-x:auto;white-space:nowrap;
+  -ms-overflow-style:none;scrollbar-width:none}
+#tabs-wrap::-webkit-scrollbar{display:none}
+.tabs-inner{display:inline-flex;padding:0 8px}
+.tab-btn{display:inline-flex;align-items:center;gap:5px;padding:11px 13px;
+  font-size:.76rem;font-weight:700;color:var(--text3);background:none;
+  border-bottom:2px solid transparent;transition:var(--trans);
+  letter-spacing:.4px;white-space:nowrap}
+.tab-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn:hover{color:var(--text)}
+.tab-icon{font-size:.9rem}
+
+/* ═══════════════════════════════════════════ SECTION HEADERS */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 14px 8px}
+.sec-hd-left{display:flex;align-items:center;gap:8px}
+.sec-dot{width:6px;height:6px;border-radius:50%}
+.sec-dot-gold{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.sec-dot-blue{background:var(--blue2);box-shadow:0 0 8px var(--blue2)}
+.sec-title{font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:1.5px}
+.sec-title-gold{color:var(--gold)}
+.sec-title-blue{color:var(--blue2)}
+.sec-badge{font-size:.62rem;color:var(--text3);background:var(--bg3);
+  padding:2px 8px;border-radius:10px;border:1px solid var(--border2)}
+
+/* ═══════════════════════════════════════════ CARDS GRID */
+.cards-wrap{padding:0 10px 8px}
+.cards-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:500px){.cards-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:820px){.cards-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* ═══════════════════════════════════════════ BUSINESS CARD */
+.biz-card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;transition:var(--trans);
+  animation:fadeUp .3s ease both;position:relative}
+.biz-card:hover{border-color:var(--gold3);box-shadow:var(--sh-gold);transform:translateY(-2px)}
+.biz-card.boosted{border-color:var(--gold3)}
+.biz-card.boosted::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,175,55,.04),transparent);pointer-events:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.card-header{padding:11px 11px 0;display:flex;gap:9px;align-items:flex-start}
+.card-avi{width:46px;height:46px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  background:linear-gradient(135deg,var(--bg4),var(--bg5));
+  border:1px solid var(--border2)}
+.card-avi.goog{font-size:.65rem;background:linear-gradient(135deg,#1565c0,#1a237e);
+  color:#fff;font-weight:800;text-align:center;letter-spacing:.5px;line-height:1.2;padding:3px}
+.card-info{flex:1;min-width:0}
+.card-name{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text);
+  font-weight:700;display:flex;align-items:center;gap:5px;flex-wrap:wrap;line-height:1.2}
+.vbadge{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);
+  font-size:.46rem;font-weight:900;padding:2px 5px;border-radius:5px;letter-spacing:.5px;
+  white-space:nowrap;flex-shrink:0}
+.gbadge{background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;
+  font-size:.46rem;font-weight:900;padding:2px 5px;border-radius:5px;
+  letter-spacing:.5px;white-space:nowrap}
+.card-cat{font-size:.66rem;color:var(--orange);font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.card-loc{font-size:.68rem;color:var(--text3);margin-top:2px;
+  display:flex;align-items:center;gap:3px}
+.card-dist{font-size:.64rem;color:var(--blue2);font-weight:700;
+  background:rgba(66,165,245,.1);padding:1px 6px;border-radius:8px;
+  border:1px solid rgba(66,165,245,.2)}
+
+.card-meta{padding:7px 11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stars-wrap{display:flex;align-items:center;gap:3px}
+.stars-txt{color:var(--gold);font-size:.72rem}
+.rating-n{font-size:.76rem;font-weight:700;color:var(--gold)}
+.rating-c{font-size:.64rem;color:var(--text3)}
+.stat-pill{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:9px;text-transform:uppercase;letter-spacing:.5px}
+.sp-open{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.sp-busy{background:rgba(255,122,0,.15);color:var(--orange);border:1px solid rgba(255,122,0,.3)}
+.sp-closed{background:rgba(229,57,53,.15);color:#ef5350;border:1px solid rgba(229,57,53,.3)}
+.rank-pill{font-size:.58rem;color:var(--gold);background:var(--gold4);
+  border:1px solid rgba(212,175,55,.22);padding:2px 7px;border-radius:9px;font-weight:700}
+.boost-pill{font-size:.58rem;color:var(--orange);background:var(--orange3);
+  border:1px solid rgba(255,122,0,.22);padding:2px 7px;border-radius:9px;font-weight:700}
+
+.card-staff{padding:0 11px 5px;font-size:.64rem;color:var(--text3)}
+.card-staff span{color:var(--text2)}
+
+.card-actions{padding:9px 11px 11px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px}
+.act-btn{padding:7px 3px;border-radius:7px;font-size:.6rem;font-weight:800;
+  letter-spacing:.2px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;transition:var(--trans);border:1px solid transparent}
+.act-btn .ai{font-size:.95rem}
+.ab-call{background:rgba(46,125,50,.12);color:#66bb6a;border-color:rgba(46,125,50,.25)}
+.ab-call:hover{background:var(--green2);color:#fff;border-color:var(--green2)}
+.ab-wa{background:rgba(37,211,102,.1);color:#25d366;border-color:rgba(37,211,102,.25)}
+.ab-wa:hover{background:#25d366;color:#fff}
+.ab-dir{background:rgba(21,101,192,.1);color:var(--blue2);border-color:rgba(21,101,192,.25)}
+.ab-dir:hover{background:var(--blue2);color:#fff}
+.ab-req{background:linear-gradient(135deg,var(--gold4),var(--orange3));
+  color:var(--gold);border-color:rgba(212,175,55,.3)}
+.ab-req:hover{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg)}
+
+.card-foot{padding:0 11px 9px;display:flex;gap:0;align-items:center}
+.cf-btn{background:none;color:var(--text3);font-size:.66rem;
+  display:flex;align-items:center;gap:3px;padding:3px 6px 3px 0;
+  transition:var(--trans);border-right:1px solid var(--border);margin-right:6px}
+.cf-btn:last-child{border-right:none;margin-right:0;margin-left:auto}
+.cf-btn:hover{color:var(--text)}
+.cf-btn.fav-on{color:var(--gold)}
+
+/* ═══════════════════════════════════════════ GOOGLE CARD */
+.google-card{background:var(--bg2);border:1px solid rgba(21,101,192,.22);
+  border-radius:var(--r);overflow:hidden;transition:var(--trans);animation:fadeUp .3s ease both}
+.google-card:hover{border-color:rgba(66,165,245,.4);transform:translateY(-2px)}
+
+/* ═══════════════════════════════════════════ VIEWS */
+.view{display:none}
+.view.on{display:block}
+
+/* ═══════════════════════════════════════════ MAP */
+#map-container{position:relative}
+#gmap{width:100%;height:280px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.map-overlay{position:absolute;top:10px;left:10px;right:10px;
+  display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+.map-badge{background:rgba(11,11,11,.88);backdrop-filter:blur(8px);
+  border:1px solid var(--border2);color:var(--text2);
+  font-size:.68rem;font-weight:700;padding:5px 10px;border-radius:10px;pointer-events:all}
+.map-badge.active-filter{border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════════════════════════════════════ MODALS */
+.modal-ov{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity var(--trans)}
+.modal-ov.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--r) var(--r) 0 0;width:100%;max-width:580px;
+  max-height:93vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform var(--trans)}
+.modal-ov.open .modal-box{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:15px 15px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-title{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);letter-spacing:1px}
+.modal-x{width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);
+  color:var(--text3);display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;transition:var(--trans)}
+.modal-x:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:15px}
+
+/* ═══════════════════════════════════════════ FORMS */
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:.68rem;color:var(--text2);font-weight:700;
+  letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);padding:9px 12px;border-radius:var(--r2);font-size:.85rem;transition:var(--trans)}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold4)}
+.fi::placeholder{color:var(--text3)}
+select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M5 6L0 0h10z' fill='%23555'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.82rem;font-weight:800;
+  padding:11px;border-radius:var(--r2);letter-spacing:1px;transition:var(--trans);margin-top:4px}
+.btn-gold:hover{opacity:.9;transform:scale(1.01)}
+.btn-ghost{width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:.82rem;font-weight:600;padding:10px;
+  border-radius:var(--r2);transition:var(--trans);margin-top:4px}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.upi-box{background:var(--bg3);border:1px solid var(--gold3);
+  border-radius:var(--r2);padding:13px;margin-bottom:13px;text-align:center;
+  background:linear-gradient(135deg,var(--bg3),#160e00)}
+.upi-lbl{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.upi-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px;font-weight:700}
+.upi-amt{font-size:.72rem;color:var(--orange);margin-top:3px}
+.info-t{font-size:.7rem;color:var(--text3);text-align:center;margin-top:8px;line-height:1.6}
+.divider{border:none;border-top:1px solid var(--border);margin:13px 0}
+.step-row{display:flex;align-items:center;gap:5px;margin-bottom:15px}
+.step-c{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0}
+.step-c.act{background:var(--gold);color:var(--bg)}
+.step-c.done{background:var(--green2);color:#fff}
+.step-c.idle{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.step-ln{flex:1;height:1px;background:var(--border2)}
+.step-ln.done{background:var(--green2)}
+
+/* STAR INPUT */
+.star-inp{display:flex;gap:5px;margin-bottom:9px}
+.star-inp .si{font-size:1.5rem;cursor:pointer;color:var(--text4);transition:var(--trans)}
+.star-inp .si.on{color:var(--gold)}
+
+/* ═══════════════════════════════════════════ ADMIN */
+.adm-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.adm-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:11px;text-align:center}
+.adm-stat-n{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold);font-weight:700}
+.adm-stat-l{font-size:.6rem;color:var(--text3);text-transform:uppercase;
+  letter-spacing:1px;margin-top:2px}
+.adm-sec{font-family:'Cinzel',serif;font-size:.72rem;color:var(--text3);
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:9px}
+.adm-row{display:flex;align-items:flex-start;justify-content:space-between;
+  padding:9px;background:var(--bg3);border-radius:var(--r2);
+  margin-bottom:6px;border:1px solid var(--border);gap:8px}
+.adm-row-name{font-size:.8rem;font-weight:700;color:var(--text)}
+.adm-row-meta{font-size:.64rem;color:var(--text3);margin-top:2px;line-height:1.5}
+.adm-btns{display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0}
+.adm-btn{font-size:.58rem;font-weight:800;padding:4px 8px;
+  border-radius:6px;transition:var(--trans);letter-spacing:.3px}
+.ab-apr{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.ab-apr:hover{background:var(--green2);color:#fff}
+.ab-rej{background:rgba(229,57,53,.15);color:#ef5350;border:1px solid rgba(229,57,53,.3)}
+.ab-rej:hover{background:var(--red);color:#fff}
+.ab-boost{background:var(--gold4);color:var(--gold);border:1px solid rgba(212,175,55,.25)}
+.ab-boost:hover{background:var(--gold);color:var(--bg)}
+.ab-edit{background:rgba(21,101,192,.12);color:var(--blue2);border:1px solid rgba(21,101,192,.25)}
+.ab-edit:hover{background:var(--blue2);color:#fff}
+.adm-ctrl{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 0;border-bottom:1px solid var(--border)}
+.adm-ctrl-lbl{font-size:.78rem;color:var(--text2);font-weight:600}
+.adm-ctrl-in{background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:4px 8px;border-radius:6px;width:130px;font-size:.8rem;text-align:right}
+.adm-ctrl-in:focus{border-color:var(--gold)}
+.adm-export-row{display:flex;gap:8px;margin-top:10px}
+.btn-export{flex:1;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:.75rem;font-weight:700;padding:9px;
+  border-radius:var(--r2);transition:var(--trans)}
+.btn-export:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════════════════════════════════════ OWNER DASH */
+.own-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:13px}
+.own-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:9px;text-align:center}
+.own-stat-n{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.own-stat-l{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.stat-tgl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:13px}
+.st-tgl{padding:8px;border-radius:var(--r2);font-size:.72rem;font-weight:800;
+  letter-spacing:.5px;border:1px solid var(--border2);color:var(--text3);
+  background:var(--bg3);transition:var(--trans)}
+.st-tgl.t-open{background:rgba(46,125,50,.15);color:#66bb6a;border-color:rgba(46,125,50,.4)}
+.st-tgl.t-busy{background:rgba(255,122,0,.15);color:var(--orange);border-color:rgba(255,122,0,.4)}
+.st-tgl.t-closed{background:rgba(229,57,53,.15);color:#ef5350;border-color:rgba(229,57,53,.4)}
+
+/* ═══════════════════════════════════════════ WALLET */
+.wallet-hero{background:linear-gradient(135deg,var(--bg3),#12090);
+  border:1px solid var(--gold3);border-radius:var(--r);
+  padding:16px;text-align:center;margin-bottom:13px}
+.wallet-n{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);font-weight:700}
+.wallet-l{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.wallet-recharge-btn{background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.75rem;font-weight:800;
+  padding:8px 18px;border-radius:var(--r2);letter-spacing:1px;margin-top:10px;transition:var(--trans)}
+.wallet-recharge-btn:hover{opacity:.9}
+.txn-row{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border)}
+.txn-desc{font-size:.76rem;color:var(--text2)}
+.txn-date{font-size:.62rem;color:var(--text3)}
+.txn-amt{font-size:.82rem;font-weight:700}
+.txn-cr{color:#66bb6a}
+.txn-dr{color:#ef5350}
+
+/* ═══════════════════════════════════════════ LEADS */
+.lead-card{background:var(--bg3);border:1px solid var(--border2);
+  border-radius:var(--r2);padding:11px;margin-bottom:9px}
+.lead-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.lead-t{font-size:.82rem;font-weight:700;color:var(--text)}
+.ls{font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.5px}
+.ls-pend{background:rgba(255,122,0,.15);color:var(--orange);border:1px solid rgba(255,122,0,.3)}
+.ls-acpt{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.ls-exp{background:rgba(100,100,100,.12);color:var(--text3);border:1px solid var(--border2)}
+.lead-meta{font-size:.68rem;color:var(--text3);line-height:1.7}
+.lead-prov-list{margin-top:7px}
+.lead-prov-row{display:flex;align-items:center;justify-content:space-between;
+  padding:5px 8px;background:var(--bg2);border-radius:var(--r2);margin-bottom:3px}
+.lp-n{font-size:.76rem;font-weight:700;color:var(--text)}
+.accept-btn{background:var(--green2);color:#fff;font-size:.6rem;
+  font-weight:800;padding:3px 9px;border-radius:7px;transition:var(--trans)}
+.accept-btn:hover{opacity:.85}
+.accepted-tag{font-size:.6rem;color:#66bb6a;font-weight:800}
+
+/* ═══════════════════════════════════════════ TRACKING */
+.track-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px;margin-bottom:10px}
+.track-tgl{width:100%;background:var(--bg2);border:1px solid var(--border2);
+  color:var(--text2);padding:9px;border-radius:var(--r2);font-size:.78rem;
+  font-weight:700;display:flex;align-items:center;justify-content:center;
+  gap:6px;transition:var(--trans)}
+.track-tgl.on{border-color:var(--green2);color:#66bb6a;background:rgba(46,125,50,.08)}
+.track-coords{font-family:monospace;font-size:.72rem;color:var(--gold);
+  margin-top:7px;word-break:break-all;line-height:1.6}
+
+/* ═══════════════════════════════════════════ COMPLAINT */
+.complaint-sent{background:rgba(46,125,50,.1);border:1px solid rgba(46,125,50,.3);
+  border-radius:var(--r2);padding:12px;text-align:center;font-size:.8rem;color:#66bb6a;margin-top:10px}
+
+/* ═══════════════════════════════════════════ REF BOX */
+.ref-box{background:var(--bg3);border:1px solid var(--gold3);border-radius:var(--r2);
+  padding:13px;text-align:center;margin-top:13px}
+.ref-code{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);
+  letter-spacing:4px;font-weight:700;margin:6px 0}
+.ref-info{font-size:.68rem;color:var(--text3);line-height:1.6}
+
+/* ═══════════════════════════════════════════ LOCATION FILTERS */
+.loc-filter{display:flex;gap:7px;padding:10px 12px;overflow-x:auto;background:var(--bg2);border-bottom:1px solid var(--border);-ms-overflow-style:none;scrollbar-width:none}
+.loc-filter::-webkit-scrollbar{display:none}
+.loc-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:5px 10px;border-radius:var(--r3);font-size:.72rem;font-family:'Rajdhani',sans-serif;
+  appearance:none;flex-shrink:0;min-width:90px}
+.loc-select:focus{border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════════════════════════════════════ BOTTOM NAV */
+#bot-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(16,16,16,.98);
+  backdrop-filter:blur(14px);border-top:1px solid var(--border);
+  display:flex;padding:3px 0 env(safe-area-inset-bottom);z-index:900}
+.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 2px;font-size:.56rem;color:var(--text3);font-weight:700;
+  letter-spacing:.3px;text-transform:uppercase;transition:var(--trans)}
+.nav-it .ni{font-size:1.1rem}
+.nav-it.on{color:var(--gold)}
+
+/* ═══════════════════════════════════════════ TOAST */
+#toast-c{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);
+  z-index:9999;display:flex;flex-direction:column-reverse;gap:7px;
+  pointer-events:none;max-width:340px;width:92%}
+.toast{background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:9px 13px;border-radius:var(--r);font-size:.78rem;font-weight:600;
+  box-shadow:var(--sh);animation:tIn .28s ease;
+  display:flex;align-items:center;gap:7px;word-break:break-word}
+.toast.suc{border-color:rgba(46,125,50,.5);background:rgba(46,125,50,.1)}
+.toast.err{border-color:rgba(229,57,53,.5);background:rgba(229,57,53,.1)}
+.toast.wrn{border-color:rgba(255,122,0,.5);background:rgba(255,122,0,.1)}
+@keyframes tIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════ EMPTY / LOADING */
+.empty-s{text-align:center;padding:44px 20px}
+.empty-ic{font-size:2.6rem;margin-bottom:10px;opacity:.35}
+.empty-t{font-size:.84rem;color:var(--text3);line-height:1.7}
+.loading-s{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:36px;gap:10px}
+.spin{width:22px;height:22px;border:2px solid var(--border2);
+  border-top-color:var(--gold);border-radius:50%;
+  animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-t{font-size:.76rem;color:var(--text3);letter-spacing:1px}
+
+/* ═══════════════════════════════════════════ FOOTER */
+#footer{background:var(--bg2);border-top:1px solid var(--border);
+  padding:16px 14px;text-align:center;margin-top:20px}
+.footer-line{font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);
+  letter-spacing:1.5px;margin-bottom:6px}
+.footer-help{font-size:.75rem;color:var(--text2);font-weight:700}
+.footer-help a{color:var(--orange);font-weight:800}
+.footer-copy{font-size:.62rem;color:var(--text3);margin-top:5px}
+
+/* ═══════════════════════════════════════════ COOLDOWN */
+.cooldown-bar{background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);
+  border-radius:var(--r2);padding:8px 12px;font-size:.72rem;color:var(--orange);text-align:center;margin-bottom:10px}
+
+/* PARTNER CARD */
+.partner-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px;margin-bottom:8px}
+.partner-name{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.partner-meta{font-size:.68rem;color:var(--text3);line-height:1.6}
+.partner-rev{font-size:.75rem;color:var(--gold);font-weight:700;margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE -->
+<div id="offline-bar">⚡ No Internet — Offline Mode Active</div>
+
+<!-- PWA BAR -->
+<div id="pwa-bar">
+  <div class="pwa-text"><strong>SULTAN ENGINE</strong> — Install as App</div>
+  <button class="pwa-go" id="pwa-btn">Install</button>
+  <button class="pwa-x" id="pwa-x">✕</button>
+</div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="tb-brand">
+    <span class="b1">⚡ SULTAN ENGINE</span>
+    <span class="b2">Hybrid Global Marketplace • V12</span>
+  </div>
+  <div class="tb-links">
+    <a class="tb-link" href="#" onclick="T('🌐 Digital Menu Pro — जल्द आ रहा है','wrn');return false">Menu Pro</a>
+    <a class="tb-link" href="#" onclick="T('🛒 Digital Shokeen — जल्द आ रहा है','wrn');return false">Shokeen</a>
+  </div>
+  <div class="tb-right">
+    <button class="tb-icon-btn" onclick="openM('favM')" title="Favorites">♡</button>
+    <button class="tb-icon-btn" onclick="openM('compM')" title="Complaint">⚠</button>
+    <button class="tb-admin-btn" onclick="openM('admLoginM')">ADMIN</button>
+  </div>
+</div>
+
+<div id="banner-spacer"></div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- HERO -->
+<div id="hero">
+  <span class="hero-crown">👑</span>
+  <div class="hero-title">SULTAN GLOBAL ENGINE</div>
+  <div class="hero-sub">Hybrid Real-Time Service Marketplace • V12 Final</div>
+  <div class="hero-loc" id="heroLoc">📍 Detecting Location...</div>
+  <div class="search-row">
+    <input class="search-in" id="searchIn" type="text" placeholder="Search services, shops, city..." oninput="dbSearch(this.value)">
+    <button class="search-go" onclick="doSearch()">🔍 Search</button>
+  </div>
+</div>
+
+<!-- LOCATION FILTERS -->
+<div class="loc-filter">
+  <select class="loc-select" id="fCountry" onchange="applyFilters()">
+    <option value="">🌍 Country</option>
+    <option>India</option><option>UAE</option><option>UK</option>
+    <option>USA</option><option>Canada</option><option>Australia</option>
+  </select>
+  <select class="loc-select" id="fCity" onchange="applyFilters()">
+    <option value="">🏙️ City</option>
+    <option>Delhi</option><option>Mumbai</option><option>Bangalore</option>
+    <option>Hyderabad</option><option>Chennai</option><option>Kolkata</option>
+    <option>Jaipur</option><option>Lucknow</option><option>Pune</option>
+    <option>Dubai</option><option>London</option><option>New York</option>
+  </select>
+  <select class="loc-select" id="fArea" onchange="applyFilters()">
+    <option value="">📌 Area</option>
+    <option>Connaught Place</option><option>Andheri</option><option>Koramangala</option>
+    <option>Bandra</option><option>Karol Bagh</option><option>Hazratganj</option>
+  </select>
+</div>
+
+<!-- TABS -->
+<div id="tabs-wrap">
+  <div class="tabs-inner" id="tabs"></div>
+</div>
+
+<!-- HOME VIEW -->
+<div class="view on" id="view-home">
+  <!-- GOOGLE MAP -->
+  <div id="map-container">
+    <div id="gmap"></div>
+    <div class="map-overlay" id="mapFilters"></div>
+  </div>
+
+  <!-- SULTAN VERIFIED SECTION -->
+  <div class="sec-hd">
+    <div class="sec-hd-left">
+      <div class="sec-dot sec-dot-gold"></div>
+      <span class="sec-title sec-title-gold">⭐ SULTAN VERIFIED</span>
+    </div>
+    <span class="sec-badge" id="verifiedCount">Loading...</span>
+  </div>
+  <div class="cards-wrap">
+    <div class="cards-grid" id="verifiedGrid"></div>
+  </div>
+
+  <!-- GOOGLE NEARBY SECTION -->
+  <div class="sec-hd">
+    <div class="sec-hd-left">
+      <div class="sec-dot sec-dot-blue"></div>
+      <span class="sec-title sec-title-blue">📍 NEARBY PLACES</span>
+    </div>
+    <span class="sec-badge" id="nearbyCount">Detecting...</span>
+  </div>
+  <div class="cards-wrap">
+    <div class="cards-grid" id="nearbyGrid"></div>
+  </div>
+</div>
+
+<!-- LEADS VIEW -->
+<div class="view" id="view-leads">
+  <div class="sec-hd">
+    <span class="sec-title sec-title-gold">⚡ SERVICE REQUESTS</span>
+    <button onclick="openReqModal()" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);font-family:'Cinzel',serif;font-size:.68rem;font-weight:800;padding:6px 13px;border-radius:var(--r2);letter-spacing:.5px">+ REQUEST</button>
+  </div>
+  <div style="padding:0 10px" id="leadsView"></div>
+</div>
+
+<!-- REGISTER VIEW -->
+<div class="view" id="view-register">
+  <div class="sec-hd"><span class="sec-title sec-title-gold">➕ REGISTER BUSINESS</span></div>
+  <div style="padding:0 10px 20px" id="regView"></div>
+</div>
+
+<!-- DASHBOARD VIEW -->
+<div class="view" id="view-dash">
+  <div class="sec-hd"><span class="sec-title sec-title-gold">📊 OWNER DASHBOARD</span></div>
+  <div style="padding:0 10px 20px" id="dashView"></div>
+</div>
+
+<!-- FOOTER -->
+<div id="footer">
+  <div class="footer-line">SULTAN GLOBAL ENGINE V12 FINAL</div>
+  <div class="footer-help">📞 SULTAN HELPLINE: <a href="tel:+918273214261">+91-8273214261</a></div>
+  <div class="footer-copy">Managed by SULTAN TECHNOLOGY — All Rights Reserved</div>
+</div>
+
+</div><!-- /main -->
+
+<!-- BOTTOM NAV -->
+<div id="bot-nav">
+  <button class="nav-it on" onclick="swV('home',this)"><span class="ni">🏪</span>Browse</button>
+  <button class="nav-it" onclick="swV('leads',this)"><span class="ni">⚡</span>Requests</button>
+  <button class="nav-it" onclick="swV('register',this)"><span class="ni">➕</span>Register</button>
+  <button class="nav-it" onclick="swV('dash',this)"><span class="ni">📊</span>Dashboard</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast-c"></div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- REQUEST MODAL -->
+<div class="modal-ov" id="reqM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⚡ REQUEST SERVICE</span><button class="modal-x" onclick="closeM('reqM')">✕</button></div>
+    <div class="modal-body" id="reqMBody"></div>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div class="modal-ov" id="rateM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⭐ RATE SERVICE</span><button class="modal-x" onclick="closeM('rateM')">✕</button></div>
+    <div class="modal-body" id="rateMBody"></div>
+  </div>
+</div>
+
+<!-- FAVORITES MODAL -->
+<div class="modal-ov" id="favM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">♥ FAVORITES</span><button class="modal-x" onclick="closeM('favM')">✕</button></div>
+    <div class="modal-body" id="favMBody"></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN -->
+<div class="modal-ov" id="admLoginM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">🔐 ADMIN ACCESS</span><button class="modal-x" onclick="closeM('admLoginM')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Admin Password</label><input class="fi" type="password" id="admPass" placeholder="Enter password" onkeydown="if(event.key==='Enter')admLogin()"></div>
+      <button class="btn-gold" onclick="admLogin()">ACCESS PANEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="modal-ov" id="admM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⚙️ ADMIN PANEL</span><button class="modal-x" onclick="closeM('admM')">✕</button></div>
+    <div class="modal-body" id="admMBody"></div>
+  </div>
+</div>
+
+<!-- WALLET MODAL -->
+<div class="modal-ov" id="walletM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">💰 WALLET</span><button class="modal-x" onclick="closeM('walletM')">✕</button></div>
+    <div class="modal-body" id="walletMBody"></div>
+  </div>
+</div>
+
+<!-- RECHARGE MODAL -->
+<div class="modal-ov" id="rchM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">💳 RECHARGE</span><button class="modal-x" onclick="closeM('rchM')">✕</button></div>
+    <div class="modal-body" id="rchMBody"></div>
+  </div>
+</div>
+
+<!-- TRACKING MODAL -->
+<div class="modal-ov" id="trackM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">📍 LIVE TRACKING</span><button class="modal-x" onclick="closeM('trackM')">✕</button></div>
+    <div class="modal-body" id="trackMBody"></div>
+  </div>
+</div>
+
+<!-- COMPLAINT MODAL -->
+<div class="modal-ov" id="compM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⚠️ COMPLAINT</span><button class="modal-x" onclick="closeM('compM')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Your Name</label><input class="fi" type="text" id="comp_name" placeholder="Name"></div>
+      <div class="fg"><label class="fl">Phone</label><input class="fi" type="tel" id="comp_phone" placeholder="Mobile"></div>
+      <div class="fg"><label class="fl">Business (if any)</label><input class="fi" type="text" id="comp_biz" placeholder="Business name"></div>
+      <div class="fg"><label class="fl">Complaint Details</label><textarea class="fi" id="comp_text" rows="4" placeholder="Describe your issue..." style="resize:none"></textarea></div>
+      <button class="btn-gold" onclick="submitComplaint()">SUBMIT COMPLAINT</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARTNER MODAL -->
+<div class="modal-ov" id="partnerM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">🤝 PARTNER SYSTEM</span><button class="modal-x" onclick="closeM('partnerM')">✕</button></div>
+    <div class="modal-body" id="partnerMBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SCRIPT ═══ -->
+<script>
+/* ─── FIREBASE CONFIG (v10 modular — connected) ─── */
+const GM_KEY = "AIzaSyDIIWbMB8YlcQ_ex8UST6G1Jj5Abi1IOc4";
+
+/* ─── STATE ─── */
+const S = {
+  tab:'all', view:'home', q:'',
+  biz:{}, leads:{}, wallets:{}, ratings:{}, tracking:{}, partners:{}, complaints:{},
+  settings:{leadPrice:10,upiId:"8273214261@ptyes",referralBonus:20,currency:"₹"},
+  loc:{lat:null,lng:null,city:'',country:''},
+  owner:null, adminIn:false,
+  favs:_lsGet('sultan_favs',[]),
+  rLocks:_lsGet('sultan_rlocks',{}),
+  devId:_devId(),
+  cooldowns:{},
+  trackOn:false, trackWid:null,
+  gmapObj:null, nearbyPlaces:[],
+  filters:{country:'',city:'',area:''},
+  fbReady:false, gmReady:false
+};
+
+const CATS=[
+  {id:'all',l:'All',ic:'🌐'},
+  {id:'barber',l:'Barber',ic:'✂️'},
+  {id:'doctor',l:'Doctor',ic:'🏥'},
+  {id:'electrician',l:'Electrician',ic:'⚡'},
+  {id:'cab',l:'Cab',ic:'🚕'},
+  {id:'restaurant',l:'Restaurant',ic:'🍛'},
+  {id:'shop',l:'Shop',ic:'🛍️'},
+  {id:'plumber',l:'Plumber',ic:'🔧'},
+  {id:'others',l:'Others',ic:'➕'}
+];
+const GM_TYPES=['restaurant','store','hospital','electrician','lodging','pharmacy','gym','bank'];
+
+/* ─── UTILS ─── */
+function _lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}}
+function _lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function _devId(){let id=localStorage.getItem('sultan_dev');if(!id){id='d_'+Math.random().toString(36).substr(2,10)+Date.now().toString(36);localStorage.setItem('sultan_dev',id)}return id}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function tsAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+function haversine(lat1,lng1,lat2,lng2){const R=6371,dL=((lat2-lat1)*Math.PI/180),dG=((lng2-lng1)*Math.PI/180),a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dG/2)**2;return(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1)}
+function fmtDist(d){return d<1?(d*1000).toFixed(0)+'m':d+'km'}
+
+/* ─── TOAST ─── */
+function T(msg,type=''){
+  const ic={suc:'✅',err:'❌',wrn:'⚠️'};
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');
+  el.innerHTML=`<span>${ic[type]||'ℹ️'}</span>${esc(msg)}`;
+  document.getElementById('toast-c').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),350)},3200);
+}
+
+/* ─── MODALS ─── */
+function openM(id){
+  if(id==='favM')renderFavM();
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeM(m.id)}));
+
+/* ─── FIREBASE v10 BRIDGE ─── */
+/* Module SDK initialised via type="module" script injected at bottom */
+function initFB(){
+  if(window._fbReady){_onFBReady();}
+  else{
+    window.addEventListener('sultan:fb:ready',_onFBReady,{once:true});
+    window.addEventListener('sultan:fb:error',()=>{T('Firebase error — Demo mode','wrn');loadDemo();},{once:true});
+    setTimeout(()=>{if(!S.fbReady){T('Firebase timeout — Demo mode','wrn');loadDemo();}},7000);
+  }
+}
+function _onFBReady(){S.fbReady=true;T('🔥 Firebase Connected','suc');listenFB();}
+
+function listenFB(){
+  if(!window._fbOn){loadDemo();return;}
+  window._fbOn('/',data=>{
+    const d=data||{};
+    S.biz       =d.businesses||{};
+    S.leads     =d.leads||{};
+    S.wallets   =d.wallets||{};
+    S.ratings   =d.ratings||{};
+    S.tracking  =d.tracking||{};
+    S.partners  =d.partners||{};
+    S.complaints=d.complaints||{};
+    S.settings  ={...S.settings,...(d.settings||{})};
+    renderAll();
+    if(S.view==='leads')renderLeadsView();
+    if(S.view==='dash')renderDashView();
+  });
+}
+
+function fbSet(path,val){if(window._fbSet)window._fbSet(path,val);}
+function fbPush(path,val){if(window._fbPush)window._fbPush(path,val);}
+function fbTxn(path,fn){
+  if(window._fbTxn){window._fbTxn(path,fn);}
+}
+function fbDel(path){if(window._fbDel)window._fbDel(path);}
+
+function loadDemo(){
+  S.biz={
+    b001:{name:"Sultan Barber Palace",category:"barber",phone:"8273214261",whatsapp:"8273214261",city:"Delhi",area:"Connaught Place",country:"India",status:"open",rating:4.8,ratingCount:124,staff:"Rahul Kumar, Amit Singh",verified:true,boost:true,calls:89,leadsCompleted:34,responses:45,avatar:"✂️",lat:28.6315,lng:77.2167,createdAt:Date.now()-86400000*10},
+    b002:{name:"Dr. Khan Medical Center",category:"doctor",phone:"9876543210",whatsapp:"9876543210",city:"Mumbai",area:"Andheri West",country:"India",status:"open",rating:4.6,ratingCount:87,staff:"Dr. Arjun Khan, Dr. Priya Sharma",verified:true,boost:false,calls:56,leadsCompleted:21,responses:28,avatar:"🏥",lat:19.1136,lng:72.8697,createdAt:Date.now()-86400000*8},
+    b003:{name:"PowerFix Electricians",category:"electrician",phone:"7654321098",whatsapp:"7654321098",city:"Bangalore",area:"Koramangala",country:"India",status:"busy",rating:4.4,ratingCount:62,staff:"Suresh P., Ravi K.",verified:true,boost:false,calls:43,leadsCompleted:18,responses:22,avatar:"⚡",lat:12.9352,lng:77.6245,createdAt:Date.now()-86400000*6},
+    b004:{name:"Sultan Cab Express",category:"cab",phone:"6543210987",whatsapp:"6543210987",city:"Delhi",area:"Karol Bagh",country:"India",status:"open",rating:4.7,ratingCount:201,staff:"Imran Bhai, Vijay Driver",verified:true,boost:true,calls:134,leadsCompleted:89,responses:98,avatar:"🚕",lat:28.6512,lng:77.1897,createdAt:Date.now()-86400000*5},
+    b005:{name:"Mughal Darbar Restaurant",category:"restaurant",phone:"5432109876",whatsapp:"5432109876",city:"Lucknow",area:"Hazratganj",country:"India",status:"open",rating:4.9,ratingCount:345,staff:"Chef Nasir, Chef Rani",verified:true,boost:true,calls:210,leadsCompleted:0,responses:0,avatar:"🍛",lat:26.8467,lng:80.9462,createdAt:Date.now()-86400000*4},
+    b006:{name:"Fashion Hub Boutique",category:"shop",phone:"4321098765",whatsapp:"4321098765",city:"Jaipur",area:"MI Road",country:"India",status:"closed",rating:4.2,ratingCount:43,staff:"Pooja M., Kiran D.",verified:false,boost:false,calls:28,leadsCompleted:5,responses:7,avatar:"🛍️",lat:26.9124,lng:75.7873,createdAt:Date.now()-86400000*3},
+    b007:{name:"AquaFix Plumbers",category:"plumber",phone:"3210987654",whatsapp:"3210987654",city:"Chennai",area:"T. Nagar",country:"India",status:"open",rating:4.3,ratingCount:38,staff:"Kumar S., Selvam R.",verified:false,boost:false,calls:31,leadsCompleted:11,responses:15,avatar:"🔧",lat:13.0418,lng:80.2341,createdAt:Date.now()-86400000*2}
+  };
+  renderAll();
+}
+
+/* ─── GOOGLE MAPS INIT ─── */
+function initGM(){
+  window.gmCallback=function(){
+    S.gmReady=true;
+    const loc=S.loc.lat?{lat:S.loc.lat,lng:S.loc.lng}:{lat:28.6139,lng:77.2090};
+    S.gmapObj=new google.maps.Map(document.getElementById('gmap'),{
+      center:loc,zoom:14,
+      styles:[{elementType:'geometry',stylers:[{color:'#1a1a1a'}]},{elementType:'labels.text.fill',stylers:[{color:'#746855'}]},{elementType:'labels.text.stroke',stylers:[{color:'#242f3e'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#2c2c2c'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#000000'}]},{featureType:'poi',elementType:'geometry',stylers:[{color:'#1a1a1a'}]}],
+      disableDefaultUI:true,zoomControl:true
+    });
+    addVerifiedMarkers();
+    loadNearbyPlaces();
+    renderMapFilters();
+  };
+  const sc=document.createElement('script');
+  sc.src=`https://maps.googleapis.com/maps/api/js?key=${GM_KEY}&libraries=places&callback=gmCallback`;
+  sc.onerror=()=>{document.getElementById('gmap').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;font-size:.8rem;flex-direction:column;gap:8px"><span style="font-size:2rem">🗺️</span>Add Google Maps API Key</div>'};
+  document.head.appendChild(sc);
+}
+
+function addVerifiedMarkers(){
+  if(!S.gmapObj)return;
+  Object.entries(S.biz).forEach(([id,b])=>{
+    if(!b.lat||!b.lng)return;
+    new google.maps.Marker({
+      position:{lat:b.lat,lng:b.lng},
+      map:S.gmapObj,
+      title:b.name,
+      icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#d4af37',fillOpacity:1,strokeColor:'#ff7a00',strokeWeight:2}
+    }).addListener('click',()=>T(`⭐ ${b.name} — Sultan Verified`,'suc'));
+  });
+}
+
+function loadNearbyPlaces(){
+  if(!S.gmapObj||!S.loc.lat)return;
+  const svc=new google.maps.places.PlacesService(S.gmapObj);
+  S.nearbyPlaces=[];
+  GM_TYPES.slice(0,3).forEach(type=>{
+    svc.nearbySearch({location:{lat:S.loc.lat,lng:S.loc.lng},radius:2000,type},
+    (results,status)=>{
+      if(status===google.maps.places.PlacesServiceStatus.OK&&results){
+        S.nearbyPlaces=[...S.nearbyPlaces,...results.map(p=>({
+          place_id:p.place_id,name:p.name,
+          lat:p.geometry.location.lat(),lng:p.geometry.location.lng(),
+          rating:p.rating||0,ratingCount:p.user_ratings_total||0,
+          vicinity:p.vicinity||'',type,
+          open:p.opening_hours?.open_now,
+          icon:p.icon
+        }))];
+        renderNearby();
+      }
+    });
+  });
+}
+
+function renderMapFilters(){
+  const filters=['All','Restaurants','Shops','Hospitals'];
+  document.getElementById('mapFilters').innerHTML=filters.map((f,i)=>`
+    <button class="map-badge ${i===0?'active-filter':''}" onclick="this.parentNode.querySelectorAll('.map-badge').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');T('Filter: ${f}')">
+      ${f}
+    </button>`).join('');
+}
+
+/* ─── LOCATION ─── */
+function getLocation(){
+  if(!navigator.geolocation){
+    T('Geolocation not supported — using default','wrn');
+    S.loc={lat:28.6139,lng:77.2090,city:'Delhi',country:'India'};
+    updateLocUI();initGM();return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      S.loc.lat=pos.coords.latitude;
+      S.loc.lng=pos.coords.longitude;
+      reverseGeocode(S.loc.lat,S.loc.lng);
+      updateLocUI();
+      if(S.gmReady)loadNearbyPlaces();
+      else initGM();
+    },
+    ()=>{
+      T('Location denied — Default location used','wrn');
+      S.loc={lat:28.6139,lng:77.2090,city:'Delhi',country:'India'};
+      updateLocUI();initGM();
+    },{timeout:8000,enableHighAccuracy:true}
+  );
+}
+
+function reverseGeocode(lat,lng){
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(r=>r.json())
+    .then(d=>{
+      S.loc.city=d.address?.city||d.address?.town||d.address?.village||'';
+      S.loc.country=d.address?.country||'';
+      updateLocUI();
+    }).catch(()=>{});
+}
+
+function updateLocUI(){
+  const l=S.loc;
+  const txt=l.city?`📍 ${l.city}${l.country?', '+l.country:''}`:`📍 ${l.lat?l.lat.toFixed(4)+', '+l.lng.toFixed(4):'Unknown'}`;
+  document.getElementById('heroLoc').textContent=txt;
+}
+
+/* ─── RANKING ─── */
+function score(b){
+  const base=(b.rating||0)*2+(b.responses||0)*3+(b.leadsCompleted||0)*3+(b.calls||0)*1;
+  const boost=b.boost?30:0;
+  let dist=0;
+  if(S.loc.lat&&b.lat){const d=parseFloat(haversine(S.loc.lat,S.loc.lng,b.lat,b.lng));dist=Math.max(0,10-d);}
+  return base+boost+dist;
+}
+
+/* ─── RENDER ALL ─── */
+function renderAll(){renderTabs();renderVerified();renderNearby();}
+
+/* ─── TABS ─── */
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=CATS.map(c=>`
+    <button class="tab-btn ${S.tab===c.id?'on':''}" onclick="switchTab('${c.id}')">
+      <span class="tab-icon">${c.ic}</span>${c.l}
+    </button>`).join('');
+}
+function switchTab(id){S.tab=id;renderTabs();renderVerified();renderNearby();}
+
+/* ─── FILTERS ─── */
+function applyFilters(){
+  S.filters.country=document.getElementById('fCountry').value;
+  S.filters.city=document.getElementById('fCity').value;
+  S.filters.area=document.getElementById('fArea').value;
+  renderVerified();renderNearby();
+}
+
+function matchFilters(b){
+  const {country,city,area}=S.filters;
+  if(country&&b.country&&b.country!==country)return false;
+  if(city&&b.city&&b.city!==city)return false;
+  if(area&&b.area&&b.area!==area)return false;
+  return true;
+}
+
+/* ─── RENDER VERIFIED ─── */
+function renderVerified(){
+  const q=S.q.toLowerCase();
+  let list=Object.entries(S.biz)
+    .filter(([_,b])=>{
+      const catOk=S.tab==='all'||b.category===S.tab;
+      const qOk=!q||(b.name||'').toLowerCase().includes(q)||(b.area||'').toLowerCase().includes(q)||(b.city||'').toLowerCase().includes(q);
+      const fOk=matchFilters(b);
+      return catOk&&qOk&&fOk;
+    })
+    .map(([id,b])=>({id,...b,_score:score(b)}))
+    .sort((a,b)=>{if(a.boost&&!b.boost)return -1;if(!a.boost&&b.boost)return 1;return b._score-a._score});
+
+  document.getElementById('verifiedCount').textContent=list.length+' verified';
+  document.getElementById('verifiedGrid').innerHTML=list.length
+    ?list.map((b,i)=>bizCard(b,i,true)).join('')
+    :`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">🔍</div><div class="empty-t">No verified businesses found.<br>Try different category or filters.</div></div>`;
+}
+
+/* ─── RENDER NEARBY (Google) ─── */
+function renderNearby(){
+  if(!S.gmReady){
+    document.getElementById('nearbyCount').textContent='Maps not loaded';
+    document.getElementById('nearbyGrid').innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">🗺️</div><div class="empty-t">Add Google Maps API Key to see nearby places.</div></div>`;
+    return;
+  }
+  const tab=S.tab==='all'?null:{restaurant:'restaurant',shop:'store',doctor:'hospital',electrician:'electrician'}[S.tab];
+  let list=S.nearbyPlaces
+    .filter(p=>!tab||p.type===tab)
+    .filter(p=>!S.q||p.name.toLowerCase().includes(S.q.toLowerCase()))
+    .map(p=>({...p,_dist:S.loc.lat?parseFloat(haversine(S.loc.lat,S.loc.lng,p.lat,p.lng)):999}))
+    .sort((a,b)=>a._dist-b._dist)
+    .slice(0,20);
+
+  document.getElementById('nearbyCount').textContent=list.length+' nearby';
+  document.getElementById('nearbyGrid').innerHTML=list.length
+    ?list.map((p,i)=>googleCard(p,i)).join('')
+    :`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">📍</div><div class="empty-t">${S.loc.lat?'No nearby places found.':'Allow location to see nearby places.'}</div></div>`;
+}
+
+/* ─── BUSINESS CARD ─── */
+function bizCard(b,i,verified=false){
+  const isFav=S.favs.includes(b.id);
+  const sc=b.status==='open'?'sp-open':b.status==='busy'?'sp-busy':'sp-closed';
+  const st=b.status==='open'?'● OPEN':b.status==='busy'?'◉ BUSY':'○ CLOSED';
+  const stars='★'.repeat(Math.round(b.rating||0))+'☆'.repeat(5-Math.round(b.rating||0));
+  const distTxt=S.loc.lat&&b.lat?`<span class="card-dist">📍 ${fmtDist(haversine(S.loc.lat,S.loc.lng,b.lat,b.lng))}</span>`:'';
+  const delay=Math.min(i*.04,.5);
+  return `<div class="biz-card${b.boost?' boosted':''}" style="animation-delay:${delay}s">
+    <div class="card-header">
+      <div class="card-avi">${b.avatar||'🏪'}</div>
+      <div class="card-info">
+        <div class="card-name">${esc(b.name||'')}<span class="${verified?'vbadge':'gbadge'}">${verified?'✓ VERIFIED':'LISTED'}</span></div>
+        <div class="card-cat">${(b.category||'').toUpperCase()}</div>
+        <div class="card-loc">📍 ${esc(b.area||'')}${b.city?', '+esc(b.city):''} ${distTxt}</div>
+      </div>
+    </div>
+    <div class="card-meta">
+      <div class="stars-wrap"><span class="stars-txt">${stars}</span><span class="rating-n">${(b.rating||0).toFixed(1)}</span><span class="rating-c">(${b.ratingCount||0})</span></div>
+      <span class="stat-pill ${sc}">${st}</span>
+      <span class="rank-pill">#${i+1}</span>
+      ${b.boost?'<span class="boost-pill">⚡ BOOST</span>':''}
+    </div>
+    ${b.staff?`<div class="card-staff">👥 <span>${esc(b.staff)}</span></div>`:''}
+    <div class="card-actions">
+      <button class="act-btn ab-call" onclick="callBiz('${b.id}','${esc(b.phone||'')}')"><span class="ai">📞</span>Call</button>
+      <button class="act-btn ab-wa" onclick="waBiz('${esc(b.whatsapp||b.phone||'')}')"><span class="ai">💬</span>WhatsApp</button>
+      <button class="act-btn ab-dir" onclick="dirBiz('${esc(b.name||'')}','${esc(b.city||'')}',${b.lat||0},${b.lng||0})"><span class="ai">🗺️</span>Map</button>
+      <button class="act-btn ab-req" onclick="openReqModal('${b.id}')"><span class="ai">⚡</span>Request</button>
+    </div>
+    <div class="card-foot">
+      <button class="cf-btn${isFav?' fav-on':''}" onclick="toggleFav('${b.id}',this)">
+        ${isFav?'♥ Saved':'♡ Save'}
+      </button>
+      <button class="cf-btn" onclick="shareCard('${b.id}','${esc(b.name||'')}')">🔗 Share</button>
+      <button class="cf-btn" onclick="openRate('${b.id}','${esc(b.name||'')}')">⭐ Rate</button>
+    </div>
+  </div>`;
+}
+
+/* ─── GOOGLE CARD ─── */
+function googleCard(p,i){
+  const delay=Math.min(i*.04,.5);
+  const dist=p._dist<999?`<span class="card-dist">📍 ${fmtDist(p._dist)}</span>`:'';
+  const st=p.open===true?'<span class="stat-pill sp-open">● OPEN</span>':p.open===false?'<span class="stat-pill sp-closed">○ CLOSED</span>':'';
+  const stars=p.rating?'★'.repeat(Math.round(p.rating))+'☆'.repeat(5-Math.round(p.rating)):'';
+  return `<div class="google-card" style="animation-delay:${delay}s">
+    <div class="card-header">
+      <div class="card-avi goog">MAPS<br>PLACE</div>
+      <div class="card-info">
+        <div class="card-name">${esc(p.name)}<span class="gbadge">GOOGLE</span></div>
+        <div class="card-cat">${(p.type||'').replace('_',' ').toUpperCase()}</div>
+        <div class="card-loc">📍 ${esc(p.vicinity||'')} ${dist}</div>
+      </div>
+    </div>
+    <div class="card-meta">
+      ${stars?`<div class="stars-wrap"><span class="stars-txt">${stars}</span><span class="rating-n">${p.rating.toFixed(1)}</span><span class="rating-c">(${p.ratingCount})</span></div>`:''}
+      ${st}
+    </div>
+    <div class="card-actions">
+      <button class="act-btn ab-call" onclick="T('Call unavailable for Google listings','wrn')"><span class="ai">📞</span>Call</button>
+      <button class="act-btn ab-wa" onclick="T('WhatsApp unavailable for Google listings','wrn')"><span class="ai">💬</span>WhatsApp</button>
+      <button class="act-btn ab-dir" onclick="window.open('https://www.google.com/maps/place/?q=place_id:${p.place_id}','_blank')"><span class="ai">🗺️</span>Map</button>
+      <button class="act-btn ab-req" onclick="openReqModal('')"><span class="ai">⚡</span>Request</button>
+    </div>
+  </div>`;
+}
+
+/* ─── ACTIONS ─── */
+function callBiz(id,phone){
+  if(!phone){T('Phone unavailable','err');return}
+  fbTxn('/businesses/'+id+'/calls',v=>(v||0)+1);
+  if(S.biz[id])S.biz[id].calls=(S.biz[id].calls||0)+1;
+  window.location.href='tel:+91'+phone;
+  T('📞 Calling...','suc');
+}
+function waBiz(wa){
+  if(!wa){T('WhatsApp unavailable','err');return}
+  window.open('https://wa.me/91'+wa+'?text=Hi%2C%20I%20found%20you%20on%20Sultan%20Global%20Engine.%20Need%20your%20service.','_blank');
+}
+function dirBiz(name,city,lat,lng){
+  if(lat&&lng)window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,'_blank');
+  else window.open(`https://www.google.com/maps/search/${encodeURIComponent(name+' '+city)}`,'_blank');
+}
+function toggleFav(id,btn){
+  const idx=S.favs.indexOf(id);
+  if(idx===-1){S.favs.push(id);btn.innerHTML='♥ Saved';btn.classList.add('fav-on');T('♥ Saved to Favorites','suc')}
+  else{S.favs.splice(idx,1);btn.innerHTML='♡ Save';btn.classList.remove('fav-on');T('Removed from Favorites')}
+  _lsSet('sultan_favs',S.favs);
+}
+function shareCard(id,name){
+  const url=location.href.split('?')[0]+'?b='+id;
+  if(navigator.share)navigator.share({title:name+' — Sultan Engine',url});
+  else navigator.clipboard.writeText(url).then(()=>T('🔗 Link copied','suc'));
+}
+
+/* ─── REQUEST SERVICE ─── */
+function openReqModal(prefId=''){
+  const now=Date.now();
+  const ck=S.devId+'_lead';
+  if(S.cooldowns[ck]&&now-S.cooldowns[ck]<120000){
+    const rem=Math.ceil((120000-(now-S.cooldowns[ck]))/1000);
+    T(`⏱️ Wait ${rem}s before next request`,'wrn');return;
+  }
+  const biz=prefId?S.biz[prefId]:null;
+  const catOpts=CATS.filter(c=>c.id!=='all').map(c=>`<option value="${c.id}"${biz&&biz.category===c.id?' selected':''}>${c.ic} ${c.l}</option>`).join('');
+  document.getElementById('reqMBody').innerHTML=`
+    <div class="fg"><label class="fl">Service Category</label><select class="fi" id="rq_cat">${catOpts}</select></div>
+    <div class="fg"><label class="fl">Describe Your Need *</label><textarea class="fi" id="rq_desc" rows="3" placeholder="E.g. Need electrician for wiring repair..." style="resize:none"></textarea></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">City</label><input class="fi" id="rq_city" type="text" placeholder="City" value="${biz?.city||S.loc.city||''}"></div>
+      <div class="fg"><label class="fl">Area</label><input class="fi" id="rq_area" type="text" placeholder="Area" value="${biz?.area||''}"></div>
+    </div>
+    <div class="fg"><label class="fl">Your Phone *</label><input class="fi" id="rq_phone" type="tel" placeholder="10-digit mobile number"></div>
+    <div class="info-t">⚡ Top 3 providers notified. First to accept wins the lead.</div>
+    <button class="btn-gold" onclick="submitReq('${prefId}')">⚡ SEND REQUEST</button>`;
+  openM('reqM');
+}
+
+function submitReq(prefId){
+  const desc=document.getElementById('rq_desc').value.trim();
+  const phone=document.getElementById('rq_phone').value.trim();
+  if(!desc||!phone){T('Fill description & phone','err');return}
+  const cat=document.getElementById('rq_cat').value;
+  const top3=Object.entries(S.biz)
+    .filter(([_,b])=>b.category===cat&&b.status==='open')
+    .map(([id,b])=>({id,...b,_score:score(b)}))
+    .sort((a,b)=>b._score-a._score).slice(0,3)
+    .map(p=>({id:p.id,name:p.name,accepted:false}));
+  if(!top3.length){T('No available providers for this category','wrn');return}
+  const lid='L'+Date.now();
+  const lead={id:lid,category:cat,description:desc,city:document.getElementById('rq_city').value.trim(),area:document.getElementById('rq_area').value.trim(),clientPhone:phone,deviceId:S.devId,status:'pending',providers:top3,preferredBiz:prefId||'',createdAt:Date.now()};
+  fbSet('/leads/'+lid,lead);
+  S.leads[lid]=lead;
+  S.cooldowns[S.devId+'_lead']=Date.now();
+  closeM('reqM');
+  T('⚡ Request sent! Top 3 providers notified.','suc');
+  swV('leads',document.querySelectorAll('.nav-it')[1]);
+  renderLeadsView();
+}
+
+/* ─── LEADS VIEW ─── */
+function renderLeadsView(){
+  const myLeads=Object.values(S.leads).filter(l=>l.deviceId===S.devId);
+  const el=document.getElementById('leadsView');
+  if(!myLeads.length){el.innerHTML=`<div class="empty-s"><div class="empty-ic">⚡</div><div class="empty-t">No requests yet.<br>Tap + REQUEST to get started.</div></div>`;return}
+  el.innerHTML=myLeads.sort((a,b)=>b.createdAt-a.createdAt).map(l=>{
+    const sc=l.status==='pending'?'ls-pend':l.status==='accepted'?'ls-acpt':'ls-exp';
+    const cat=CATS.find(c=>c.id===l.category);
+    const acc=l.providers?.find(p=>p.accepted);
+    return `<div class="lead-card">
+      <div class="lead-top">
+        <span class="lead-t">${cat?.ic||'🔧'} ${cat?.l||l.category} Request</span>
+        <span class="ls ${sc}">${l.status.toUpperCase()}</span>
+      </div>
+      <div class="lead-meta">📝 ${esc(l.description)}<br>📍 ${l.area?l.area+', ':''}${l.city||''}<br>🕒 ${tsAgo(l.createdAt)}</div>
+      ${l.providers?.length?`<div class="lead-prov-list">${l.providers.map(p=>`<div class="lead-prov-row">
+        <span class="lp-n">${esc(p.name||'Provider')}</span>
+        ${p.accepted?'<span class="accepted-tag">✓ ACCEPTED</span>':'<span style="font-size:.6rem;color:var(--text3)">Notified</span>'}
+      </div>`).join('')}</div>`:''}
+      ${acc?`<div style="margin-top:7px;padding:7px 9px;background:rgba(46,125,50,.08);border-radius:var(--r2);border:1px solid rgba(46,125,50,.2);font-size:.72rem;color:#66bb6a">✅ ${esc(acc.name)} accepted your request!</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ─── RATING ─── */
+function openRate(bizId,bizName){
+  const lk=S.devId+'_'+bizId;
+  const now=Date.now();
+  if(S.rLocks[lk]&&now-S.rLocks[lk]<86400000){
+    T(`⏱️ Rate again in ${Math.ceil((86400000-(now-S.rLocks[lk]))/3600000)}h`,'wrn');return;
+  }
+  window._ratingStars=0;
+  document.getElementById('rateMBody').innerHTML=`
+    <div style="text-align:center;font-family:'Cinzel',serif;font-size:.85rem;color:var(--text2);margin-bottom:11px">${esc(bizName)}</div>
+    <div class="star-inp" id="starInp">${[1,2,3,4,5].map(n=>`<span class="si" onclick="setStars(${n})">★</span>`).join('')}</div>
+    <div class="fg"><label class="fl">Your Review</label><textarea class="fi" id="rateText" rows="3" placeholder="Share your experience..." style="resize:none"></textarea></div>
+    <button class="btn-gold" onclick="submitRate('${bizId}')">SUBMIT RATING</button>`;
+  openM('rateM');
+}
+function setStars(n){window._ratingStars=n;document.querySelectorAll('.star-inp .si').forEach((s,i)=>s.classList.toggle('on',i<n))}
+function submitRate(bizId){
+  const stars=window._ratingStars||0;
+  if(!stars){T('Select stars first','err');return}
+  const text=document.getElementById('rateText').value.trim();
+  const rid='R'+Date.now();
+  const data={stars,text,bizId,deviceId:S.devId,createdAt:Date.now()};
+  fbSet('/ratings/'+rid,data);
+  fbTxn('/businesses/'+bizId,b=>{
+    if(!b)return b;
+    const nc=(b.ratingCount||0)+1;
+    return{...b,rating:Math.round((((b.rating||0)*(b.ratingCount||0))+stars)/nc*10)/10,ratingCount:nc};
+  });
+  S.ratings[rid]=data;
+  if(S.biz[bizId]){const b=S.biz[bizId];const nc=(b.ratingCount||0)+1;b.rating=Math.round((((b.rating||0)*(b.ratingCount||0))+stars)/nc*10)/10;b.ratingCount=nc;}
+  S.rLocks[S.devId+'_'+bizId]=Date.now();
+  _lsSet('sultan_rlocks',S.rLocks);
+  closeM('rateM');T('⭐ Rating submitted!','suc');
+  window._ratingStars=0;renderVerified();
+}
+
+/* ─── FAVORITES MODAL ─── */
+function renderFavM(){
+  const list=S.favs.map(id=>S.biz[id]).filter(Boolean);
+  document.getElementById('favMBody').innerHTML=list.length
+    ?list.map(b=>`<div class="adm-row">
+      <div><div class="adm-row-name">${b.avatar||'🏪'} ${esc(b.name||'')}</div><div class="adm-row-meta">${(b.category||'').toUpperCase()} · ${b.area||''}, ${b.city||''}</div></div>
+      <div class="adm-btns"><button class="adm-btn ab-apr" onclick="callBiz('${b.id||''}','${b.phone||''}')">Call</button><button class="adm-btn ab-edit" onclick="dirBiz('${esc(b.name||'')}','${esc(b.city||'')}',${b.lat||0},${b.lng||0})">Map</button></div>
+    </div>`).join('')
+    :`<div class="empty-s"><div class="empty-ic">♡</div><div class="empty-t">No favorites yet.<br>Tap ♡ Save on any listing.</div></div>`;
+}
+
+/* ─── REGISTER VIEW ─── */
+function renderRegView(){
+  const el=document.getElementById('regView');
+  const step=S._regStep||1;
+  if(step===1){
+    const catOpts=CATS.filter(c=>c.id!=='all').map(c=>`<option value="${c.id}">${c.ic} ${c.l}</option>`).join('');
+    el.innerHTML=`
+      <div class="step-row"><div class="step-c act">1</div><div class="step-ln"></div><div class="step-c idle">2</div><div class="step-ln"></div><div class="step-c idle">3</div></div>
+      <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);margin-bottom:11px">Step 1: Business Details</div>
+      <div class="fg"><label class="fl">Business Name *</label><input class="fi" id="rg_name" type="text" placeholder="Your Business Name"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Category *</label><select class="fi" id="rg_cat">${catOpts}</select></div>
+        <div class="fg"><label class="fl">Phone *</label><input class="fi" id="rg_phone" type="tel" placeholder="Mobile Number"></div>
+      </div>
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="rg_wa" type="tel" placeholder="WhatsApp Number"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Country</label><input class="fi" id="rg_country" type="text" value="India" placeholder="Country"></div>
+        <div class="fg"><label class="fl">City *</label><input class="fi" id="rg_city" type="text" placeholder="City"></div>
+      </div>
+      <div class="fg"><label class="fl">Area/Locality *</label><input class="fi" id="rg_area" type="text" placeholder="Area"></div>
+      <div class="fg"><label class="fl">Staff Names</label><input class="fi" id="rg_staff" type="text" placeholder="Name1, Name2..."></div>
+      <div class="fg"><label class="fl">Referral Code</label><input class="fi" id="rg_ref" type="text" placeholder="Friend's code (optional)"></div>
+      <button class="btn-gold" onclick="rgStep2()">CONTINUE TO PAYMENT →</button>`;
+  }else if(step===2){
+    const d=S._regData;
+    el.innerHTML=`
+      <div class="step-row"><div class="step-c done">✓</div><div class="step-ln done"></div><div class="step-c act">2</div><div class="step-ln"></div><div class="step-c idle">3</div></div>
+      <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);margin-bottom:11px">Step 2: Payment</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:9px;margin-bottom:11px;font-size:.75rem;color:var(--text2)">
+        Listing: <strong style="color:var(--text)">${esc(d?.name||'')}</strong> · ${esc(d?.category||'')} · ${esc(d?.city||'')}
+      </div>
+      <div class="upi-box">
+        <div class="upi-lbl">Pay via UPI</div>
+        <div class="upi-val">${S.settings.upiId}</div>
+        <div class="upi-amt">₹99 Registration Fee</div>
+      </div>
+      <div class="fg"><label class="fl">Payment Mode *</label>
+        <select class="fi" id="rg_paymode"><option value="online">Online UPI / Bank</option><option value="cash">Cash (Admin verify)</option></select>
+      </div>
+      <div class="fg"><label class="fl">Transaction ID *</label><input class="fi" id="rg_txn" type="text" placeholder="UPI Transaction ID"></div>
+      <div class="fg"><label class="fl">Screenshot Upload</label><input class="fi" id="rg_ss" type="file" accept="image/*" style="padding:6px"></div>
+      <div class="info-t">Admin verifies & approves within 24 hours.</div>
+      <button class="btn-gold" onclick="rgStep3()">SUBMIT REGISTRATION →</button>
+      <button class="btn-ghost" onclick="S._regStep=1;renderRegView()">← Back</button>`;
+  }
+}
+
+function rgStep2(){
+  const name=document.getElementById('rg_name').value.trim();
+  const phone=document.getElementById('rg_phone').value.trim();
+  const city=document.getElementById('rg_city').value.trim();
+  const area=document.getElementById('rg_area').value.trim();
+  if(!name||!phone||!city||!area){T('Fill all required fields','err');return}
+  S._regData={name,category:document.getElementById('rg_cat').value,phone,whatsapp:document.getElementById('rg_wa').value.trim()||phone,city,area,country:document.getElementById('rg_country').value.trim()||'India',staff:document.getElementById('rg_staff').value.trim(),referral:document.getElementById('rg_ref').value.trim(),status:'pending',verified:false,boost:false,rating:0,ratingCount:0,calls:0,leadsCompleted:0,responses:0,deviceId:S.devId,avatar:CATS.find(c=>c.id===document.getElementById('rg_cat').value)?.ic||'🏪',lat:S.loc.lat||null,lng:S.loc.lng||null,createdAt:Date.now()};
+  S._regStep=2;renderRegView();
+}
+
+function rgStep3(){
+  const txn=document.getElementById('rg_txn').value.trim();
+  const mode=document.getElementById('rg_paymode').value;
+  if(!txn&&mode==='online'){T('Enter Transaction ID','err');return}
+  const bid='B'+Date.now();
+  const data={...S._regData,txnId:txn,payMode:mode};
+  fbSet('/businesses/'+bid,data);
+  if(data.referral){fbTxn('/wallets/'+data.referral,w=>{if(!w)return w;return{...w,balance:(w.balance||0)+S.settings.referralBonus}});}
+  S.biz[bid]=data;
+  S._regStep=1;S._regData=null;
+  T('🎉 Registered! Pending admin approval.','suc');
+  renderVerified();
+  swV('home',document.querySelectorAll('.nav-it')[0]);
+}
+
+/* ─── OWNER DASHBOARD ─── */
+function renderDashView(){
+  const el=document.getElementById('dashView');
+  if(!S.owner){
+    el.innerHTML=`
+      <div class="fg"><label class="fl">Registered Phone</label><input class="fi" type="tel" id="dsh_phone" placeholder="Enter your registered mobile"></div>
+      <button class="btn-gold" onclick="ownerLogin()">ACCESS MY DASHBOARD</button>`;
+    return;
+  }
+  const b=S.owner;const bid=b.id;
+  const wal=S.wallets[bid]||{balance:50,transactions:[]};
+  const myLeads=Object.values(S.leads).filter(l=>l.providers?.some(p=>p.id===bid));
+  const pending=myLeads.filter(l=>l.status==='pending');
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+      <div><div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold)">${esc(b.name||'')}</div><div style="font-size:.65rem;color:var(--text3)">${(b.category||'').toUpperCase()} · ${b.area||''}</div></div>
+      <button class="btn-ghost" style="width:auto;padding:5px 11px;font-size:.68rem" onclick="S.owner=null;renderDashView()">Logout</button>
+    </div>
+    <div class="own-stats">
+      <div class="own-stat"><div class="own-stat-n">${b.calls||0}</div><div class="own-stat-l">Calls</div></div>
+      <div class="own-stat"><div class="own-stat-n">${b.leadsCompleted||0}</div><div class="own-stat-l">Done</div></div>
+      <div class="own-stat"><div class="own-stat-n" style="color:var(--green2)">${S.settings.currency}${wal.balance||0}</div><div class="own-stat-l">Balance</div></div>
+    </div>
+    <div class="stat-tgl">
+      <button class="st-tgl${b.status==='open'?' t-open':''}" onclick="ownStatus('${bid}','open')">● OPEN</button>
+      <button class="st-tgl${b.status==='busy'?' t-busy':''}" onclick="ownStatus('${bid}','busy')">◉ BUSY</button>
+      <button class="st-tgl${b.status==='closed'?' t-closed':''}" onclick="ownStatus('${bid}','closed')">○ CLOSED</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px">
+      <button class="btn-ghost" style="padding:8px;font-size:.72rem" onclick="openWallet('${bid}')">💰 Wallet</button>
+      <button class="btn-ghost" style="padding:8px;font-size:.72rem" onclick="openTrackModal('${bid}')">📍 Tracking</button>
+    </div>
+    <div class="adm-sec">Pending Leads (${pending.length})</div>
+    ${pending.length?pending.map(l=>`
+      <div class="lead-card">
+        <div class="lead-top"><span class="lead-t">⚡ ${CATS.find(c=>c.id===l.category)?.l||l.category}</span><button class="accept-btn" onclick="acceptLead('${l.id}','${bid}')">ACCEPT</button></div>
+        <div class="lead-meta">📝 ${esc(l.description||'')}<br>📍 ${l.area?l.area+', ':''}${l.city||''}<br>💰 Cost: ${S.settings.currency}${S.settings.leadPrice}</div>
+      </div>`).join(''):'<div style="font-size:.75rem;color:var(--text3);text-align:center;padding:14px">No pending leads</div>'}
+    <div class="ref-box">
+      <div style="font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Your Referral Code</div>
+      <div class="ref-code">${bid.substr(-6).toUpperCase()}</div>
+      <div class="ref-info">Share & earn ${S.settings.currency}${S.settings.referralBonus} when a new owner registers</div>
+      <button style="background:var(--gold);color:var(--bg);font-size:.68rem;font-weight:800;padding:6px 14px;border-radius:var(--r2);margin-top:8px" onclick="shareCard('${bid}','${esc(b.name||'')}')">🔗 Share Code</button>
+    </div>`;
+}
+
+function ownerLogin(){
+  const phone=document.getElementById('dsh_phone').value.trim();
+  if(!phone){T('Enter registered phone','err');return}
+  const found=Object.entries(S.biz).find(([_,b])=>b.phone===phone);
+  if(!found){T('No business found with this number','err');return}
+  S.owner={id:found[0],...found[1]};
+  renderDashView();T('✅ Dashboard loaded','suc');
+}
+
+function ownStatus(bid,st){
+  fbSet('/businesses/'+bid+'/status',st);
+  if(S.biz[bid])S.biz[bid].status=st;
+  if(S.owner)S.owner.status=st;
+  renderDashView();renderVerified();T(`Status: ${st.toUpperCase()}`,'suc');
+}
+
+function acceptLead(lid,bid){
+  const wal=S.wallets[bid]||{balance:50};
+  if((wal.balance||0)<S.settings.leadPrice){T(`Insufficient balance. Need ${S.settings.currency}${S.settings.leadPrice}`,'err');openWallet(bid);return}
+  fbSet('/leads/'+lid+'/status','accepted');
+  fbTxn('/businesses/'+bid+'/leadsCompleted',v=>(v||0)+1);
+  fbTxn('/wallets/'+bid,w=>({...(w||{}),balance:(w?.balance||50)-S.settings.leadPrice,transactions:[...((w||{}).transactions||[]),{desc:'Lead accepted',amount:-S.settings.leadPrice,date:Date.now()}]}));
+  if(S.leads[lid])S.leads[lid].status='accepted';
+  S.wallets[bid]={...(S.wallets[bid]||{}),balance:(wal.balance||50)-S.settings.leadPrice};
+  T('✅ Lead accepted!','suc');renderDashView();
+}
+
+/* ─── WALLET ─── */
+function openWallet(bid){
+  const wal=S.wallets[bid]||{balance:50,transactions:[]};
+  const txns=(wal.transactions||[]).slice(-5).reverse();
+  document.getElementById('walletMBody').innerHTML=`
+    <div class="wallet-hero">
+      <div class="wallet-l">Available Balance</div>
+      <div class="wallet-n">${S.settings.currency}${wal.balance||0}</div>
+      <button class="wallet-recharge-btn" onclick="closeM('walletM');openRch('${bid}')">+ RECHARGE</button>
+    </div>
+    <div class="adm-sec">Recent Transactions</div>
+    ${txns.length?txns.map(t=>`<div class="txn-row"><div><div class="txn-desc">${esc(t.desc||'')}</div><div class="txn-date">${new Date(t.date||0).toLocaleDateString()}</div></div><div class="txn-amt ${t.amount>0?'txn-cr':'txn-dr'}">${t.amount>0?'+':''}${S.settings.currency}${Math.abs(t.amount)}</div></div>`).join(''):'<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:12px">No transactions</div>'}`;
+  openM('walletM');
+}
+
+function openRch(bid){
+  document.getElementById('rchMBody').innerHTML=`
+    <div class="upi-box"><div class="upi-lbl">Pay via UPI</div><div class="upi-val">${S.settings.upiId}</div><div class="upi-amt">Min ${S.settings.currency}50 · Max ${S.settings.currency}5000</div></div>
+    <div class="fg"><label class="fl">Amount (₹)</label><input class="fi" id="rch_amt" type="number" placeholder="100" min="50"></div>
+    <div class="fg"><label class="fl">Transaction ID *</label><input class="fi" id="rch_txn" type="text" placeholder="UPI Transaction ID"></div>
+    <div class="info-t">Admin verifies & credits within 1 hour.</div>
+    <button class="btn-gold" onclick="submitRch('${bid}')">SUBMIT RECHARGE</button>`;
+  openM('rchM');
+}
+
+function submitRch(bid){
+  const amt=parseInt(document.getElementById('rch_amt').value)||0;
+  const txn=document.getElementById('rch_txn').value.trim();
+  if(amt<50||!txn){T('Valid amount & Transaction ID required','err');return}
+  const rid='RQ'+Date.now();
+  const req={bizId:bid,amount:amt,txnId:txn,status:'pending',createdAt:Date.now()};
+  fbSet('/wallets/'+bid+'/rechargeRequests/'+rid,req);
+  closeM('rchM');T('💰 Recharge request submitted!','suc');
+}
+
+/* ─── LIVE TRACKING ─── */
+function openTrackModal(bid){
+  const tracked=S.tracking[bid];
+  document.getElementById('trackMBody').innerHTML=`
+    <div class="track-box">
+      <div style="font-size:.76rem;color:var(--text2);margin-bottom:7px">Share your live GPS with clients</div>
+      <button class="track-tgl${S.trackOn?' on':''}" onclick="toggleTrack('${bid}')">
+        ${S.trackOn?'📍 Tracking ON — Click to Stop':'📍 Start Live Tracking'}
+      </button>
+      ${tracked?`<div class="track-coords">🕒 ${new Date(tracked.updatedAt||0).toLocaleTimeString()}<br>Lat: ${tracked.lat}<br>Lng: ${tracked.lng}</div>`:''}
+    </div>
+    ${tracked?`<a href="https://www.google.com/maps?q=${tracked.lat},${tracked.lng}" target="_blank" style="display:block;text-align:center;padding:9px;border-radius:var(--r2);border:1px solid var(--border2);font-size:.78rem;color:var(--blue2);margin-top:8px">🗺️ View on Google Maps</a>`:''}`;
+  openM('trackM');
+}
+
+function toggleTrack(bid){
+  if(S.trackOn){
+    if(S.trackWid)navigator.geolocation.clearWatch(S.trackWid);
+    S.trackOn=false;
+    fbSet('/tracking/'+bid+'/active',false);
+    T('📍 Tracking stopped');
+  }else{
+    if(!navigator.geolocation){T('Geolocation not supported','err');return}
+    S.trackWid=navigator.geolocation.watchPosition(pos=>{
+      const d={lat:pos.coords.latitude,lng:pos.coords.longitude,updatedAt:Date.now(),active:true};
+      S.tracking[bid]=d;
+      fbSet('/tracking/'+bid,d);
+      if(S.gmapObj)S.gmapObj.panTo({lat:d.lat,lng:d.lng});
+    },err=>T('Location error: '+err.message,'err'),{enableHighAccuracy:true});
+    S.trackOn=true;T('📍 Live tracking started','suc');
+  }
+  openTrackModal(bid);
+}
+
+/* ─── COMPLAINT ─── */
+function submitComplaint(){
+  const name=document.getElementById('comp_name').value.trim();
+  const phone=document.getElementById('comp_phone').value.trim();
+  const text=document.getElementById('comp_text').value.trim();
+  if(!text||!phone){T('Fill complaint details & phone','err');return}
+  const cid='C'+Date.now();
+  const c={name,phone,biz:document.getElementById('comp_biz').value.trim(),text,deviceId:S.devId,createdAt:Date.now()};
+  fbSet('/complaints/'+cid,c);
+  S.complaints[cid]=c;
+  closeM('compM');T('⚠️ Complaint submitted. We will respond in 24h.','suc');
+}
+
+/* ─── ADMIN ─── */
+function admLogin(){
+  if(document.getElementById('admPass').value==='Sultan786'){
+    S.adminIn=true;
+    closeM('admLoginM');
+    renderAdmPanel();openM('admM');
+  }else T('❌ Wrong password','err');
+}
+
+function renderAdmPanel(){
+  const allBiz=Object.entries(S.biz);
+  const totalLeads=Object.keys(S.leads).length;
+  const accepted=Object.values(S.leads).filter(l=>l.status==='accepted').length;
+  const revenue=accepted*S.settings.leadPrice;
+  const complaints=Object.keys(S.complaints).length;
+  const pending=allBiz.filter(([_,b])=>b.status==='pending');
+  const el=document.getElementById('admMBody');
+  el.innerHTML=`
+    <div class="adm-stats">
+      <div class="adm-stat"><div class="adm-stat-n">${S.settings.currency}${revenue}</div><div class="adm-stat-l">Revenue</div></div>
+      <div class="adm-stat"><div class="adm-stat-n">${allBiz.length}</div><div class="adm-stat-l">Shops</div></div>
+      <div class="adm-stat"><div class="adm-stat-n">${pending.length}</div><div class="adm-stat-l">Pending</div></div>
+      <div class="adm-stat"><div class="adm-stat-n">${totalLeads}</div><div class="adm-stat-l">Leads</div></div>
+      <div class="adm-stat"><div class="adm-stat-n">${accepted}</div><div class="adm-stat-l">Accepted</div></div>
+      <div class="adm-stat"><div class="adm-stat-n">${complaints}</div><div class="adm-stat-l">Complaints</div></div>
+    </div>
+    <div class="adm-sec">Settings</div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">Lead Price (₹)</span><input class="adm-ctrl-in" type="number" value="${S.settings.leadPrice}" onchange="updateSetting('leadPrice',this.value)"></div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">UPI ID</span><input class="adm-ctrl-in" type="text" value="${S.settings.upiId}" onchange="updateSetting('upiId',this.value)" style="width:160px"></div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">Referral Bonus (₹)</span><input class="adm-ctrl-in" type="number" value="${S.settings.referralBonus}" onchange="updateSetting('referralBonus',this.value)"></div>
+    <div class="adm-export-row">
+      <button class="btn-export" onclick="exportData()">📦 Export JSON</button>
+      <button class="btn-export" onclick="document.getElementById('importFile').click()">📂 Import JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+    </div>
+    <div class="adm-sec">All Businesses (${allBiz.length})</div>
+    ${allBiz.map(([id,b])=>`
+      <div class="adm-row">
+        <div style="flex:1;min-width:0">
+          <div class="adm-row-name">${b.avatar||'🏪'} ${esc(b.name||'')} ${b.boost?'⚡':''}</div>
+          <div class="adm-row-meta">${(b.category||'').toUpperCase()} · ${b.city||''} · Score:${score(b)}</div>
+          <div class="adm-row-meta">Status: <span style="color:${b.status==='open'?'#66bb6a':b.status==='busy'?'var(--orange)':'#ef5350'}">${(b.status||'').toUpperCase()}</span> · Calls:${b.calls||0} · Rating:${b.rating||0}</div>
+        </div>
+        <div class="adm-btns" style="flex-direction:column">
+          ${b.status==='pending'?`<button class="adm-btn ab-apr" onclick="admApprove('${id}')">Approve</button>`:`<button class="adm-btn ab-boost" onclick="admBoost('${id}',${!b.boost})">${b.boost?'Unboost':'Boost'}</button>`}
+          <button class="adm-btn ab-rej" onclick="admDel('${id}')">Remove</button>
+        </div>
+      </div>`).join('')}
+    <div class="adm-sec">Pending Recharges</div>
+    ${renderAdmRch()}
+    <div class="adm-sec">Complaints (${complaints})</div>
+    ${Object.values(S.complaints).map(c=>`
+      <div class="adm-row">
+        <div><div class="adm-row-name">${esc(c.name||'Anonymous')} · ${esc(c.phone||'')}</div><div class="adm-row-meta">${esc(c.text||'')}</div></div>
+      </div>`).join('')||'<div style="font-size:.72rem;color:var(--text3);padding:8px">No complaints</div>'}
+    <div class="adm-sec">Partner System</div>
+    <button class="btn-ghost" onclick="closeM('admM');openM('partnerM');renderPartnerM()" style="margin-top:4px">🤝 Manage Partners</button>`;
+}
+
+function renderAdmRch(){
+  const all=[];
+  Object.entries(S.wallets).forEach(([bid,w])=>{Object.entries(w.rechargeRequests||{}).forEach(([rid,r])=>{if(r.status==='pending')all.push({...r,bid,rid})})});
+  if(!all.length)return'<div style="font-size:.72rem;color:var(--text3);padding:8px">No pending recharges</div>';
+  return all.map(r=>`<div class="adm-row"><div><div class="adm-row-name">${S.settings.currency}${r.amount} — ${esc(S.biz[r.bid]?.name||r.bid)}</div><div class="adm-row-meta">TxnID: ${esc(r.txnId||'')}</div></div><div class="adm-btns"><button class="adm-btn ab-apr" onclick="admApproveRch('${r.bid}','${r.rid}',${r.amount})">Approve</button></div></div>`).join('');
+}
+
+function admApprove(id){
+  fbSet('/businesses/'+id+'/status','open');
+  if(S.biz[id])S.biz[id].status='open';
+  T('✅ Approved!','suc');renderAdmPanel();renderVerified();
+}
+function admDel(id){
+  fbDel('/businesses/'+id);
+  delete S.biz[id];
+  T('Removed','wrn');renderAdmPanel();renderVerified();
+}
+function admBoost(id,val){
+  fbSet('/businesses/'+id+'/boost',val);
+  if(S.biz[id])S.biz[id].boost=val;
+  T(val?'⚡ Boosted!':'Boost removed',val?'suc':'wrn');renderAdmPanel();renderVerified();
+}
+function admApproveRch(bid,rid,amt){
+  fbTxn('/wallets/'+bid,w=>({...(w||{}),balance:((w||{}).balance||0)+amt,transactions:[...((w||{}).transactions||[]),{desc:'Recharge',amount:amt,date:Date.now()}]}));
+  fbSet('/wallets/'+bid+'/rechargeRequests/'+rid+'/status','approved');
+  S.wallets[bid]=S.wallets[bid]||{balance:0};S.wallets[bid].balance=(S.wallets[bid].balance||0)+amt;
+  T(`✅ ${S.settings.currency}${amt} credited!`,'suc');renderAdmPanel();
+}
+function updateSetting(key,val){
+  const v=key==='upiId'?val:(parseFloat(val)||0);
+  S.settings[key]=v;
+  fbSet('/settings/'+key,v);
+  T('⚙️ Setting saved','suc');
+}
+
+/* ─── EXPORT / IMPORT ─── */
+function exportData(){
+  const data={businesses:S.biz,leads:S.leads,wallets:S.wallets,ratings:S.ratings,settings:S.settings,exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sultan_backup_'+Date.now()+'.json';a.click();
+  T('📦 Data exported!','suc');
+}
+function importData(inp){
+  const file=inp.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.businesses){
+        Object.entries(d.businesses).forEach(([id,b])=>{fbSet('/businesses/'+id,b);S.biz[id]=b;});
+        Object.entries(d.wallets||{}).forEach(([id,w])=>{fbSet('/wallets/'+id,w);S.wallets[id]=w;});
+        T('📂 Data imported successfully!','suc');
+        renderVerified();
+      }
+      renderAdmPanel();
+    }catch(err){T('Import failed: invalid JSON','err')}
+  };
+  reader.readAsText(file);inp.value='';
+}
+
+/* ─── PARTNER ─── */
+function renderPartnerM(){
+  const all=Object.entries(S.partners);
+  document.getElementById('partnerMBody').innerHTML=`
+    <div class="adm-sec">Register Partner</div>
+    <div class="fg"><label class="fl">Partner Name</label><input class="fi" id="pt_name" type="text" placeholder="Name"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Area</label><input class="fi" id="pt_area" type="text" placeholder="Area"></div>
+      <div class="fg"><label class="fl">Phone</label><input class="fi" id="pt_phone" type="tel" placeholder="Phone"></div>
+    </div>
+    <div class="fg"><label class="fl">Revenue Share (%)</label><input class="fi" id="pt_rev" type="number" placeholder="20" min="0" max="50"></div>
+    <button class="btn-gold" onclick="addPartner()">ADD PARTNER</button>
+    <div class="adm-sec" style="margin-top:14px">Partners (${all.length})</div>
+    ${all.map(([id,p])=>`<div class="partner-card"><div class="partner-name">${esc(p.name||'')}</div><div class="partner-meta">📍 ${esc(p.area||'')} · 📞 ${esc(p.phone||'')}</div><div class="partner-rev">Revenue Share: ${p.rev||0}%</div></div>`).join('')||'<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:12px">No partners yet</div>'}`;
+}
+
+function addPartner(){
+  const name=document.getElementById('pt_name').value.trim();
+  const area=document.getElementById('pt_area').value.trim();
+  const phone=document.getElementById('pt_phone').value.trim();
+  const rev=parseInt(document.getElementById('pt_rev').value)||0;
+  if(!name||!phone){T('Name & phone required','err');return}
+  const pid='P'+Date.now();
+  const p={name,area,phone,rev,createdAt:Date.now()};
+  fbSet('/partners/'+pid,p);
+  S.partners[pid]=p;
+  T('🤝 Partner added!','suc');renderPartnerM();
+}
+
+/* ─── VIEW SWITCHING ─── */
+function swV(view,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('view-'+view).classList.add('on');
+  document.querySelectorAll('.nav-it').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  S.view=view;
+  if(view==='leads')renderLeadsView();
+  if(view==='register'){S._regStep=1;renderRegView()}
+  if(view==='dash')renderDashView();
+}
+
+/* ─── SEARCH ─── */
+let _st;
+function dbSearch(v){clearTimeout(_st);_st=setTimeout(()=>{S.q=v;renderVerified();renderNearby();},260)}
+function doSearch(){S.q=document.getElementById('searchIn').value;renderVerified();renderNearby()}
+
+/* ─── OFFLINE / PWA ─── */
+window.addEventListener('offline',()=>{document.getElementById('offline-bar').style.display='block'});
+window.addEventListener('online',()=>{document.getElementById('offline-bar').style.display='none';T('🌐 Back online','suc')});
+if(!navigator.onLine)document.getElementById('offline-bar').style.display='block';
+
+let _pwa;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_pwa=e;document.getElementById('pwa-bar').classList.add('show')});
+document.getElementById('pwa-btn').onclick=()=>{if(_pwa){_pwa.prompt();_pwa.userChoice.then(()=>{document.getElementById('pwa-bar').classList.remove('show');_pwa=null})}};
+document.getElementById('pwa-x').onclick=()=>document.getElementById('pwa-bar').classList.remove('show');
+
+/* ─── SERVICE WORKER ─── */
+if('serviceWorker'in navigator){
+  const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('fetch',e=>{if(!navigator.onLine)e.respondWith(new Response('<html><body style="background:#0b0b0b;color:#d4af37;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;text-align:center"><div><div style="font-size:3rem">⚡</div><div style="font-size:1.2rem;letter-spacing:2px;margin:10px 0">SULTAN ENGINE</div><div style="font-size:.8rem;color:#666">Offline Mode — Limited Features</div></div></body></html>',{headers:{'Content-Type':'text/html'}}))});`;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+/* ─── MANIFEST ─── */
+const mf={name:"Sultan Global Engine V12",short_name:"Sultan Engine",start_url:"./",display:"standalone",background_color:"#0b0b0b",theme_color:"#d4af37",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0b0b'/><text y='.9em' x='10' font-size='75'>⚡</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
+const mbl=new Blob([JSON.stringify(mf)],{type:'application/json'});
+const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(mbl);document.head.appendChild(ml);
+
+/* ─── FIREBASE RULES COMMENT ─── */
+// Firebase Rules (paste in Firebase Console > Rules):
+// {
+//   "rules": {
+//     "settings": { ".read": true, ".write": "auth != null || root.child('admin').val() === true" },
+//     "businesses": { ".read": true, ".write": true },
+//     "leads": { ".read": true, ".write": true },
+//     "wallets": { ".read": true, ".write": true },
+//     "ratings": { ".read": true, ".write": true },
+//     "tracking": { ".read": true, ".write": true },
+//     "partners": { ".read": "auth != null", ".write": "auth != null" },
+//     "complaints": { ".read": false, ".write": true }
+//   }
+// }
+
+/* ─── INIT ─── */
+(function init(){
+  renderTabs();
+  getLocation();
+  initFB();
+  renderRegView();
+  renderDashView();
+  renderLeadsView();
+})();
+</script>
+<!-- ═══ FIREBASE v10 MODULE SDK — type="module" ═══ -->
+<script type="module">
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, set, push, onValue, runTransaction, remove }
+                            from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBfVLRsr-kwW0P17Jh0yPkiuLBw8PJg8iQ",
+  authDomain:        "sultan-engine-v12-62455.firebaseapp.com",
+  databaseURL:       "https://sultan-engine-v12-62455-default-rtdb.firebaseio.com/",
+  projectId:         "sultan-engine-v12-62455",
+  storageBucket:     "sultan-engine-v12-62455.firebasestorage.app",
+  messagingSenderId: "1015551535579",
+  appId:             "1:1015551535579:web:08e3ae1e2ab88fa9891ffe"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  /* Expose slim wrappers on window so the classic script above can call them */
+  window._fbSet  = (path, val) => set(ref(db, path), val);
+  window._fbPush = (path, val) => push(ref(db, path), val);
+  window._fbTxn  = (path, fn)  => runTransaction(ref(db, path), fn);
+  window._fbDel  = (path)      => remove(ref(db, path));
+  window._fbOn   = (path, cb)  => onValue(ref(db, path), snap => cb(snap.val()));
+
+  window._fbReady = true;
+  window.dispatchEvent(new CustomEvent('sultan:fb:ready'));
+  console.log('%c🔥 Sultan Firebase v10 Connected', 'color:#d4af37;font-weight:bold');
+} catch(e) {
+  console.warn('Sultan Firebase Error:', e.message);
+  window._fbReady = false;
+  window.dispatchEvent(new CustomEvent('sultan:fb:error'));
+}
+</script>
+</body>
+</html>
