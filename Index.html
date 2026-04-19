@@ -481,53 +481,65 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Test Write Function
-  (async () => {
-    try {
-      await setDoc(doc(db, "test", "check"), {
-        status: "working",
-        time: new Date()
+  <!DOCTYPE html>
+<html>
+<head>
+    <title>Sultan Engine V12</title>
+</head>
+<body>
+
+    <h1>Sultan Engine Dashboard</h1>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AlzaSyDIWbMB8YlcQ_ex8UST6G1Jj5AbillOc4", 
+        authDomain: "sultan-engine-v12-62455.firebaseapp.com",
+        projectId: "sultan-engine-v12-62455",
+        storageBucket: "sultan-engine-v12-62455.appspot.com",
+        messagingSenderId: "1015551535579", 
+        appId: "1:1015551535579:web:08e3ae1e2ab88fa9891ffe"
+      };
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          // Refresh karte hi ye alert aayega, UID copy kar lena
+          alert("COPY THIS UID:\n\n" + user.uid);
+        } else {
+          auth.signInAnonymously().catch(err => alert("Anonymous login enable karein!"));
+        }
       });
-      console.log("Firestore Write Success");
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  })();
-</script>
 
-// Add Business Function (Updated)
-async function addBusiness() {
-  const user = auth.currentUser;
+      async function sultanSave() {
+        const user = auth.currentUser;
+        if (!user) return alert("UID ka wait karein...");
+        try {
+          await db.collection("business").doc(user.uid).set({
+            owner_id: user.uid,
+            status: "Active",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          alert("Sultan Engine: Data Saved!");
+        } catch (e) {
+          alert("Error: " + e.message);
+        }
+      }
+    </script>
+    
+    <button onclick="sultanSave()">SAVE DATA</button>
 
-  if (!user) {
-    alert("Login required! Please wait or refresh.");
-    return;
-  }
-
-  // Dhyan dein: Check karein ki aapke input fields ki ID 'name' aur 'phone' hi hai na?
-  const name = document.getElementById("name").value;
-  const phone = document.getElementById("phone").value;
-
-  if (!name || phone.length < 10) {
-    alert("Please enter a valid Name and 10-digit Phone number.");
-    return;
-  }
-
-  try {
-    await db.collection("businesses").add({
-      name: name,
-      phone: phone,
-      ownerId: user.uid, // <--- Ye aapke Rules ko satisfy karega
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert("Business added successfully!");
-    location.reload(); 
-  } catch (err) {
-    console.error("Firebase Error:", err);
-    alert("Permission Denied: Database ne entry block kar di!");
-  }
-}
+</body>
+</html>
 
 <body>
 
