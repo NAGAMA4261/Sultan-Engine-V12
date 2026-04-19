@@ -464,6 +464,39 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 .partner-rev{font-size:.75rem;color:var(--gold);font-weight:700;margin-top:4px}
 </style>
 </head>
+  
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBfVLRSr-kwW0P17Jh0yPkIuLBw8PJg8iQ",
+    authDomain: "sultan-engine-v12-62455.firebaseapp.com",
+    projectId: "sultan-engine-v12-62455",
+    storageBucket: "sultan-engine-v12-62455.firebasestorage.app",
+    messagingSenderId: "1015551535579",
+    appId: "1:1015551535579:web:08e3ae1e2ab88fa9891ffe"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Test Write Function
+  (async () => {
+    try {
+      await setDoc(doc(db, "test", "check"), {
+        status: "working",
+        time: new Date()
+      });
+      console.log("Firestore Write Success");
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  })();
+</script>
+
+</script>
+
 <body>
 
 <!-- OFFLINE -->
