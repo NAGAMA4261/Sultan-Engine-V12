@@ -472,92 +472,66 @@ select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
   const firebaseConfig = {
     apiKey: "AIzaSyBfVLRSr-kwW0P17Jh0yPkIuLBw8PJg8iQ",
     authDomain: "sultan-engine-v12-62455.firebaseapp.com",
+      // --- SULTAN ENGINE V12: CLEAN & FIXED CODE ---
+  const firebaseConfig = {
+    apiKey: "AlzaSyDIWbMB8YlcQ_ex8UST6G1Jj5AbillOc4", 
+    authDomain: "sultan-engine-v12-62455.firebaseapp.com",
     projectId: "sultan-engine-v12-62455",
-    storageBucket: "sultan-engine-v12-62455.firebasestorage.app",
-    messagingSenderId: "1015551535579",
+    storageBucket: "sultan-engine-v12-62455.appspot.com",
+    messagingSenderId: "1015551535579", 
     appId: "1:1015551535579:web:08e3ae1e2ab88fa9891ffe"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  // Initialize Firebase (v8 format)
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-  <!DOCTYPE html>
-<html>
-<head>
-    <title>Sultan Engine V12</title>
-</head>
-<body>
+  // Auth State & UID Alert
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log("UID:", user.uid);
+      alert("SULTAN ENGINE UID:\n\n" + user.uid);
+    } else {
+      auth.signInAnonymously().catch(err => console.error("Auth Error:", err.message));
+    }
+  });
 
-    <h1>Sultan Engine Dashboard</h1>
+  // Business Add Function
+  async function addBusiness() {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Wait! Login process chalu hai...");
+      return;
+    }
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    const nameVal = document.getElementById("name").value;
+    const phoneVal = document.getElementById("phone").value;
 
-    <script>
-      const firebaseConfig = {
-        apiKey: "AlzaSyDIWbMB8YlcQ_ex8UST6G1Jj5AbillOc4", 
-        authDomain: "sultan-engine-v12-62455.firebaseapp.com",
-        projectId: "sultan-engine-v12-62455",
-        storageBucket: "sultan-engine-v12-62455.appspot.com",
-        messagingSenderId: "1015551535579", 
-        appId: "1:1015551535579:web:08e3ae1e2ab88fa9891ffe"
-      };
+    if (!nameVal || phoneVal.length < 10) {
+      alert("Bhai, sahi Name aur 10-digit Phone dalo.");
+      return;
+    }
 
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          // Refresh karte hi ye alert aayega, UID copy kar lena
-          alert("COPY THIS UID:\n\n" + user.uid);
-        } else {
-          auth.signInAnonymously().catch(err => alert("Anonymous login enable karein!"));
-        }
+    try {
+      // Database mein 'business' collection mein data jayega
+      await db.collection("business").doc(user.uid).set({
+        name: nameVal,
+        phone: phoneVal,
+        ownerId: user.uid,
+        status: "Active",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      async function sultanSave() {
-        const user = auth.currentUser;
-        if (!user) return alert("UID ka wait karein...");
-        try {
-          await db.collection("business").doc(user.uid).set({
-            owner_id: user.uid,
-            status: "Active",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          alert("Sultan Engine: Data Saved!");
-        } catch (e) {
-          alert("Error: " + e.message);
-        }
-      }
-    </script>
-    
-    <button onclick="sultanSave()">SAVE DATA</button>
+      alert("Mubarak Ho! Business detail save ho gayi.");
+      location.reload();
+    } catch (err) {
+      alert("Data Save Nahi Hua: " + err.message);
+    }
+  }
 
-</body>
-</html>
-
-<body>
-
-<!-- OFFLINE -->
-<div id="offline-bar">⚡ No Internet — Offline Mode Active</div>
-
-<!-- PWA BAR -->
-<div id="pwa-bar">
-  <div class="pwa-text"><strong>SULTAN ENGINE</strong> — Install as App</div>
-  <button class="pwa-go" id="pwa-btn">Install</button>
-  <button class="pwa-x" id="pwa-x">✕</button>
-</div>
-
-<!-- TOPBAR -->
-<div id="topbar">
-  <div class="tb-brand">
-    <span class="b1">⚡ SULTAN ENGINE</span>
-    <span class="b2">Hybrid Global Marketplace • V12</span>
   </div>
       <div class="tb-links">
         <a class="tb-link" href="https://digitalmenu61.netlify.app/" target="_blank">🌐 Digital Menu Pro</a>
