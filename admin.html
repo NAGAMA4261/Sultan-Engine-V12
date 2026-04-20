@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="robots" content="noindex,nofollow">
+<title>SULTAN ENGINE — Admin Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0b0b0b;--bg2:#101010;--bg3:#161616;--bg4:#1e1e1e;
+--gold:#d4af37;--gold3:#9a7d1a;--gold4:rgba(212,175,55,0.12);
+--orange:#ff7a00;--orange3:rgba(255,122,0,0.12);
+--red:#e53935;--green:#2e7d32;--green2:#43a047;--blue2:#42a5f5;
+--text:#efefef;--text2:#b0b0b0;--text3:#686868;
+--border:#1f1f1f;--border2:#2a2a2a;--border3:#333;
+--r:12px;--r2:8px;--trans:.22s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh}
+button{font-family:'Rajdhani',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+input,select{font-family:'Rajdhani',sans-serif;outline:none;border:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:2px}
+
+/* LOGIN PAGE */
+#loginPage{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);
+  padding:28px 22px;width:100%;max-width:360px;text-align:center}
+.login-crown{font-size:2.5rem;margin-bottom:8px;display:block}
+.login-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);letter-spacing:3px;margin-bottom:4px}
+.login-sub{font-size:.65rem;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:22px}
+.login-err{background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.3);
+  color:#ef5350;font-size:.72rem;padding:8px 12px;border-radius:var(--r2);margin-bottom:12px;display:none}
+
+/* ADMIN PANEL */
+#adminPage{display:none;padding:0 0 40px}
+#adm-topbar{position:sticky;top:0;z-index:100;background:rgba(11,11,11,.97);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 14px;height:54px;gap:10px}
+.adm-brand{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);letter-spacing:2px;font-weight:900;flex:1}
+.adm-logout{background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.3);
+  color:#ef5350;font-size:.65rem;font-weight:800;padding:5px 12px;border-radius:6px;letter-spacing:.5px}
+.adm-back{background:var(--bg4);border:1px solid var(--border2);color:var(--text2);
+  font-size:.65rem;font-weight:700;padding:5px 10px;border-radius:6px;text-decoration:none;letter-spacing:.5px}
+
+/* STATS */
+.adm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+@media(min-width:500px){.adm-stats{grid-template-columns:repeat(6,1fr)}}
+.adm-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px;text-align:center}
+.adm-stat-n{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);font-weight:700}
+.adm-stat-l{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* TABS */
+.adm-tabs{display:flex;overflow-x:auto;border-bottom:1px solid var(--border);
+  background:var(--bg2);-ms-overflow-style:none;scrollbar-width:none}
+.adm-tabs::-webkit-scrollbar{display:none}
+.adm-tab{padding:11px 16px;font-size:.75rem;font-weight:700;color:var(--text3);
+  border-bottom:2px solid transparent;white-space:nowrap;transition:var(--trans)}
+.adm-tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* SECTIONS */
+.adm-section{display:none;padding:0 14px}
+.adm-section.on{display:block}
+.adm-sec-title{font-family:'Cinzel',serif;font-size:.72rem;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1.5px;margin:16px 0 8px;
+  padding-bottom:5px;border-bottom:1px solid var(--border)}
+
+/* ROWS */
+.adm-row{display:flex;align-items:flex-start;gap:10px;background:var(--bg3);
+  border:1px solid var(--border2);border-radius:var(--r2);padding:11px;margin-bottom:7px}
+.adm-row-info{flex:1;min-width:0}
+.adm-row-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.adm-row-meta{font-size:.65rem;color:var(--text3);line-height:1.6}
+.adm-btns{display:flex;flex-wrap:wrap;gap:5px;flex-shrink:0}
+.adm-btn{font-size:.62rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.3px;transition:var(--trans)}
+.ab-apr{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.ab-apr:hover{background:var(--green2);color:#fff}
+.ab-rej{background:rgba(229,57,53,.1);color:#ef5350;border:1px solid rgba(229,57,53,.3)}
+.ab-rej:hover{background:var(--red);color:#fff}
+.ab-boost{background:rgba(255,122,0,.1);color:var(--orange);border:1px solid rgba(255,122,0,.3)}
+.ab-boost:hover{background:var(--orange);color:#fff}
+.ab-edit{background:var(--gold4);color:var(--gold);border:1px solid rgba(212,175,55,.3)}
+.ab-edit:hover{background:var(--gold);color:var(--bg)}
+
+/* STATUS BADGE */
+.status-badge{font-size:.56rem;font-weight:800;padding:2px 6px;border-radius:6px;letter-spacing:.5px}
+.sb-open{background:rgba(46,125,50,.15);color:#66bb6a}
+.sb-busy{background:rgba(255,122,0,.15);color:var(--orange)}
+.sb-closed{background:rgba(229,57,53,.15);color:#ef5350}
+.sb-pending{background:rgba(212,175,55,.12);color:var(--gold)}
+
+/* SETTINGS */
+.adm-ctrl{display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:10px 12px;margin-bottom:7px}
+.adm-ctrl-lbl{font-size:.72rem;color:var(--text2);font-weight:600}
+.adm-ctrl-in{background:var(--bg4);border:1px solid var(--border2);color:var(--text);
+  padding:5px 9px;border-radius:6px;font-size:.78rem;font-family:'Rajdhani',sans-serif;width:130px;text-align:right}
+
+/* FORMS */
+.fg{margin-bottom:12px}
+.fl{display:block;font-size:.65rem;color:var(--text2);font-weight:700;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:9px 12px;border-radius:var(--r2);font-size:.85rem}
+.fi:focus{border-color:var(--gold)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.82rem;font-weight:800;
+  padding:11px;border-radius:var(--r2);letter-spacing:1px;margin-top:4px}
+
+/* TOAST */
+#toast-c{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;
+  display:flex;flex-direction:column;gap:7px;pointer-events:none;min-width:220px;max-width:90vw}
+.toast{background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:9px 14px;border-radius:var(--r2);font-size:.78rem;font-weight:600;
+  display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.7)}
+.toast.suc{border-color:rgba(46,125,50,.4);background:rgba(46,125,50,.1)}
+.toast.err{border-color:rgba(229,57,53,.4);background:rgba(229,57,53,.1)}
+.toast.wrn{border-color:rgba(255,122,0,.4);background:rgba(255,122,0,.1)}
+
+/* EMPTY */
+.empty-s{text-align:center;padding:28px 14px;font-size:.78rem;color:var(--text3)}
+
+/* EXPORT */
+.adm-export-row{display:flex;gap:7px;margin:12px 0}
+.btn-export{flex:1;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:.72rem;font-weight:700;padding:9px;border-radius:var(--r2);transition:var(--trans)}
+.btn-export:hover{border-color:var(--gold);color:var(--gold)}
+
+/* PARTNER */
+.partner-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px;margin-bottom:8px}
+.partner-name{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.partner-meta{font-size:.68rem;color:var(--text3);line-height:1.6}
+.partner-rev{font-size:.75rem;color:var(--gold);font-weight:700;margin-top:4px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="login-box">
+    <span class="login-crown">👑</span>
+    <div class="login-title">SULTAN ENGINE</div>
+    <div class="login-sub">Admin Access Only</div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="admEmail" value="mb543171@gmail.com" placeholder="Admin email"></div>
+    <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="admPass" placeholder="Admin password"></div>
+    <button class="btn-gold" id="loginBtn" onclick="admLogin()">Loading Firebase...</button>
+    <div style="margin-top:12px"><a href="index.html" style="font-size:.68rem;color:var(--text3)">← Back to App</a></div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPage">
+  <div id="adm-topbar">
+    <div class="adm-brand">⚡ SULTAN ADMIN</div>
+    <a href="index.html" class="adm-back">← App</a>
+    <button class="adm-logout" onclick="admLogout()">LOGOUT</button>
+  </div>
+
+  <div class="adm-stats" id="admStats"></div>
+
+  <div class="adm-tabs">
+    <button class="adm-tab on" onclick="switchAdmTab('businesses',this)">🏪 Businesses</button>
+    <button class="adm-tab" onclick="switchAdmTab('pending',this)">⏳ Pending</button>
+    <button class="adm-tab" onclick="switchAdmTab('leads',this)">⚡ Leads</button>
+    <button class="adm-tab" onclick="switchAdmTab('recharges',this)">💰 Recharges</button>
+    <button class="adm-tab" onclick="switchAdmTab('complaints',this)">⚠️ Complaints</button>
+    <button class="adm-tab" onclick="switchAdmTab('partners',this)">🤝 Partners</button>
+    <button class="adm-tab" onclick="switchAdmTab('auditlogs',this)">📋 Audit Log</button>
+    <button class="adm-tab" onclick="switchAdmTab('settings',this)">⚙️ Settings</button>
+  </div>
+
+  <!-- BUSINESSES -->
+  <div class="adm-section on" id="tab-businesses">
+    <div class="adm-sec-title">All Businesses</div>
+    <div id="bizList"></div>
+  </div>
+
+  <!-- PENDING -->
+  <div class="adm-section" id="tab-pending">
+    <div class="adm-sec-title">Pending Approval</div>
+    <div id="pendingList"></div>
+  </div>
+
+  <!-- LEADS -->
+  <div class="adm-section" id="tab-leads">
+    <div class="adm-sec-title">All Service Requests</div>
+    <div id="leadsList"></div>
+  </div>
+
+  <!-- RECHARGES -->
+  <div class="adm-section" id="tab-recharges">
+    <div class="adm-sec-title">Pending Recharges</div>
+    <div id="rechargeList"></div>
+  </div>
+
+  <!-- COMPLAINTS -->
+  <div class="adm-section" id="tab-complaints">
+    <div class="adm-sec-title">Complaints</div>
+    <div id="complaintList"></div>
+  </div>
+
+  <!-- AUDIT LOG -->
+  <div class="adm-section" id="tab-auditlogs">
+    <div class="adm-sec-title">Admin Action Logs</div>
+    <div id="auditList"></div>
+  </div>
+
+  <!-- PARTNERS -->
+  <div class="adm-section" id="tab-partners">
+    <div class="adm-sec-title">Add Partner</div>
+    <div class="fg"><label class="fl">Partner Name</label><input class="fi" id="pt_name" type="text" placeholder="Name"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">Area</label><input class="fi" id="pt_area" type="text" placeholder="Area"></div>
+      <div class="fg"><label class="fl">Phone</label><input class="fi" id="pt_phone" type="tel" placeholder="Phone"></div>
+    </div>
+    <div class="fg"><label class="fl">Revenue Share (%)</label><input class="fi" id="pt_rev" type="number" placeholder="20" min="0" max="50"></div>
+    <button class="btn-gold" onclick="addPartner()">ADD PARTNER</button>
+    <div class="adm-sec-title">Partners</div>
+    <div id="partnerList"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="adm-section" id="tab-settings">
+    <div class="adm-sec-title">App Settings</div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">Lead Price (₹)</span><input class="adm-ctrl-in" id="set_leadPrice" type="number"></div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">UPI ID</span><input class="adm-ctrl-in" id="set_upiId" type="text"></div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">Referral Bonus (₹)</span><input class="adm-ctrl-in" id="set_referralBonus" type="number"></div>
+    <div class="adm-ctrl"><span class="adm-ctrl-lbl">Currency Symbol</span><input class="adm-ctrl-in" id="set_currency" type="text"></div>
+    <button class="btn-gold" onclick="saveSettings()" style="margin-top:8px">SAVE SETTINGS</button>
+    <div class="adm-sec-title">Data Management</div>
+    <div class="adm-export-row">
+      <button class="btn-export" onclick="exportData()">📦 Export JSON</button>
+      <button class="btn-export" onclick="document.getElementById('importFile').click()">📂 Import JSON</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+    </div>
+  </div>
+</div>
+
+<div id="toast-c"></div>
+
+<script>
+/* ─── CONFIG ─── */
+const FB_CFG={apiKey:"AIzaSyBfVLRSr-kwW0P17Jh0yPkIuLBw8PJg8iQ",authDomain:"sultan-engine-v12-62455.firebaseapp.com",databaseURL:"https://sultan-engine-v12-62455-default-rtdb.firebaseio.com",projectId:"sultan-engine-v12-62455",storageBucket:"sultan-engine-v12-62455.firebasestorage.app",messagingSenderId:"1015551535579",appId:"1:1015551535579:web:08e3ae1e2ab88fa9891ffe"};
+const ADMIN_UID="FLmAk9sItLWqOKSbe4N1kFKaJRg2";
+const CFG={leadPrice:10,upiId:"8273214261@ptyes",referralBonus:20,currency:"₹"};
+
+/* ─── STATE ─── */
+const A={db:null,auth:null,biz:{},leads:{},wallets:{},complaints:{},partners:{},auditLogs:{},settings:{...CFG},currentTab:'businesses'};
+
+/* ─── UTILS ─── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function tsAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+
+/* ─── TOAST ─── */
+function T(msg,type=''){
+  const ic={suc:'✅',err:'❌',wrn:'⚠️'};
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');
+  el.innerHTML=`<span>${ic[type]||'ℹ️'}</span>${esc(msg)}`;
+  document.getElementById('toast-c').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),350)},3500);
+}
+
+/* ─── FIREBASE INIT ─── */
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src=src;
+    s.onload=res;
+    s.onerror=()=>rej(new Error('Failed: '+src));
+    document.head.appendChild(s);
+  });
+}
+
+function initFB(){
+  loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js')
+    .then(()=>loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'))
+    .then(()=>loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js'))
+    .then(()=>{
+      firebase.initializeApp(FB_CFG);
+      A.db=firebase.database();
+      A.auth=firebase.auth();
+      // Show ready indicator
+      const btn=document.querySelector('#loginPage .btn-gold');
+      if(btn)btn.textContent='ACCESS PANEL';
+      A.auth.onAuthStateChanged(user=>{
+        if(user&&user.uid===ADMIN_UID){
+          showAdminPanel();
+          listenData();
+        }else{
+          showLoginPage();
+        }
+      });
+    })
+    .catch(e=>{
+      showErr('Firebase load failed — check internet connection');
+      console.error(e);
+    });
+}
+
+/* ─── AUTH ─── */
+function admLogin(){
+  const email=document.getElementById('admEmail').value.trim();
+  const pass=document.getElementById('admPass').value;
+  if(!email||!pass){showErr('Email aur password daalo');return}
+  if(!A.auth){showErr('Firebase loading... thoda wait karo aur try karein');return}
+  document.querySelector('#loginPage .btn-gold').textContent='Logging in...';
+  A.auth.signInWithEmailAndPassword(email,pass)
+    .then(uc=>{
+      if(uc.user.uid!==ADMIN_UID){
+        A.auth.signOut();
+        showErr('Access denied. Admin only.');
+        document.querySelector('#loginPage .btn-gold').textContent='ACCESS PANEL';
+      }
+    })
+    .catch(e=>{
+      showErr('Wrong email or password');
+      document.querySelector('#loginPage .btn-gold').textContent='ACCESS PANEL';
+    });
+}
+
+function admLogout(){
+  A.auth.signOut().then(()=>{showLoginPage();T('Logged out','suc');});
+}
+
+function showErr(msg){
+  const el=document.getElementById('loginErr');
+  el.textContent=msg;el.style.display='block';
+  document.querySelector('#loginPage .btn-gold').textContent='ACCESS PANEL';
+}
+
+function showLoginPage(){
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('adminPage').style.display='none';
+}
+
+function showAdminPanel(){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('adminPage').style.display='block';
+  T('✅ Admin access granted','suc');
+}
+
+/* ─── DATA LISTENERS ─── */
+function listenData(){
+  A.db.ref('/businesses').on('value',snap=>{A.biz=snap.val()||{};renderAll();});
+  A.db.ref('/leads').on('value',snap=>{A.leads=snap.val()||{};renderLeads();});
+  A.db.ref('/wallets').on('value',snap=>{A.wallets=snap.val()||{};renderRecharges();});
+  A.db.ref('/complaints').on('value',snap=>{A.complaints=snap.val()||{};renderComplaints();});
+  A.db.ref('/partners').on('value',snap=>{A.partners=snap.val()||{};renderPartners();});
+  A.db.ref('/settings').on('value',snap=>{if(snap.val()){A.settings={...CFG,...snap.val()};renderSettings();}});
+  A.db.ref('/auditLogs').limitToLast(50).on('value',snap=>{
+    const logs=snap.val()||{};
+    A.auditLogs=logs;
+    renderAuditLogs();
+  });
+}
+
+/* ─── RENDER ALL ─── */
+function renderAll(){
+  renderStats();
+  renderBizList();
+  renderPending();
+}
+
+/* ─── STATS ─── */
+function renderStats(){
+  const allBiz=Object.values(A.biz);
+  const pending=allBiz.filter(b=>b.status==='pending').length;
+  const verified=allBiz.filter(b=>b.verified).length;
+  const totalLeads=Object.keys(A.leads).length;
+  const accepted=Object.values(A.leads).filter(l=>l.status==='accepted').length;
+  const revenue=accepted*A.settings.leadPrice;
+  const complaints=Object.keys(A.complaints).length;
+  document.getElementById('admStats').innerHTML=[
+    {n:allBiz.length,l:'Businesses'},
+    {n:pending,l:'Pending'},
+    {n:verified,l:'Verified'},
+    {n:totalLeads,l:'Leads'},
+    {n:A.settings.currency+revenue,l:'Revenue'},
+    {n:complaints,l:'Complaints'},
+  ].map(s=>`<div class="adm-stat"><div class="adm-stat-n">${s.n}</div><div class="adm-stat-l">${s.l}</div></div>`).join('');
+}
+
+/* ─── BUSINESSES ─── */
+function renderBizList(){
+  const list=Object.entries(A.biz).filter(([_,b])=>b.status!=='pending');
+  document.getElementById('bizList').innerHTML=list.length
+    ?list.sort((a,b)=>b[1].createdAt-a[1].createdAt).map(([id,b])=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">${b.avatar||'🏪'} ${esc(b.name||'')} ${b.boost?'⚡':''}</div>
+          <div class="adm-row-meta">
+            ${(b.category||'').toUpperCase()} · ${esc(b.city||'')} · ${esc(b.area||'')}<br>
+            📞 ${esc(b.phone||'')} · Rating: ${b.rating||0} · Calls: ${b.calls||0}<br>
+            <span class="status-badge ${b.status==='open'?'sb-open':b.status==='busy'?'sb-busy':'sb-closed'}">${(b.status||'').toUpperCase()}</span>
+            ${b.verified?'<span class="status-badge sb-open" style="margin-left:4px">VERIFIED</span>':''}
+            ${b.txnId?`<br>💳 UTR: ${esc(b.txnId)}`:''}
+          </div>
+        </div>
+        <div class="adm-btns">
+          <button class="adm-btn ab-boost" onclick="admBoost('${id}',${!b.boost})">${b.boost?'Unboost':'⚡ Boost'}</button>
+          <button class="adm-btn ab-edit" onclick="admVerify('${id}',${!b.verified})">${b.verified?'Unverify':'✓ Verify'}</button>
+          <button class="adm-btn ab-rej" onclick="admDel('${id}')">🗑 Remove</button>
+        </div>
+      </div>`).join('')
+    :`<div class="empty-s">No businesses yet</div>`;
+}
+
+/* ─── PENDING ─── */
+function renderPending(){
+  const list=Object.entries(A.biz).filter(([_,b])=>b.status==='pending');
+  document.getElementById('pendingList').innerHTML=list.length
+    ?list.map(([id,b])=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">${b.avatar||'🏪'} ${esc(b.name||'')}</div>
+          <div class="adm-row-meta">
+            ${(b.category||'').toUpperCase()} · ${esc(b.city||'')} · ${esc(b.area||'')}<br>
+            📞 ${esc(b.phone||'')} · ${esc(b.country||'')}<br>
+            💳 Payment: ${esc(b.payMode||'')} · UTR: <strong style="color:var(--gold)">${esc(b.txnId||'N/A')}</strong><br>
+            🕒 ${tsAgo(b.createdAt||0)}
+          </div>
+        </div>
+        <div class="adm-btns">
+          <button class="adm-btn ab-apr" onclick="admApprove('${id}')">✅ Approve</button>
+          <button class="adm-btn ab-rej" onclick="admDel('${id}')">❌ Reject</button>
+        </div>
+      </div>`).join('')
+    :`<div class="empty-s">✅ No pending approvals</div>`;
+}
+
+/* ─── LEADS ─── */
+function renderLeads(){
+  const list=Object.entries(A.leads).sort((a,b)=>b[1].createdAt-a[1].createdAt);
+  document.getElementById('leadsList').innerHTML=list.length
+    ?list.map(([id,l])=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">⚡ ${esc(l.category||'')} Request</div>
+          <div class="adm-row-meta">
+            📝 ${esc(l.description||'')}<br>
+            📍 ${l.area?l.area+', ':''}${l.city||''}<br>
+            📞 ${esc(l.clientPhone||'')} · 🕒 ${tsAgo(l.createdAt||0)}<br>
+            Status: <strong style="color:${l.status==='accepted'?'#66bb6a':l.status==='pending'?'var(--orange)':'#ef5350'}">${(l.status||'').toUpperCase()}</strong>
+          </div>
+        </div>
+        <button class="adm-btn ab-rej" onclick="A.db.ref('/leads/${id}').remove();T('Lead deleted','wrn')">🗑</button>
+      </div>`).join('')
+    :`<div class="empty-s">No leads yet</div>`;
+}
+
+/* ─── RECHARGES ─── */
+function renderRecharges(){
+  const all=[];
+  Object.entries(A.wallets).forEach(([bid,w])=>{
+    Object.entries(w.rechargeRequests||{}).forEach(([rid,r])=>{
+      if(r.status==='pending')all.push({...r,bid,rid});
+    });
+  });
+  document.getElementById('rechargeList').innerHTML=all.length
+    ?all.map(r=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">💰 ${A.settings.currency}${r.amount} — ${esc(A.biz[r.bid]?.name||r.bid)}</div>
+          <div class="adm-row-meta">UTR: <strong style="color:var(--gold)">${esc(r.txnId||'')}</strong> · ${tsAgo(r.createdAt||0)}</div>
+        </div>
+        <div class="adm-btns">
+          <button class="adm-btn ab-apr" onclick="admApproveRch('${r.bid}','${r.rid}',${r.amount})">✅ Approve</button>
+          <button class="adm-btn ab-rej" onclick="admRejectRch('${r.bid}','${r.rid}')">❌ Reject</button>
+        </div>
+      </div>`).join('')
+    :`<div class="empty-s">✅ No pending recharges</div>`;
+}
+
+/* ─── COMPLAINTS ─── */
+function renderComplaints(){
+  const list=Object.entries(A.complaints).sort((a,b)=>b[1].createdAt-a[1].createdAt);
+  document.getElementById('complaintList').innerHTML=list.length
+    ?list.map(([id,c])=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">⚠️ ${esc(c.name||'Anonymous')}</div>
+          <div class="adm-row-meta">
+            📞 ${esc(c.phone||'')} · 🕒 ${tsAgo(c.createdAt||0)}<br>
+            ${c.biz?`Business: ${esc(c.biz)}<br>`:''}
+            ${esc(c.text||'')}
+          </div>
+        </div>
+        <button class="adm-btn ab-rej" onclick="A.db.ref('/complaints/${id}').remove();T('Complaint deleted','wrn')">🗑</button>
+      </div>`).join('')
+    :`<div class="empty-s">✅ No complaints</div>`;
+}
+
+/* ─── PARTNERS ─── */
+function renderPartners(){
+  const list=Object.entries(A.partners);
+  document.getElementById('partnerList').innerHTML=list.length
+    ?list.map(([id,p])=>`
+      <div class="partner-card">
+        <div class="partner-name">${esc(p.name||'')}</div>
+        <div class="partner-meta">📍 ${esc(p.area||'')} · 📞 ${esc(p.phone||'')}</div>
+        <div class="partner-rev">Revenue Share: ${p.rev||0}%</div>
+        <button class="adm-btn ab-rej" style="margin-top:6px" onclick="A.db.ref('/partners/${id}').remove();T('Partner removed','wrn')">Remove</button>
+      </div>`).join('')
+    :`<div class="empty-s">No partners yet</div>`;
+}
+
+/* ─── SETTINGS ─── */
+function renderSettings(){
+  document.getElementById('set_leadPrice').value=A.settings.leadPrice||10;
+  document.getElementById('set_upiId').value=A.settings.upiId||'';
+  document.getElementById('set_referralBonus').value=A.settings.referralBonus||20;
+  document.getElementById('set_currency').value=A.settings.currency||'₹';
+}
+
+function saveSettings(){
+  const settings={
+    leadPrice:parseFloat(document.getElementById('set_leadPrice').value)||10,
+    upiId:document.getElementById('set_upiId').value.trim(),
+    referralBonus:parseFloat(document.getElementById('set_referralBonus').value)||20,
+    currency:document.getElementById('set_currency').value.trim()||'₹'
+  };
+  A.db.ref('/settings').set(settings)
+    .then(()=>T('⚙️ Settings saved','suc'))
+    .catch(e=>T('Save failed: '+e.message,'err'));
+}
+
+/* ─── ADMIN ACTIONS ─── */
+function auditLog(action,details){
+  const log={action,details,adminUid:ADMIN_UID,timestamp:Date.now(),date:new Date().toISOString()};
+  A.db.ref('/auditLogs').push(log).catch(()=>{});
+}
+
+function admApprove(id){
+  A.db.ref('/businesses/'+id).update({status:'open',verified:true,approvedAt:Date.now()})
+    .then(()=>{
+      T('✅ Approved & Verified!','suc');
+      auditLog('APPROVE_BUSINESS',{bizId:id,bizName:A.biz[id]?.name||id});
+    })
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+function admVerify(id,val){
+  A.db.ref('/businesses/'+id+'/verified').set(val)
+    .then(()=>T(val?'✓ Verified!':'Unverified','suc'))
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+function admBoost(id,val){
+  A.db.ref('/businesses/'+id+'/boost').set(val)
+    .then(()=>T(val?'⚡ Boosted!':'Boost removed',val?'suc':'wrn'))
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+function admDel(id){
+  if(!confirm('Yeh business delete karna chahte ho?'))return;
+  const name=A.biz[id]?.name||id;
+  A.db.ref('/businesses/'+id).remove()
+    .then(()=>{
+      T('Business removed','wrn');
+      auditLog('DELETE_BUSINESS',{bizId:id,bizName:name});
+    })
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+function admApproveRch(bid,rid,amt){
+  A.db.ref('/wallets/'+bid).transaction(w=>{
+    const wallet=w||{balance:0,transactions:[]};
+    return{...wallet,balance:(wallet.balance||0)+amt,transactions:[...(wallet.transactions||[]),{desc:'Recharge approved',amount:amt,date:Date.now()}]};
+  });
+  A.db.ref('/wallets/'+bid+'/rechargeRequests/'+rid+'/status').set('approved')
+    .then(()=>{
+      T(`✅ ${A.settings.currency}${amt} credited!`,'suc');
+      auditLog('APPROVE_RECHARGE',{bizId:bid,amount:amt,bizName:A.biz[bid]?.name||bid});
+    })
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+function admRejectRch(bid,rid){
+  A.db.ref('/wallets/'+bid+'/rechargeRequests/'+rid+'/status').set('rejected')
+    .then(()=>T('Recharge rejected','wrn'));
+}
+
+function addPartner(){
+  const name=document.getElementById('pt_name').value.trim();
+  const area=document.getElementById('pt_area').value.trim();
+  const phone=document.getElementById('pt_phone').value.trim();
+  const rev=parseInt(document.getElementById('pt_rev').value)||0;
+  if(!name||!phone){T('Name & phone required','err');return}
+  const pid='P'+Date.now();
+  A.db.ref('/partners/'+pid).set({name,area,phone,rev,createdAt:Date.now()})
+    .then(()=>{T('🤝 Partner added!','suc');document.getElementById('pt_name').value='';document.getElementById('pt_phone').value='';})
+    .catch(e=>T('Error: '+e.message,'err'));
+}
+
+/* ─── EXPORT/IMPORT ─── */
+function exportData(){
+  const data={businesses:A.biz,leads:A.leads,wallets:A.wallets,settings:A.settings,exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sultan_backup_'+Date.now()+'.json';a.click();
+  T('📦 Data exported!','suc');
+}
+
+function importData(inp){
+  const file=inp.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.businesses){
+        Object.entries(d.businesses).forEach(([id,b])=>A.db.ref('/businesses/'+id).set(b));
+        if(d.wallets)Object.entries(d.wallets).forEach(([id,w])=>A.db.ref('/wallets/'+id).set(w));
+        T('📂 Data imported!','suc');
+      }else T('Invalid backup file','err');
+    }catch{T('Import failed: invalid JSON','err')}
+  };
+  reader.readAsText(file);inp.value='';
+}
+
+/* ─── AUDIT LOGS ─── */
+function renderAuditLogs(){
+  const list=Object.values(A.auditLogs||{}).sort((a,b)=>b.timestamp-a.timestamp);
+  document.getElementById('auditList').innerHTML=list.length
+    ?list.map(l=>`
+      <div class="adm-row">
+        <div class="adm-row-info">
+          <div class="adm-row-name">${esc(l.action||'')}</div>
+          <div class="adm-row-meta">${JSON.stringify(l.details||{})}<br>🕒 ${new Date(l.timestamp||0).toLocaleString()}</div>
+        </div>
+      </div>`).join('')
+    :`<div class="empty-s">No audit logs yet</div>`;
+}
+
+/* ─── TAB SWITCHING ─── */
+function switchAdmTab(tab,btn){
+  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.adm-tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+tab).classList.add('on');
+  btn.classList.add('on');
+  A.currentTab=tab;
+  if(tab==='settings')renderSettings();
+  if(tab==='auditlogs')renderAuditLogs();
+}
+
+/* ─── KEYBOARD ─── */
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none')admLogin();});
+
+/* ─── INIT ─── */
+initFB();
+</script>
+</body>
+</html>
