@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="description" content="Sultan Global Engine — Hybrid Real-Time Service Marketplace">
+<title>SULTAN GLOBAL ENGINE V12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0b0b0b;--bg2:#101010;--bg3:#161616;--bg4:#1e1e1e;--bg5:#252525;
+--gold:#d4af37;--gold2:#f0d060;--gold3:#9a7d1a;--gold4:rgba(212,175,55,0.12);
+--orange:#ff7a00;--orange2:#ff9a30;--orange3:rgba(255,122,0,0.12);
+--red:#e53935;--green:#2e7d32;--green2:#43a047;--blue:#1565c0;--blue2:#42a5f5;
+--text:#efefef;--text2:#b0b0b0;--text3:#686868;--text4:#3a3a3a;
+--border:#1f1f1f;--border2:#2a2a2a;--border3:#333;
+--r:12px;--r2:8px;--r3:20px;--r4:4px;
+--sh:0 4px 32px rgba(0,0,0,0.7);
+--sh-gold:0 0 24px rgba(212,175,55,0.22);
+--sh-o:0 0 20px rgba(255,122,0,0.18);
+--trans:.22s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:15px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+button{font-family:'Rajdhani',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+input,textarea,select{font-family:'Rajdhani',sans-serif;outline:none;border:none}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:2px}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:900;height:54px;
+  background:rgba(11,11,11,.97);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;padding:0 12px;gap:10px}
+.tb-brand{display:flex;flex-direction:column;flex:1;line-height:1.1}
+.tb-brand .b1{font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);letter-spacing:2px;font-weight:900}
+.tb-brand .b2{font-size:.55rem;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.tb-links{display:flex;gap:6px}
+.tb-link{background:var(--bg4);border:1px solid var(--border3);color:var(--gold);
+  font-size:.58rem;font-weight:700;padding:4px 8px;border-radius:6px;
+  letter-spacing:.5px;transition:var(--trans);white-space:nowrap}
+.tb-link:hover{background:var(--gold);color:var(--bg)}
+.tb-right{display:flex;gap:7px;align-items:center}
+.tb-icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border2);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;transition:var(--trans)}
+.tb-icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.tb-admin-btn{background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.55rem;font-weight:800;
+  padding:5px 10px;border-radius:6px;letter-spacing:1px;transition:var(--trans)}
+.tb-admin-btn:hover{opacity:.88}
+
+/* BANNERS */
+#offline-bar{display:none;background:rgba(229,57,53,.12);border-bottom:1px solid rgba(229,57,53,.3);
+  padding:7px 14px;text-align:center;font-size:.72rem;font-weight:700;
+  color:var(--red);letter-spacing:.5px;position:fixed;top:54px;left:0;right:0;z-index:850}
+#pwa-bar{background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(255,122,0,.1));
+  border-bottom:1px solid var(--gold3);padding:9px 14px;
+  position:fixed;top:54px;left:0;right:0;z-index:850;
+  display:none;align-items:center;gap:10px}
+#pwa-bar.show{display:flex}
+.pwa-text{flex:1;font-size:.75rem;color:var(--text2)}
+.pwa-text strong{color:var(--gold)}
+.pwa-go{background:var(--gold);color:var(--bg);font-size:.68rem;font-weight:800;padding:5px 12px;border-radius:6px;white-space:nowrap}
+.pwa-x{color:var(--text3);font-size:1rem;padding:2px 4px}
+
+/* MAIN */
+#main{padding-top:54px;padding-bottom:70px;min-height:100vh}
+#banner-spacer{height:0;transition:height .2s}
+
+/* HERO */
+#hero{background:linear-gradient(160deg,#0b0b0b 0%,#120d00 55%,#0b0b0b 100%);
+  padding:22px 14px 18px;text-align:center;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border)}
+#hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(212,175,55,.14) 0%,transparent 65%);pointer-events:none}
+#hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold3),transparent)}
+.hero-crown{font-size:1.8rem;margin-bottom:4px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.hero-title{font-family:'Cinzel',serif;font-size:1.35rem;color:var(--gold);
+  letter-spacing:3px;font-weight:900;line-height:1.2;margin-bottom:3px;position:relative}
+.hero-sub{font-size:.68rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.hero-loc{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;
+  color:var(--orange);background:var(--orange3);border:1px solid rgba(255,122,0,.2);
+  padding:4px 10px;border-radius:12px;margin-bottom:14px;font-weight:600}
+.search-row{display:flex;gap:7px;max-width:520px;margin:0 auto}
+.search-in{flex:1;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);padding:9px 14px;border-radius:var(--r3);font-size:.86rem;transition:var(--trans)}
+.search-in:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.12)}
+.search-in::placeholder{color:var(--text3)}
+.search-go{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);
+  font-weight:800;padding:9px 16px;border-radius:var(--r3);font-size:.84rem;
+  letter-spacing:.5px;transition:var(--trans);white-space:nowrap}
+.search-go:hover{opacity:.9;transform:scale(1.02)}
+
+/* TABS */
+#tabs-wrap{background:var(--bg2);border-bottom:1px solid var(--border);
+  position:sticky;top:54px;z-index:800;overflow-x:auto;white-space:nowrap;
+  -ms-overflow-style:none;scrollbar-width:none}
+#tabs-wrap::-webkit-scrollbar{display:none}
+.tabs-inner{display:inline-flex;padding:0 8px}
+.tab-btn{display:inline-flex;align-items:center;gap:5px;padding:11px 13px;
+  font-size:.76rem;font-weight:700;color:var(--text3);background:none;
+  border-bottom:2px solid transparent;transition:var(--trans);letter-spacing:.4px;white-space:nowrap}
+.tab-btn.on{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-btn:hover{color:var(--text)}
+.tab-icon{font-size:.9rem}
+
+/* LOC FILTER */
+.loc-filter{display:flex;gap:7px;padding:8px 10px;background:var(--bg2);
+  border-bottom:1px solid var(--border);overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+.loc-filter::-webkit-scrollbar{display:none}
+.loc-select{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);
+  padding:5px 10px;border-radius:var(--r2);font-size:.72rem;font-family:'Rajdhani',sans-serif;
+  min-width:90px;appearance:none}
+
+/* SECTION HEADERS */
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 8px}
+.sec-hd-left{display:flex;align-items:center;gap:8px}
+.sec-dot{width:6px;height:6px;border-radius:50%}
+.sec-dot-gold{background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.sec-dot-blue{background:var(--blue2);box-shadow:0 0 8px var(--blue2)}
+.sec-title{font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:1.5px}
+.sec-title-gold{color:var(--gold)}
+.sec-title-blue{color:var(--blue2)}
+.sec-badge{font-size:.62rem;color:var(--text3);background:var(--bg3);
+  padding:2px 8px;border-radius:10px;border:1px solid var(--border2)}
+
+/* CARDS */
+.cards-wrap{padding:0 10px 8px}
+.cards-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:500px){.cards-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:820px){.cards-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* BUSINESS CARD */
+.biz-card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;transition:var(--trans);
+  animation:fadeUp .3s ease both;position:relative}
+.biz-card:hover{border-color:var(--gold3);box-shadow:var(--sh-gold);transform:translateY(-2px)}
+.biz-card.boosted{border-color:var(--gold3)}
+.biz-card.boosted::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,175,55,.04),transparent);pointer-events:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card-header{padding:11px 11px 0;display:flex;gap:9px;align-items:flex-start}
+.card-avi{width:46px;height:46px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  background:linear-gradient(135deg,var(--bg4),var(--bg5));border:1px solid var(--border2)}
+.card-avi.goog{font-size:.65rem;background:linear-gradient(135deg,#1565c0,#1a237e);
+  color:#fff;font-weight:800;text-align:center;letter-spacing:.5px;line-height:1.2;padding:3px}
+.card-info{flex:1;min-width:0}
+.card-name{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text);
+  font-weight:700;display:flex;align-items:center;gap:5px;flex-wrap:wrap;line-height:1.2}
+.vbadge{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);
+  font-size:.46rem;font-weight:900;padding:2px 5px;border-radius:5px;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.gbadge{background:linear-gradient(135deg,#1565c0,#1976d2);color:#fff;
+  font-size:.46rem;font-weight:900;padding:2px 5px;border-radius:5px;letter-spacing:.5px;white-space:nowrap}
+.card-cat{font-size:.66rem;color:var(--orange);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:1px}
+.card-loc{font-size:.68rem;color:var(--text3);margin-top:2px;display:flex;align-items:center;gap:3px}
+.card-dist{font-size:.64rem;color:var(--blue2);font-weight:700;
+  background:rgba(66,165,245,.1);padding:1px 6px;border-radius:8px;border:1px solid rgba(66,165,245,.2)}
+.card-meta{padding:7px 11px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stars-wrap{display:flex;align-items:center;gap:3px}
+.stars-txt{color:var(--gold);font-size:.72rem}
+.rating-n{font-size:.76rem;font-weight:700;color:var(--gold)}
+.rating-c{font-size:.64rem;color:var(--text3)}
+.stat-pill{font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:9px;text-transform:uppercase;letter-spacing:.5px}
+.sp-open{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.sp-busy{background:rgba(255,122,0,.15);color:var(--orange);border:1px solid rgba(255,122,0,.3)}
+.sp-closed{background:rgba(229,57,53,.15);color:#ef5350;border:1px solid rgba(229,57,53,.3)}
+.rank-pill{font-size:.58rem;color:var(--gold);background:var(--gold4);
+  border:1px solid rgba(212,175,55,.22);padding:2px 7px;border-radius:9px;font-weight:700}
+.boost-pill{font-size:.58rem;color:var(--orange);background:var(--orange3);
+  border:1px solid rgba(255,122,0,.22);padding:2px 7px;border-radius:9px;font-weight:700}
+.card-staff{padding:0 11px 5px;font-size:.64rem;color:var(--text3)}
+.card-staff span{color:var(--text2)}
+.card-actions{padding:9px 11px 11px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px}
+.act-btn{padding:7px 3px;border-radius:7px;font-size:.6rem;font-weight:800;
+  letter-spacing:.2px;display:flex;flex-direction:column;align-items:center;
+  gap:2px;transition:var(--trans);border:1px solid transparent}
+.act-btn .ai{font-size:.95rem}
+.ab-call{background:rgba(46,125,50,.12);color:#66bb6a;border-color:rgba(46,125,50,.25)}
+.ab-call:hover{background:var(--green2);color:#fff;border-color:var(--green2)}
+.ab-wa{background:rgba(37,211,102,.1);color:#25d366;border-color:rgba(37,211,102,.25)}
+.ab-wa:hover{background:#25d366;color:#fff}
+.ab-dir{background:rgba(21,101,192,.1);color:var(--blue2);border-color:rgba(21,101,192,.25)}
+.ab-dir:hover{background:var(--blue2);color:#fff}
+.ab-req{background:linear-gradient(135deg,var(--gold4),var(--orange3));color:var(--gold);border-color:rgba(212,175,55,.3)}
+.ab-req:hover{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg)}
+.card-foot{padding:0 11px 9px;display:flex;gap:0;align-items:center}
+.cf-btn{background:none;color:var(--text3);font-size:.66rem;
+  display:flex;align-items:center;gap:3px;padding:3px 6px 3px 0;
+  transition:var(--trans);border-right:1px solid var(--border);margin-right:6px}
+.cf-btn:last-child{border-right:none;margin-right:0;margin-left:auto}
+.cf-btn:hover{color:var(--text)}
+.cf-btn.fav-on{color:var(--gold)}
+
+/* GOOGLE CARD */
+.google-card{background:var(--bg2);border:1px solid rgba(21,101,192,.22);
+  border-radius:var(--r);overflow:hidden;transition:var(--trans);animation:fadeUp .3s ease both}
+.google-card:hover{border-color:rgba(66,165,245,.4);transform:translateY(-2px)}
+
+/* VIEWS */
+.view{display:none}
+.view.on{display:block}
+
+/* MAP */
+#map-container{position:relative}
+#gmap{width:100%;height:280px;background:var(--bg3);border-bottom:1px solid var(--border)}
+.map-overlay{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}
+.map-badge{background:rgba(11,11,11,.88);backdrop-filter:blur(8px);
+  border:1px solid var(--border2);color:var(--text2);
+  font-size:.68rem;font-weight:700;padding:5px 10px;border-radius:10px;pointer-events:all}
+.map-badge.active-filter{border-color:var(--gold);color:var(--gold)}
+
+/* MODALS */
+.modal-ov{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity var(--trans)}
+.modal-ov.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--r) var(--r) 0 0;width:100%;max-width:580px;
+  max-height:93vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform var(--trans)}
+.modal-ov.open .modal-box{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:15px 15px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-title{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);letter-spacing:1px}
+.modal-x{width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);
+  color:var(--text3);display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:var(--trans)}
+.modal-x:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:15px}
+
+/* FORMS */
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:.68rem;color:var(--text2);font-weight:700;
+  letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text);padding:9px 12px;border-radius:var(--r2);font-size:.85rem;transition:var(--trans)}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold4)}
+.fi::placeholder{color:var(--text3)}
+select.fi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M5 6L0 0h10z' fill='%23555'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.82rem;font-weight:800;
+  padding:11px;border-radius:var(--r2);letter-spacing:1px;transition:var(--trans);margin-top:4px}
+.btn-gold:hover{opacity:.9;transform:scale(1.01)}
+.btn-ghost{width:100%;background:var(--bg3);border:1px solid var(--border2);
+  color:var(--text2);font-size:.82rem;font-weight:600;padding:10px;
+  border-radius:var(--r2);transition:var(--trans);margin-top:4px}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.upi-box{background:var(--bg3);border:1px solid var(--gold3);
+  border-radius:var(--r2);padding:13px;margin-bottom:13px;text-align:center;
+  background:linear-gradient(135deg,var(--bg3),#160e00)}
+.upi-lbl{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.upi-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px;font-weight:700}
+.upi-amt{font-size:.72rem;color:var(--orange);margin-top:3px}
+.info-t{font-size:.7rem;color:var(--text3);text-align:center;margin-top:8px;line-height:1.6}
+.divider{border:none;border-top:1px solid var(--border);margin:13px 0}
+.step-row{display:flex;align-items:center;gap:5px;margin-bottom:15px}
+.step-c{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:.68rem;font-weight:800;flex-shrink:0}
+.step-c.act{background:var(--gold);color:var(--bg)}
+.step-c.done{background:var(--green2);color:#fff}
+.step-c.idle{background:var(--bg4);color:var(--text3);border:1px solid var(--border2)}
+.step-ln{flex:1;height:1px;background:var(--border2)}
+.step-ln.done{background:var(--green2)}
+.star-inp{display:flex;gap:5px;margin-bottom:9px}
+.star-inp .si{font-size:1.5rem;cursor:pointer;color:var(--text4);transition:var(--trans)}
+.star-inp .si.on{color:var(--gold)}
+
+/* LEADS */
+.lead-card{background:var(--bg3);border:1px solid var(--border2);
+  border-radius:var(--r2);padding:12px;margin-bottom:9px}
+.lead-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.lead-t{font-size:.78rem;font-weight:700;color:var(--text)}
+.ls{font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:8px;letter-spacing:.5px}
+.ls-pend{background:rgba(255,122,0,.15);color:var(--orange);border:1px solid rgba(255,122,0,.3)}
+.ls-acpt{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.ls-exp{background:rgba(229,57,53,.15);color:#ef5350;border:1px solid rgba(229,57,53,.3)}
+.lead-meta{font-size:.68rem;color:var(--text3);line-height:1.7}
+.lead-prov-list{margin-top:7px;display:flex;flex-direction:column;gap:4px}
+.lead-prov-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg4);border-radius:var(--r4);padding:5px 8px}
+.lp-n{font-size:.7rem;font-weight:700;color:var(--text2)}
+.accepted-tag{font-size:.58rem;color:#66bb6a;font-weight:800}
+.accept-btn{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
+  font-size:.62rem;font-weight:800;padding:4px 10px;border-radius:6px;letter-spacing:.5px}
+
+/* DASHBOARD */
+.own-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.own-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px;text-align:center}
+.own-stat-n{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);font-weight:700}
+.own-stat-l{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.stat-tgl{display:flex;gap:6px;margin-bottom:12px}
+.st-tgl{flex:1;padding:8px;border-radius:var(--r2);font-size:.68rem;font-weight:800;
+  background:var(--bg3);border:1px solid var(--border2);color:var(--text3);transition:var(--trans)}
+.t-open{background:rgba(46,125,50,.15);color:#66bb6a;border-color:rgba(46,125,50,.3)}
+.t-busy{background:rgba(255,122,0,.15);color:var(--orange);border-color:rgba(255,122,0,.3)}
+.t-closed{background:rgba(229,57,53,.15);color:#ef5350;border-color:rgba(229,57,53,.3)}
+.ref-box{background:var(--bg3);border:1px solid var(--gold3);border-radius:var(--r);
+  padding:14px;text-align:center;margin-top:13px}
+.ref-code{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);
+  letter-spacing:4px;font-weight:900;margin:6px 0}
+.ref-info{font-size:.68rem;color:var(--text3)}
+
+/* WALLET */
+.wallet-hero{background:linear-gradient(135deg,#0d0800,#1a1000);
+  border:1px solid var(--gold3);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:14px}
+.wallet-l{font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.wallet-n{font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);font-weight:900;margin-bottom:10px}
+.wallet-recharge-btn{background:linear-gradient(135deg,var(--gold),var(--orange));
+  color:var(--bg);font-family:'Cinzel',serif;font-size:.72rem;font-weight:800;
+  padding:7px 18px;border-radius:var(--r2);letter-spacing:1px}
+.txn-row{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border)}
+.txn-desc{font-size:.75rem;color:var(--text2);font-weight:600}
+.txn-date{font-size:.62rem;color:var(--text3);margin-top:2px}
+.txn-amt{font-size:.82rem;font-weight:800}
+.txn-cr{color:#66bb6a}
+.txn-dr{color:#ef5350}
+
+/* TRACKING */
+.track-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.track-tgl{width:100%;padding:11px;border-radius:var(--r2);font-size:.78rem;font-weight:800;
+  background:var(--bg4);border:1px solid var(--border2);color:var(--text2);
+  transition:var(--trans);letter-spacing:.5px}
+.track-tgl.on{background:rgba(46,125,50,.15);color:#66bb6a;border-color:rgba(46,125,50,.3)}
+.track-coords{font-size:.65rem;color:var(--text3);margin-top:9px;line-height:1.7;
+  background:var(--bg4);padding:7px 10px;border-radius:var(--r4)}
+
+/* COOLDOWN */
+.cooldown-bar{background:rgba(255,122,0,.1);border:1px solid rgba(255,122,0,.3);
+  border-radius:var(--r2);padding:8px 12px;font-size:.72rem;color:var(--orange);text-align:center;margin-bottom:10px}
+
+/* TOAST */
+#toast-c{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;
+  display:flex;flex-direction:column;gap:7px;pointer-events:none;min-width:220px;max-width:90vw}
+.toast{background:var(--bg3);border:1px solid var(--border2);color:var(--text);
+  padding:9px 14px;border-radius:var(--r2);font-size:.78rem;font-weight:600;
+  display:flex;align-items:center;gap:8px;box-shadow:var(--sh);animation:fadeUp .25s ease}
+.toast.suc{border-color:rgba(46,125,50,.4);background:rgba(46,125,50,.1)}
+.toast.err{border-color:rgba(229,57,53,.4);background:rgba(229,57,53,.1)}
+.toast.wrn{border-color:rgba(255,122,0,.4);background:rgba(255,122,0,.1)}
+
+/* BOTTOM NAV */
+#bot-nav{position:fixed;bottom:0;left:0;right:0;z-index:900;
+  background:rgba(11,11,11,.97);backdrop-filter:blur(14px);
+  border-top:1px solid var(--border2);display:flex}
+.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 4px;font-size:.6rem;font-weight:700;color:var(--text3);
+  letter-spacing:.5px;transition:var(--trans);gap:3px}
+.nav-it.on{color:var(--gold)}
+.nav-it:hover{color:var(--text)}
+.ni{font-size:1.1rem}
+
+/* EMPTY STATE */
+.empty-s{text-align:center;padding:32px 14px}
+.empty-ic{font-size:2.2rem;margin-bottom:8px}
+.empty-t{font-size:.78rem;color:var(--text3);line-height:1.6}
+
+/* LOADING */
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;gap:10px}
+.loading-spin{width:28px;height:28px;border:2px solid var(--border2);
+  border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-t{font-size:.76rem;color:var(--text3);letter-spacing:1px}
+
+/* FOOTER */
+#footer{background:var(--bg2);border-top:1px solid var(--border);padding:16px 14px;text-align:center;margin-top:20px}
+.footer-line{font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:1.5px;margin-bottom:6px}
+.footer-help{font-size:.75rem;color:var(--text2);font-weight:700}
+.footer-help a{color:var(--orange);font-weight:800}
+.footer-copy{font-size:.62rem;color:var(--text3);margin-top:5px}
+</style>
+</head>
+<body>
+
+<div id="offline-bar">⚡ No Internet — Offline Mode Active</div>
+
+<div id="pwa-bar">
+  <div class="pwa-text"><strong>SULTAN ENGINE</strong> — Install as App</div>
+  <button class="pwa-go" id="pwa-btn">Install</button>
+  <button class="pwa-x" id="pwa-x">✕</button>
+</div>
+
+<div id="topbar">
+  <div class="tb-brand">
+    <span class="b1">⚡ SULTAN ENGINE</span>
+    <span class="b2">Hybrid Global Marketplace • V12</span>
+  </div>
+  <div class="tb-links">
+    <a class="tb-link" href="https://digitalmenu61.netlify.app/" target="_blank">Menu Pro</a>
+    <a class="tb-link" href="https://digital-shokeen.netlify.app/" target="_blank">Shokeen</a>
+  </div>
+  <div class="tb-right">
+    <button class="tb-icon-btn" onclick="openM('favM')" title="Favorites">♡</button>
+    <button class="tb-icon-btn" onclick="openM('compM')" title="Complaint">⚠</button>
+    <a class="tb-admin-btn" href="admin.html" target="_blank">ADMIN</a>
+  </div>
+</div>
+
+<div id="banner-spacer"></div>
+<div id="main">
+
+<div id="hero">
+  <span class="hero-crown">👑</span>
+  <div class="hero-title">SULTAN GLOBAL ENGINE</div>
+  <div class="hero-sub">Hybrid Real-Time Service Marketplace • V12 Final</div>
+  <div class="hero-loc" id="heroLoc">📍 Detecting Location...</div>
+  <div class="search-row">
+    <input class="search-in" id="searchIn" type="text" placeholder="Search services, shops, city...">
+    <button class="search-go" onclick="doSearch()">🔍 Search</button>
+  </div>
+</div>
+
+<div class="loc-filter">
+  <select class="loc-select" id="fCountry">
+    <option value="">🌍 Country</option>
+    <option>India</option><option>UAE</option><option>UK</option>
+    <option>USA</option><option>Canada</option><option>Australia</option>
+  </select>
+  <select class="loc-select" id="fCity">
+    <option value="">🏙️ City</option>
+    <option>Delhi</option><option>Mumbai</option><option>Bangalore</option>
+    <option>Hyderabad</option><option>Chennai</option><option>Kolkata</option>
+    <option>Jaipur</option><option>Lucknow</option><option>Pune</option>
+    <option>Dubai</option><option>London</option><option>New York</option>
+  </select>
+  <select class="loc-select" id="fArea">
+    <option value="">📌 Area</option>
+    <option>Connaught Place</option><option>Andheri</option><option>Koramangala</option>
+    <option>Bandra</option><option>Karol Bagh</option><option>Hazratganj</option>
+  </select>
+</div>
+
+<div id="tabs-wrap"><div class="tabs-inner" id="tabs"></div></div>
+
+<div class="view on" id="view-home">
+  <div id="map-container">
+    <div id="gmap"></div>
+    <div class="map-overlay" id="mapFilters"></div>
+  </div>
+  <div class="sec-hd">
+    <div class="sec-hd-left">
+      <div class="sec-dot sec-dot-gold"></div>
+      <span class="sec-title sec-title-gold">⭐ SULTAN VERIFIED</span>
+    </div>
+    <span class="sec-badge" id="verifiedCount">Loading...</span>
+  </div>
+  <div class="cards-wrap"><div class="cards-grid" id="verifiedGrid"></div></div>
+  <div class="sec-hd">
+    <div class="sec-hd-left">
+      <div class="sec-dot sec-dot-blue"></div>
+      <span class="sec-title sec-title-blue">📍 NEARBY PLACES</span>
+    </div>
+    <span class="sec-badge" id="nearbyCount">Detecting...</span>
+  </div>
+  <div class="cards-wrap"><div class="cards-grid" id="nearbyGrid"></div></div>
+</div>
+
+<div class="view" id="view-leads">
+  <div class="sec-hd">
+    <span class="sec-title sec-title-gold">⚡ SERVICE REQUESTS</span>
+    <button onclick="openReqModal()" style="background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);font-family:'Cinzel',serif;font-size:.68rem;font-weight:800;padding:6px 13px;border-radius:var(--r2);letter-spacing:.5px">+ REQUEST</button>
+  </div>
+  <div style="padding:0 10px" id="leadsView"></div>
+</div>
+
+<div class="view" id="view-register">
+  <div class="sec-hd"><span class="sec-title sec-title-gold">➕ REGISTER BUSINESS</span></div>
+  <div style="padding:0 10px 20px" id="regView"></div>
+</div>
+
+<div class="view" id="view-dash">
+  <div class="sec-hd"><span class="sec-title sec-title-gold">📊 OWNER DASHBOARD</span></div>
+  <div style="padding:0 10px 20px" id="dashView"></div>
+</div>
+
+<div id="footer">
+  <div class="footer-line">SULTAN GLOBAL ENGINE V12 FINAL</div>
+  <div class="footer-help">📞 SULTAN HELPLINE: <a href="tel:+918273214261">+91-8273214261</a></div>
+  <div class="footer-copy">Managed by SULTAN TECHNOLOGY — All Rights Reserved</div>
+</div>
+
+</div>
+
+<div id="bot-nav">
+  <button class="nav-it on" onclick="swV('home',this)"><span class="ni">🏪</span>Browse</button>
+  <button class="nav-it" onclick="swV('leads',this)"><span class="ni">⚡</span>Requests</button>
+  <button class="nav-it" onclick="swV('register',this)"><span class="ni">➕</span>Register</button>
+  <button class="nav-it" onclick="swV('dash',this)"><span class="ni">📊</span>Dashboard</button>
+</div>
+
+<div id="toast-c"></div>
+
+<!-- MODALS -->
+<div class="modal-ov" id="reqM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⚡ REQUEST SERVICE</span><button class="modal-x" onclick="closeM('reqM')">✕</button></div>
+    <div class="modal-body" id="reqMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="rateM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⭐ RATE SERVICE</span><button class="modal-x" onclick="closeM('rateM')">✕</button></div>
+    <div class="modal-body" id="rateMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="favM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">♥ FAVORITES</span><button class="modal-x" onclick="closeM('favM')">✕</button></div>
+    <div class="modal-body" id="favMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="walletM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">💰 WALLET</span><button class="modal-x" onclick="closeM('walletM')">✕</button></div>
+    <div class="modal-body" id="walletMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="rchM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">💳 RECHARGE</span><button class="modal-x" onclick="closeM('rchM')">✕</button></div>
+    <div class="modal-body" id="rchMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="trackM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">📍 LIVE TRACKING</span><button class="modal-x" onclick="closeM('trackM')">✕</button></div>
+    <div class="modal-body" id="trackMBody"></div>
+  </div>
+</div>
+<div class="modal-ov" id="compM">
+  <div class="modal-box">
+    <div class="modal-hd"><span class="modal-title">⚠️ COMPLAINT</span><button class="modal-x" onclick="closeM('compM')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Your Name *</label><input class="fi" type="text" id="comp_name" placeholder="Aapka naam"></div>
+      <div class="fg"><label class="fl">Phone *</label><input class="fi" type="tel" id="comp_phone" placeholder="10-digit mobile"></div>
+      <div class="fg"><label class="fl">Business (if any)</label><input class="fi" type="text" id="comp_biz" placeholder="Business name"></div>
+      <div class="fg"><label class="fl">Complaint Details *</label><textarea class="fi" id="comp_text" rows="4" placeholder="Apni problem likhein (min 10 words)..." style="resize:none"></textarea></div>
+      <button class="btn-gold" onclick="submitComplaint()">SUBMIT COMPLAINT</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─── CONFIG ─── */
+// NOTE: Firebase Console me Anonymous Auth enable karna zaruri hai
+// Authentication → Sign-in method → Anonymous → Enable
+const FB_CFG={apiKey:"AIzaSyBfVLRSr-kwW0P17Jh0yPkIuLBw8PJg8iQ",authDomain:"sultan-engine-v12-62455.firebaseapp.com",databaseURL:"https://sultan-engine-v12-62455-default-rtdb.firebaseio.com",projectId:"sultan-engine-v12-62455",storageBucket:"sultan-engine-v12-62455.firebasestorage.app",messagingSenderId:"1015551535579",appId:"1:1015551535579:web:08e3ae1e2ab88fa9891ffe"};
+const GM_KEY="AIzaSyDIIWbMB8YlcQ_ex8UST6G1Jj5Abi1IOc4";
+const CFG={leadPrice:10,upiId:"8273214261@ptyes",referralBonus:20,currency:"₹",nearbyRadius:2000,maxLeadsPerDay:5,minUTRLength:12,ratingCooldownHours:24};
+
+/* ─── STATE ─── */
+const S={
+  tab:'all',view:'home',q:'',
+  biz:{},leads:{},wallets:{},ratings:{},tracking:{},partners:{},complaints:{},
+  settings:{...CFG},
+  loc:{lat:null,lng:null,city:'',country:''},
+  owner:null,
+  favs:_lsGet('sultan_favs',[]),
+  rLocks:_lsGet('sultan_rlocks',{}),
+  devId:_devId(),
+  uid:null,
+  cooldowns:{},
+  trackOn:false,trackWid:null,
+  gmapObj:null,nearbyPlaces:[],
+  _markers:[],
+  filters:{country:'',city:'',area:''},
+  fbReady:false,gmReady:false,
+  _renderPending:false
+};
+
+const CATS=[
+  {id:'all',l:'All',ic:'🌐'},{id:'barber',l:'Barber',ic:'✂️'},
+  {id:'doctor',l:'Doctor',ic:'🏥'},{id:'electrician',l:'Electrician',ic:'⚡'},
+  {id:'cab',l:'Cab',ic:'🚕'},{id:'restaurant',l:'Restaurant',ic:'🍛'},
+  {id:'shop',l:'Shop',ic:'🛍️'},{id:'plumber',l:'Plumber',ic:'🔧'},{id:'others',l:'Others',ic:'➕'}
+];
+const GM_TYPES=['restaurant','store','hospital','electrician'];
+
+/* ─── UTILS ─── */
+function _lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}}
+function _lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function _devId(){let id=localStorage.getItem('sultan_dev');if(!id){id='d_'+Math.random().toString(36).substr(2,10)+Date.now().toString(36);localStorage.setItem('sultan_dev',id)}return id}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function tsAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+function haversine(lat1,lng1,lat2,lng2){const R=6371,dL=((lat2-lat1)*Math.PI/180),dG=((lng2-lng1)*Math.PI/180),a=Math.sin(dL/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dG/2)**2;return(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1)}
+function fmtDist(d){return d<1?(d*1000).toFixed(0)+'m':d+'km'}
+function isValidPhone(p){return /^[6-9]\d{9}$/.test(p)}
+
+/* ─── TOAST ─── */
+function T(msg,type=''){
+  const ic={suc:'✅',err:'❌',wrn:'⚠️'};
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');
+  el.innerHTML=`<span>${ic[type]||'ℹ️'}</span>${esc(msg)}`;
+  document.getElementById('toast-c').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),350)},3200);
+}
+
+/* ─── MODALS ─── */
+function openM(id){if(id==='favM')renderFavM();document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeM(m.id)}));
+
+/* ─── FIREBASE ─── */
+function initFB(){
+  const s1=document.createElement('script');
+  s1.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
+  s1.onload=()=>{
+    const s2=document.createElement('script');
+    s2.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';
+    s2.onload=()=>{
+      const s3=document.createElement('script');
+      s3.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js';
+      s3.onload=()=>{
+        try{
+          firebase.initializeApp(FB_CFG);
+          S.db=firebase.database();
+          S.auth=firebase.auth();
+          S.fbReady=true;
+          T('🔥 Firebase Connected','suc');
+          // Anonymous auth — ownership tracking ke liye
+          S.auth.signInAnonymously().catch(()=>{});
+          S.auth.onAuthStateChanged(user=>{if(user)S.uid=user.uid;});
+          listenFB();
+        }catch(e){T('Demo mode — Firebase not connected','wrn');loadDemo();}
+      };
+      s3.onerror=()=>loadDemo();
+      document.head.appendChild(s3);
+    };
+    s2.onerror=()=>loadDemo();
+    document.head.appendChild(s2);
+  };
+  s1.onerror=()=>loadDemo();
+  document.head.appendChild(s1);
+}
+
+function listenFB(){
+  // Show loading state
+  document.getElementById('verifiedGrid').innerHTML='<div style="grid-column:1/-1" class="loading-wrap"><div class="loading-spin"></div><div class="loading-t">Loading businesses...</div></div>';
+  document.getElementById('nearbyGrid').innerHTML='<div style="grid-column:1/-1" class="loading-wrap"><div class="loading-spin"></div><div class="loading-t">Loading nearby...</div></div>';
+  
+  S.db.ref('/businesses').on('value',snap=>{
+    S.biz=snap.val()||{};
+    cacheBizData();
+    scheduleRender();
+  },err=>{
+    document.getElementById('verifiedGrid').innerHTML='<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">❌</div><div class="empty-t">Data load nahi hua. Refresh karein.</div></div>';
+    T('Database error: '+err.message,'err');
+  });
+  S.db.ref('/leads').on('value',snap=>{S.leads=snap.val()||{};if(S.view==='leads')renderLeadsView();if(S.view==='dash')renderDashView();});
+  S.db.ref('/wallets').on('value',snap=>{S.wallets=snap.val()||{};});
+  S.db.ref('/ratings').on('value',snap=>{S.ratings=snap.val()||{};});
+  S.db.ref('/settings').on('value',snap=>{if(snap.val())S.settings={...CFG,...snap.val()};});
+}
+
+// Debounced render — avoid multiple rapid re-renders
+function scheduleRender(){
+  if(S._renderPending)return;
+  S._renderPending=true;
+  setTimeout(()=>{S._renderPending=false;renderVerified();if(S.loc.lat)loadNearbyPlaces();},300);
+}
+
+function loadDemo(){
+  // Try cache first
+  const cached=_lsGet('sultan_biz_cache',null);
+  const cacheTime=localStorage.getItem('sultan_cache_time');
+  const cacheAge=cacheTime?Date.now()-parseInt(cacheTime):Infinity;
+  if(cached&&cacheAge<3600000){// 1 hour cache
+    S.biz=cached;
+    T('📦 Cached data loaded','wrn');
+    renderAll();
+    return;
+  }
+  S.biz={
+    b001:{name:"Sultan Barber Palace",category:"barber",phone:"8273214261",whatsapp:"8273214261",city:"Delhi",area:"Connaught Place",country:"India",status:"open",rating:4.8,ratingCount:124,staff:"Rahul Kumar, Amit Singh",verified:true,boost:true,calls:89,leadsCompleted:34,responses:45,avatar:"✂️",lat:28.6315,lng:77.2167,createdAt:Date.now()-86400000*10},
+    b002:{name:"Dr. Khan Medical Center",category:"doctor",phone:"9876543210",whatsapp:"9876543210",city:"Mumbai",area:"Andheri West",country:"India",status:"open",rating:4.6,ratingCount:87,verified:true,boost:false,calls:56,leadsCompleted:21,responses:28,avatar:"🏥",lat:19.1136,lng:72.8697,createdAt:Date.now()-86400000*8}
+  };
+  renderAll();
+}
+
+// Cache biz data when it loads
+function cacheBizData(){
+  try{
+    _lsSet('sultan_biz_cache',S.biz);
+    localStorage.setItem('sultan_cache_time',Date.now().toString());
+  }catch(e){}
+}
+
+function fbSet(path,val){if(S.db)S.db.ref(path).set(val)}
+function fbTxn(path,fn){if(S.db)S.db.ref(path).transaction(fn)}
+
+/* ─── GOOGLE MAPS ─── */
+function initGM(){
+  window.gmCallback=function(){
+    S.gmReady=true;
+    const loc=S.loc.lat?{lat:S.loc.lat,lng:S.loc.lng}:{lat:28.6139,lng:77.2090};
+    S.gmapObj=new google.maps.Map(document.getElementById('gmap'),{
+      center:loc,zoom:14,
+      styles:[{elementType:'geometry',stylers:[{color:'#1a1a1a'}]},{elementType:'labels.text.fill',stylers:[{color:'#746855'}]},{elementType:'labels.text.stroke',stylers:[{color:'#242f3e'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#2c2c2c'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#000000'}]}],
+      disableDefaultUI:true,zoomControl:true
+    });
+    addVerifiedMarkers();loadNearbyPlaces();renderMapFilters();
+  };
+  const sc=document.createElement('script');
+  sc.src=`https://maps.googleapis.com/maps/api/js?key=${GM_KEY}&libraries=places&callback=gmCallback`;
+  sc.onerror=()=>{document.getElementById('gmap').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#666;font-size:.8rem;flex-direction:column;gap:8px"><span style="font-size:2rem">🗺️</span>Maps unavailable</div>'};
+  document.head.appendChild(sc);
+}
+
+function addVerifiedMarkers(){
+  if(!S.gmapObj)return;
+  if(S._markers){S._markers.forEach(m=>m.setMap(null));S._markers=[];}
+  Object.entries(S.biz).forEach(([id,b])=>{
+    if(!b.lat||!b.lng)return;
+    const marker=new google.maps.Marker({
+      position:{lat:b.lat,lng:b.lng},map:S.gmapObj,title:b.name,
+      icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:'#d4af37',fillOpacity:1,strokeColor:'#ff7a00',strokeWeight:2}
+    });
+    marker.addListener('click',()=>T(`⭐ ${b.name} — Sultan Verified`,'suc'));
+    S._markers.push(marker);
+  });
+}
+
+function loadNearbyPlaces(){
+  if(!S.loc.lat)return;
+  function haversine(lat1,lng1,lat2,lng2){
+    const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+    const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  }
+  const radius=CFG.nearbyRadius||5000;
+  S.nearbyPlaces=Object.entries(S.biz)
+    .filter(([_,b])=>b.lat&&b.lng&&b.status!=='pending')
+    .map(([id,b])=>({
+      place_id:id,name:b.name,lat:parseFloat(b.lat),lng:parseFloat(b.lng),
+      rating:b.rating||0,ratingCount:b.ratingCount||0,
+      vicinity:b.area||b.city||'',type:b.category||'',open:b.status==='open',
+      dist:haversine(S.loc.lat,S.loc.lng,parseFloat(b.lat),parseFloat(b.lng))
+    }))
+    .filter(p=>p.dist<=radius)
+    .sort((a,b)=>a.dist-b.dist);
+  renderNearby();
+}
+
+function renderMapFilters(){
+  const filters=['All','Restaurants','Shops','Hospitals'];
+  document.getElementById('mapFilters').innerHTML=filters.map((f,i)=>`
+    <button class="map-badge ${i===0?'active-filter':''}" onclick="this.parentNode.querySelectorAll('.map-badge').forEach(b=>b.classList.remove('active-filter'));this.classList.add('active-filter');T('Filter: ${f}')">
+      ${f}</button>`).join('');
+}
+
+/* ─── LOCATION ─── */
+function getLocation(){
+  if(!navigator.geolocation){
+    S.loc={lat:28.6139,lng:77.2090,city:'Delhi',country:'India'};
+    updateLocUI();initGM();return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      S.loc.lat=pos.coords.latitude;S.loc.lng=pos.coords.longitude;
+      reverseGeocode(S.loc.lat,S.loc.lng);
+      updateLocUI();
+      if(S.gmReady)loadNearbyPlaces();else initGM();
+    },
+    ()=>{
+      S.loc={lat:28.6139,lng:77.2090,city:'Delhi',country:'India'};
+      updateLocUI();initGM();
+    },{timeout:8000,enableHighAccuracy:true}
+  );
+}
+
+function reverseGeocode(lat,lng){
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
+    .then(r=>{if(!r.ok)throw new Error('Network error');return r.json();})
+    .then(d=>{S.loc.city=d.address?.city||d.address?.town||d.address?.village||'';S.loc.country=d.address?.country||'';updateLocUI();})
+    .catch(()=>{updateLocUI();});
+}
+
+function updateLocUI(){
+  const l=S.loc;
+  document.getElementById('heroLoc').textContent=l.city?`📍 ${l.city}${l.country?', '+l.country:''}`:`📍 ${l.lat?l.lat.toFixed(4)+', '+l.lng.toFixed(4):'Unknown'}`;
+}
+
+/* ─── RANKING ─── */
+function score(b){
+  const base=(b.rating||0)*2+(b.responses||0)*3+(b.leadsCompleted||0)*3+(b.calls||0)*1;
+  const boost=b.boost?30:0;
+  let dist=0;
+  if(S.loc.lat&&b.lat){const d=parseFloat(haversine(S.loc.lat,S.loc.lng,b.lat,b.lng));dist=Math.max(0,10-d);}
+  return base+boost+dist;
+}
+
+/* ─── RENDER ─── */
+function renderAll(){renderTabs();renderVerified();renderNearby();}
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=CATS.map(c=>`
+    <button class="tab-btn ${S.tab===c.id?'on':''}" onclick="switchTab('${c.id}')">
+      <span class="tab-icon">${c.ic}</span>${c.l}</button>`).join('');
+}
+function switchTab(id){S.tab=id;_verifiedPage=1;renderTabs();renderVerified();renderNearby();}
+
+function applyFilters(){
+  S.filters.country=document.getElementById('fCountry').value;
+  S.filters.city=document.getElementById('fCity').value;
+  S.filters.area=document.getElementById('fArea').value;
+  renderVerified();renderNearby();
+}
+
+// Add event listeners for filters
+document.getElementById('fCountry').addEventListener('change',applyFilters);
+document.getElementById('fCity').addEventListener('change',applyFilters);
+document.getElementById('fArea').addEventListener('change',applyFilters);
+
+function matchFilters(b){
+  const {country,city,area}=S.filters;
+  if(country&&b.country&&b.country.toLowerCase()!==country.toLowerCase())return false;
+  if(city&&b.city&&b.city.toLowerCase()!==city.toLowerCase())return false;
+  if(area&&b.area&&b.area.toLowerCase()!==area.toLowerCase())return false;
+  return true;
+}
+
+const PAGE_SIZE=10;
+let _verifiedPage=1;
+
+function renderVerified(reset=true){
+  if(reset)_verifiedPage=1;
+  const q=S.q.toLowerCase();
+  let list=Object.entries(S.biz)
+    .filter(([_,b])=>{
+      const catOk=S.tab==='all'||b.category===S.tab;
+      const qOk=!q||(b.name||'').toLowerCase().includes(q)||(b.area||'').toLowerCase().includes(q)||(b.city||'').toLowerCase().includes(q);
+      return catOk&&qOk&&matchFilters(b);
+    })
+    .map(([id,b])=>({id,...b,_score:score(b)}))
+    .sort((a,b)=>{if(a.boost&&!b.boost)return -1;if(!a.boost&&b.boost)return 1;return b._score-a._score});
+  const total=list.length;
+  const paged=list.slice(0,_verifiedPage*PAGE_SIZE);
+  document.getElementById('verifiedCount').textContent=total+' verified';
+  const grid=document.getElementById('verifiedGrid');
+  grid.innerHTML=paged.length
+    ?paged.map((b,i)=>bizCard(b,i)).join('')
+    :`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">🔍</div><div class="empty-t">No verified businesses found.</div></div>`;
+  // Load more button
+  const loadMoreId='loadMoreBtn';
+  const existing=document.getElementById(loadMoreId);
+  if(existing)existing.remove();
+  if(paged.length<total){
+    const btn=document.createElement('div');
+    btn.id=loadMoreId;
+    btn.style.cssText='grid-column:1/-1;text-align:center;padding:12px';
+    btn.innerHTML=`<button onclick="_verifiedPage++;renderVerified(false)" style="background:var(--bg3);border:1px solid var(--gold3);color:var(--gold);font-family:Rajdhani,sans-serif;font-size:.78rem;font-weight:700;padding:9px 24px;border-radius:var(--r2);letter-spacing:.5px">Load More (${total-paged.length} remaining)</button>`;
+    grid.appendChild(btn);
+  }
+}
+
+function renderNearby(){
+  if(!S.gmReady){
+    document.getElementById('nearbyCount').textContent='Maps not loaded';
+    document.getElementById('nearbyGrid').innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">🗺️</div><div class="empty-t">Add Google Maps API Key to see nearby places.</div></div>`;
+    return;
+  }
+  const tab=S.tab==='all'?null:{restaurant:'restaurant',shop:'store',doctor:'hospital',electrician:'electrician'}[S.tab];
+  let list=S.nearbyPlaces
+    .filter(p=>!tab||p.type===tab)
+    .filter(p=>!S.q||p.name.toLowerCase().includes(S.q.toLowerCase()))
+    .map(p=>({...p,_dist:S.loc.lat?parseFloat(haversine(S.loc.lat,S.loc.lng,p.lat,p.lng)):999}))
+    .sort((a,b)=>a._dist-b._dist).slice(0,20);
+  document.getElementById('nearbyCount').textContent=list.length+' nearby';
+  document.getElementById('nearbyGrid').innerHTML=list.length
+    ?list.map((p,i)=>googleCard(p,i)).join('')
+    :`<div class="empty-s" style="grid-column:1/-1"><div class="empty-ic">📍</div><div class="empty-t">${S.loc.lat?'No nearby places found.':'Allow location access.'}</div></div>`;
+}
+
+/* ─── CARDS ─── */
+function bizCard(b,i){
+  const isFav=S.favs.includes(b.id);
+  const sc=b.status==='open'?'sp-open':b.status==='busy'?'sp-busy':'sp-closed';
+  const st=b.status==='open'?'● OPEN':b.status==='busy'?'◉ BUSY':'○ CLOSED';
+  const stars='★'.repeat(Math.round(b.rating||0))+'☆'.repeat(5-Math.round(b.rating||0));
+  const distTxt=S.loc.lat&&b.lat?`<span class="card-dist">📍 ${fmtDist(haversine(S.loc.lat,S.loc.lng,b.lat,b.lng))}</span>`:'';
+  return `<div class="biz-card${b.boost?' boosted':''}" style="animation-delay:${Math.min(i*.04,.5)}s">
+    <div class="card-header">
+      <div class="card-avi">${b.avatar||'🏪'}</div>
+      <div class="card-info">
+        <div class="card-name">${esc(b.name||'')}<span class="vbadge">✓ VERIFIED</span></div>
+        <div class="card-cat">${(b.category||'').toUpperCase()}</div>
+        <div class="card-loc">📍 ${esc(b.area||'')}${b.city?', '+esc(b.city):''} ${distTxt}</div>
+      </div>
+    </div>
+    <div class="card-meta">
+      <div class="stars-wrap"><span class="stars-txt">${stars}</span><span class="rating-n">${(b.rating||0).toFixed(1)}</span><span class="rating-c">(${b.ratingCount||0})</span></div>
+      <span class="stat-pill ${sc}">${st}</span>
+      <span class="rank-pill">#${i+1}</span>
+      ${b.boost?'<span class="boost-pill">⚡ BOOST</span>':''}
+    </div>
+    ${b.staff?`<div class="card-staff">👥 <span>${esc(b.staff)}</span></div>`:''}
+    <div class="card-actions">
+      <button class="act-btn ab-call" onclick="callBiz('${b.id}','${esc(b.phone||'')}')"><span class="ai">📞</span>Call</button>
+      <button class="act-btn ab-wa" onclick="waBiz('${esc(b.whatsapp||b.phone||'')}')"><span class="ai">💬</span>WhatsApp</button>
+      <button class="act-btn ab-dir" onclick="dirBiz('${esc(b.name||'')}','${esc(b.city||'')}',${b.lat||0},${b.lng||0})"><span class="ai">🗺️</span>Map</button>
+      <button class="act-btn ab-req" onclick="openReqModal('${b.id}')"><span class="ai">⚡</span>Request</button>
+    </div>
+    <div class="card-foot">
+      <button class="cf-btn${isFav?' fav-on':''}" onclick="toggleFav('${b.id}',this)">${isFav?'♥ Saved':'♡ Save'}</button>
+      <button class="cf-btn" onclick="shareCard('${b.id}','${esc(b.name||'')}')">🔗 Share</button>
+      <button class="cf-btn" onclick="openRate('${b.id}','${esc(b.name||'')}')">⭐ Rate</button>
+    </div>
+  </div>`;
+}
+
+function googleCard(p,i){
+  const dist=p._dist<999?`<span class="card-dist">📍 ${fmtDist(p._dist)}</span>`:'';
+  const st=p.open===true?'<span class="stat-pill sp-open">● OPEN</span>':p.open===false?'<span class="stat-pill sp-closed">○ CLOSED</span>':'';
+  const stars=p.rating?'★'.repeat(Math.round(p.rating))+'☆'.repeat(5-Math.round(p.rating)):'';
+  return `<div class="google-card" style="animation-delay:${Math.min(i*.04,.5)}s">
+    <div class="card-header">
+      <div class="card-avi goog">MAPS</div>
+      <div class="card-info">
+        <div class="card-name">${esc(p.name)}<span class="gbadge">GOOGLE</span></div>
+        <div class="card-cat">${(p.type||'').replace('_',' ').toUpperCase()}</div>
+        <div class="card-loc">📍 ${esc(p.vicinity||'')} ${dist}</div>
+      </div>
+    </div>
+    <div class="card-meta">${stars?`<div class="stars-wrap"><span class="stars-txt">${stars}</span><span class="rating-n">${p.rating.toFixed(1)}</span><span class="rating-c">(${p.ratingCount})</span></div>`:''} ${st}</div>
+    <div class="card-actions">
+      <button class="act-btn ab-call" onclick="T('Call unavailable for Google listings','wrn')"><span class="ai">📞</span>Call</button>
+      <button class="act-btn ab-wa" onclick="T('WhatsApp unavailable','wrn')"><span class="ai">💬</span>WhatsApp</button>
+      <button class="act-btn ab-dir" onclick="window.open('https://www.google.com/maps/place/?q=place_id:${p.place_id}','_blank')"><span class="ai">🗺️</span>Map</button>
+      <button class="act-btn ab-req" onclick="openReqModal('')"><span class="ai">⚡</span>Request</button>
+    </div>
+  </div>`;
+}
+
+/* ─── ACTIONS ─── */
+function callBiz(id,phone){
+  if(!phone){T('Phone unavailable','err');return}
+  fbTxn('/businesses/'+id+'/calls',v=>(v||0)+1);
+  if(S.biz[id])S.biz[id].calls=(S.biz[id].calls||0)+1;
+  window.location.href='tel:+91'+phone;
+}
+function waBiz(wa){
+  if(!wa){T('WhatsApp unavailable','err');return}
+  window.open('https://wa.me/91'+wa+'?text=Hi%2C%20I%20found%20you%20on%20Sultan%20Global%20Engine.%20Need%20your%20service.','_blank');
+}
+function dirBiz(name,city,lat,lng){
+  if(lat&&lng)window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,'_blank');
+  else window.open(`https://www.google.com/maps/search/${encodeURIComponent(name+' '+city)}`,'_blank');
+}
+function toggleFav(id,btn){
+  const idx=S.favs.indexOf(id);
+  if(idx===-1){S.favs.push(id);btn.innerHTML='♥ Saved';btn.classList.add('fav-on');T('♥ Saved to Favorites','suc')}
+  else{S.favs.splice(idx,1);btn.innerHTML='♡ Save';btn.classList.remove('fav-on');T('Removed from Favorites')}
+  _lsSet('sultan_favs',S.favs);
+}
+function shareCard(id,name){
+  const url=location.href.split('?')[0]+'?b='+id;
+  if(navigator.share)navigator.share({title:name+' — Sultan Engine',url});
+  else navigator.clipboard.writeText(url).then(()=>T('🔗 Link copied','suc')).catch(()=>T('Copy failed','err'));
+}
+
+/* ─── FAVORITES ─── */
+function renderFavM(){
+  const list=S.favs.map(id=>S.biz[id]).filter(Boolean);
+  document.getElementById('favMBody').innerHTML=list.length
+    ?list.map(b=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:.82rem;font-weight:700">${b.avatar||'🏪'} ${esc(b.name||'')}</div><div style="font-size:.65rem;color:var(--text3)">${(b.category||'').toUpperCase()} · ${b.area||''}</div></div>
+      <div style="display:flex;gap:6px">
+        <button style="background:var(--green);color:#fff;font-size:.62rem;padding:4px 8px;border-radius:6px" onclick="callBiz('${b.id||''}','${b.phone||''}')">Call</button>
+        <button style="background:var(--blue);color:#fff;font-size:.62rem;padding:4px 8px;border-radius:6px" onclick="dirBiz('${esc(b.name||'')}','${esc(b.city||'')}',${b.lat||0},${b.lng||0})">Map</button>
+      </div></div>`).join('')
+    :`<div class="empty-s"><div class="empty-ic">♡</div><div class="empty-t">No favorites yet.</div></div>`;
+}
+
+/* ─── REQUEST SERVICE ─── */
+function openReqModal(prefId=''){
+  const now=Date.now();
+  const ck=S.devId+'_lead';
+  if(S.cooldowns[ck]&&now-S.cooldowns[ck]<120000){
+    T(`⏱️ Wait ${Math.ceil((120000-(now-S.cooldowns[ck]))/1000)}s before next request`,'wrn');return;
+  }
+  const today=new Date().toDateString();
+  const dayKey='sultan_leads_'+today;
+  const todayCount=parseInt(localStorage.getItem(dayKey)||'0');
+  if(todayCount>=CFG.maxLeadsPerDay){T('Aaj ke liye maximum '+CFG.maxLeadsPerDay+' requests ho gayi hain','err');return}
+  const biz=prefId?S.biz[prefId]:null;
+  const catOpts=CATS.filter(c=>c.id!=='all').map(c=>`<option value="${c.id}"${biz&&biz.category===c.id?' selected':''}>${c.ic} ${c.l}</option>`).join('');
+  document.getElementById('reqMBody').innerHTML=`
+    <div class="fg"><label class="fl">Service Category</label><select class="fi" id="rq_cat">${catOpts}</select></div>
+    <div class="fg"><label class="fl">Describe Your Need *</label><textarea class="fi" id="rq_desc" rows="3" placeholder="E.g. Need electrician for wiring repair..." style="resize:none"></textarea></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">City</label><input class="fi" id="rq_city" type="text" placeholder="City" value="${biz?.city||S.loc.city||''}"></div>
+      <div class="fg"><label class="fl">Area</label><input class="fi" id="rq_area" type="text" placeholder="Area" value="${biz?.area||''}"></div>
+    </div>
+    <div class="fg"><label class="fl">Your Phone *</label><input class="fi" id="rq_phone" type="tel" placeholder="10-digit mobile number" maxlength="10"></div>
+    <div class="info-t">⚡ Top 3 providers notified. First to accept wins the lead.</div>
+    <button class="btn-gold" onclick="submitReq('${prefId}')">⚡ SEND REQUEST</button>`;
+  openM('reqM');
+}
+
+function submitReq(prefId){
+  const desc=document.getElementById('rq_desc').value.trim();
+  const phone=document.getElementById('rq_phone').value.trim();
+  if(!desc||desc.length<5){T('Request describe karein (min 5 characters)','err');return}
+  if(!isValidPhone(phone)){T('Valid 10-digit phone number daalo','err');return}
+  const cat=document.getElementById('rq_cat').value;
+  const top3=Object.entries(S.biz)
+    .filter(([_,b])=>b.category===cat&&b.status==='open')
+    .map(([id,b])=>({id,...b,_score:score(b)}))
+    .sort((a,b)=>b._score-a._score).slice(0,3)
+    .map(p=>({id:p.id,name:p.name,accepted:false}));
+  if(!top3.length){T('Is category mein koi provider available nahi hai','wrn');return}
+  const lid='L'+Date.now();
+  const sanitize=s=>String(s||'').replace(/[<>"'&]/g,'').trim().substring(0,200);
+  const lead={id:lid,category:sanitize(cat),description:sanitize(desc),city:sanitize(document.getElementById('rq_city').value),area:sanitize(document.getElementById('rq_area').value),clientPhone:phone,deviceId:S.devId,ownerUid:S.uid||S.devId,status:'pending',providers:top3,preferredBiz:prefId||'',createdAt:Date.now()};
+  if(S.db)S.db.ref('/leads/'+lid).set(lead).then(()=>{
+    const today=new Date().toDateString();
+    const dayKey='sultan_leads_'+today;
+    localStorage.setItem(dayKey,(parseInt(localStorage.getItem(dayKey)||'0')+1).toString());
+    S.cooldowns[S.devId+'_lead']=Date.now();
+    closeM('reqM');T('⚡ Request sent! Top 3 providers notified.','suc');
+    swV('leads',document.querySelectorAll('.nav-it')[1]);
+  }).catch(e=>T('Request failed: '+e.message,'err'));
+  else{S.leads[lid]=lead;closeM('reqM');T('⚡ Request sent! (Demo)','suc');}
+}
+
+/* ─── LEADS VIEW ─── */
+function renderLeadsView(){
+  const myLeads=Object.values(S.leads).filter(l=>l.deviceId===S.devId);
+  const el=document.getElementById('leadsView');
+  if(!myLeads.length){el.innerHTML=`<div class="empty-s"><div class="empty-ic">⚡</div><div class="empty-t">No requests yet.<br>Tap + REQUEST to get started.</div></div>`;return}
+  el.innerHTML=myLeads.sort((a,b)=>b.createdAt-a.createdAt).map(l=>{
+    const sc=l.status==='pending'?'ls-pend':l.status==='accepted'?'ls-acpt':'ls-exp';
+    const cat=CATS.find(c=>c.id===l.category);
+    const acc=l.providers?.find(p=>p.accepted);
+    return `<div class="lead-card">
+      <div class="lead-top"><span class="lead-t">${cat?.ic||'🔧'} ${cat?.l||l.category} Request</span><span class="ls ${sc}">${l.status.toUpperCase()}</span></div>
+      <div class="lead-meta">📝 ${esc(l.description)}<br>📍 ${l.area?l.area+', ':''}${l.city||''}<br>🕒 ${tsAgo(l.createdAt)}</div>
+      ${acc?`<div style="margin-top:7px;padding:7px 9px;background:rgba(46,125,50,.08);border-radius:var(--r2);border:1px solid rgba(46,125,50,.2);font-size:.72rem;color:#66bb6a">✅ ${esc(acc.name)} accepted!</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ─── RATING ─── */
+function openRate(bizId,bizName){
+  const lk=S.devId+'_'+bizId;
+  const now=Date.now();
+  if(S.rLocks[lk]&&now-S.rLocks[lk]<CFG.ratingCooldownHours*3600000){
+    T(`⏱️ Rate again in ${Math.ceil((CFG.ratingCooldownHours*3600000-(now-S.rLocks[lk]))/3600000)}h`,'wrn');return;
+  }
+  window._ratingStars=0;
+  document.getElementById('rateMBody').innerHTML=`
+    <div style="text-align:center;font-family:'Cinzel',serif;font-size:.85rem;color:var(--text2);margin-bottom:11px">${esc(bizName)}</div>
+    <div class="star-inp" id="starInp">${[1,2,3,4,5].map(n=>`<span class="si" onclick="setStars(${n})">★</span>`).join('')}</div>
+    <div class="fg"><label class="fl">Your Review</label><textarea class="fi" id="rateText" rows="3" placeholder="Share your experience..." style="resize:none"></textarea></div>
+    <button class="btn-gold" onclick="submitRate('${bizId}')">SUBMIT RATING</button>`;
+  openM('rateM');
+}
+function setStars(n){window._ratingStars=n;document.querySelectorAll('.star-inp .si').forEach((s,i)=>s.classList.toggle('on',i<n))}
+function submitRate(bizId){
+  const stars=window._ratingStars||0;
+  if(!stars){T('Pehle stars select karein','err');return}
+  const rid='R'+Date.now();
+  const data={stars,text:document.getElementById('rateText').value.trim(),bizId,deviceId:S.devId,ownerUid:S.uid||S.devId,createdAt:Date.now()};
+  if(S.db){
+    S.db.ref('/ratings/'+rid).set(data);
+    S.db.ref('/businesses/'+bizId).transaction(b=>{
+      if(!b)return b;
+      const nc=(b.ratingCount||0)+1;
+      return{...b,rating:Math.round((((b.rating||0)*(b.ratingCount||0))+stars)/nc*10)/10,ratingCount:nc};
+    });
+  }else{if(S.biz[bizId]){const b=S.biz[bizId];const nc=(b.ratingCount||0)+1;b.rating=Math.round((((b.rating||0)*(b.ratingCount||0))+stars)/nc*10)/10;b.ratingCount=nc;}}
+  S.rLocks[S.devId+'_'+bizId]=Date.now();
+  _lsSet('sultan_rlocks',S.rLocks);
+  closeM('rateM');T('⭐ Rating submitted!','suc');
+  window._ratingStars=0;renderVerified();
+}
+
+/* ─── REGISTER ─── */
+function renderRegView(){
+  const el=document.getElementById('regView');
+  const step=S._regStep||1;
+  if(step===1){
+    const catOpts=CATS.filter(c=>c.id!=='all').map(c=>`<option value="${c.id}">${c.ic} ${c.l}</option>`).join('');
+    el.innerHTML=`
+      <div class="step-row"><div class="step-c act">1</div><div class="step-ln"></div><div class="step-c idle">2</div><div class="step-ln"></div><div class="step-c idle">3</div></div>
+      <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);margin-bottom:11px">Step 1: Business Details</div>
+      <div class="fg"><label class="fl">Business Name *</label><input class="fi" id="rg_name" type="text" placeholder="Your Business Name" maxlength="60"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Category *</label><select class="fi" id="rg_cat">${catOpts}</select></div>
+        <div class="fg"><label class="fl">Phone *</label><input class="fi" id="rg_phone" type="tel" placeholder="10-digit Mobile" maxlength="10"></div>
+      </div>
+      <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="rg_wa" type="tel" placeholder="WhatsApp Number" maxlength="10"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Country</label><input class="fi" id="rg_country" type="text" value="India" placeholder="Country"></div>
+        <div class="fg"><label class="fl">City *</label><input class="fi" id="rg_city" type="text" placeholder="City"></div>
+      </div>
+      <div class="fg"><label class="fl">Area/Locality *</label><input class="fi" id="rg_area" type="text" placeholder="Area"></div>
+      <div class="fg"><label class="fl">Business Location (Nearby ke liye)</label><button type="button" id="locPickBtn" onclick="pickRegLocation()" style="width:100%;padding:9px;border-radius:8px;font-size:.78rem;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-family:Rajdhani,sans-serif;cursor:pointer">📍 Apna Location Pick Karo</button><div id="locPickStatus" style="font-size:.65rem;color:var(--text3);margin-top:4px"></div></div>
+      <div class="fg"><label class="fl">Staff Names</label><input class="fi" id="rg_staff" type="text" placeholder="Name1, Name2..."></div>
+      <div class="fg"><label class="fl">Referral Code</label><input class="fi" id="rg_ref" type="text" placeholder="Friend's code (optional)"></div>
+      <button class="btn-gold" onclick="rgStep2()">CONTINUE TO PAYMENT →</button>`;
+  }else if(step===2){
+    const d=S._regData;
+    el.innerHTML=`
+      <div class="step-row"><div class="step-c done">✓</div><div class="step-ln done"></div><div class="step-c act">2</div><div class="step-ln"></div><div class="step-c idle">3</div></div>
+      <div style="font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);margin-bottom:11px">Step 2: Payment</div>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:9px;margin-bottom:11px;font-size:.75rem;color:var(--text2)">
+        Listing: <strong style="color:var(--text)">${esc(d?.name||'')}</strong> · ${esc(d?.category||'')} · ${esc(d?.city||'')}</div>
+      <div class="upi-box">
+        <div class="upi-lbl">Pay via UPI</div>
+        <div class="upi-val">${S.settings.upiId}</div>
+        <div class="upi-amt">₹99 Registration Fee</div>
+      </div>
+      <div class="fg"><label class="fl">Payment Mode *</label>
+        <select class="fi" id="rg_paymode"><option value="online">Online UPI / Bank</option><option value="cash">Cash (Admin verify)</option></select>
+      </div>
+      <div class="fg"><label class="fl">Transaction ID / UTR *</label><input class="fi" id="rg_txn" type="text" placeholder="12+ digit UTR Number" maxlength="30"></div>
+      <div class="info-t">Admin 24 ghante mein verify karke approve karega.</div>
+      <button class="btn-gold" onclick="rgStep3()">SUBMIT REGISTRATION →</button>
+      <button class="btn-ghost" onclick="S._regStep=1;renderRegView()">← Back</button>`;
+  }
+}
+
+function pickRegLocation(){
+  const btn=document.getElementById("locPickBtn");
+  const status=document.getElementById("locPickStatus");
+  if(!navigator.geolocation){status.textContent="Location supported nahi hai";return;}
+  btn.textContent="📍 Detecting...";
+  btn.style.color="var(--gold)";
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      S._pickedLat=pos.coords.latitude;
+      S._pickedLng=pos.coords.longitude;
+      btn.textContent="✅ Location Picked!";
+      btn.style.color="var(--green2)";
+      status.textContent="Lat: "+pos.coords.latitude.toFixed(5)+", Lng: "+pos.coords.longitude.toFixed(5);
+    },
+    ()=>{
+      btn.textContent="📍 Apna Location Pick Karo";
+      btn.style.color="";
+      status.textContent="Location nahi mili — allow karo";
+    },{timeout:8000,enableHighAccuracy:true}
+  );
+}
+function rgStep2(){
+  const name=document.getElementById('rg_name').value.trim();
+  const phone=document.getElementById('rg_phone').value.trim();
+  const city=document.getElementById('rg_city').value.trim();
+  const area=document.getElementById('rg_area').value.trim();
+  const wa=document.getElementById('rg_wa').value.trim();
+  if(!name||name.length<3){T('Business name kam se kam 3 letters ka hona chahiye','err');return}
+  if(!isValidPhone(phone)){T('Valid 10-digit Indian mobile number daalo','err');return}
+  if(wa&&!isValidPhone(wa)){T('Valid WhatsApp number daalo','err');return}
+  if(!city||city.length<2){T('City ka naam daalo','err');return}
+  if(!area||area.length<2){T('Area ka naam daalo','err');return}
+  const dup=Object.values(S.biz).find(b=>b.phone===phone);
+  if(dup){T('Yeh number already registered hai: '+dup.name,'err');return}
+  S._regData={name,category:document.getElementById('rg_cat').value,phone,whatsapp:wa||phone,city,area,country:document.getElementById('rg_country').value.trim()||'India',staff:document.getElementById('rg_staff').value.trim(),referral:document.getElementById('rg_ref').value.trim(),status:'pending',verified:false,boost:false,rating:0,ratingCount:0,calls:0,leadsCompleted:0,responses:0,deviceId:S.devId,ownerUid:S.uid||S.devId,avatar:CATS.find(c=>c.id===document.getElementById('rg_cat').value)?.ic||'🏪',lat:S._pickedLat||S.loc.lat||null,lng:S._pickedLng||S.loc.lng||null,createdAt:Date.now()};
+  S._regStep=2;renderRegView();
+}
+
+function rgStep3(){
+  const txn=document.getElementById('rg_txn').value.trim();
+  const mode=document.getElementById('rg_paymode').value;
+  if(mode==='online'){
+    if(!txn){T('Transaction ID daalna zaroori hai','err');return}
+    if(txn.length<CFG.minUTRLength){T(`Valid UTR/Transaction ID daalo (min ${CFG.minUTRLength} characters)`,'err');return}
+    if(!/^[a-zA-Z0-9]+$/.test(txn)){T('Transaction ID mein sirf numbers/letters hone chahiye','err');return}
+  }
+  const bid='B'+Date.now();
+  const data={...S._regData,txnId:txn,payMode:mode,submittedAt:Date.now()};
+  if(S.db){
+    S.db.ref('/businesses/'+bid).set(data)
+      .then(()=>{
+        T('🎉 Register ho gaye! Admin 24 ghante mein approve karega.','suc');
+        if(data.referral)S.db.ref('/wallets/'+data.referral).transaction(w=>{if(!w)return w;return{...w,balance:(w.balance||0)+S.settings.referralBonus};});
+        S._regStep=1;S._regData=null;
+        swV('home',document.querySelectorAll('.nav-it')[0]);
+      })
+      .catch(e=>T('Registration failed: '+e.message,'err'));
+  }else{S.biz[bid]=data;S._regStep=1;S._regData=null;T('🎉 Registered! (Demo mode)','suc');renderVerified();swV('home',document.querySelectorAll('.nav-it')[0]);}
+}
+
+/* ─── DASHBOARD ─── */
+function renderDashView(){
+  const el=document.getElementById('dashView');
+  if(!S.owner){
+    el.innerHTML=`
+      <div class="fg"><label class="fl">Registered Phone</label><input class="fi" type="tel" id="dsh_phone" placeholder="Apna registered mobile daalo" maxlength="10"></div>
+      <button class="btn-gold" onclick="ownerLogin()">ACCESS MY DASHBOARD</button>`;
+    return;
+  }
+  const b=S.owner;const bid=b.id;
+  const wal=S.wallets[bid]||{balance:50,transactions:[]};
+  const myLeads=Object.values(S.leads).filter(l=>l.providers?.some(p=>p.id===bid));
+  const pending=myLeads.filter(l=>l.status==='pending');
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px">
+      <div><div style="font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold)">${esc(b.name||'')}</div><div style="font-size:.65rem;color:var(--text3)">${(b.category||'').toUpperCase()} · ${b.area||''}</div></div>
+      <button class="btn-ghost" style="width:auto;padding:5px 11px;font-size:.68rem" onclick="S.owner=null;renderDashView()">Logout</button>
+    </div>
+    <div class="own-stats">
+      <div class="own-stat"><div class="own-stat-n">${b.calls||0}</div><div class="own-stat-l">Calls</div></div>
+      <div class="own-stat"><div class="own-stat-n">${b.leadsCompleted||0}</div><div class="own-stat-l">Done</div></div>
+      <div class="own-stat"><div class="own-stat-n" style="color:var(--green2)">${S.settings.currency}${wal.balance||0}</div><div class="own-stat-l">Balance</div></div>
+    </div>
+    <div class="stat-tgl">
+      <button class="st-tgl${b.status==='open'?' t-open':''}" onclick="ownStatus('${bid}','open')">● OPEN</button>
+      <button class="st-tgl${b.status==='busy'?' t-busy':''}" onclick="ownStatus('${bid}','busy')">◉ BUSY</button>
+      <button class="st-tgl${b.status==='closed'?' t-closed':''}" onclick="ownStatus('${bid}','closed')">○ CLOSED</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:13px">
+      <button class="btn-ghost" style="padding:8px;font-size:.72rem" onclick="openWallet('${bid}')">💰 Wallet</button>
+      <button class="btn-ghost" style="padding:8px;font-size:.72rem" onclick="openTrackModal('${bid}')">📍 Tracking</button>
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Pending Leads (${pending.length})</div>
+    ${pending.length?pending.map(l=>`
+      <div class="lead-card">
+        <div class="lead-top"><span class="lead-t">⚡ ${CATS.find(c=>c.id===l.category)?.l||l.category}</span><button class="accept-btn" onclick="acceptLead('${l.id}','${bid}')">ACCEPT</button></div>
+        <div class="lead-meta">📝 ${esc(l.description||'')}<br>📍 ${l.area?l.area+', ':''}${l.city||''}<br>💰 Cost: ${S.settings.currency}${S.settings.leadPrice}</div>
+      </div>`).join(''):'<div style="font-size:.75rem;color:var(--text3);text-align:center;padding:14px">No pending leads</div>'}
+    <div class="ref-box">
+      <div style="font-size:.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Your Referral Code</div>
+      <div class="ref-code">${bid.substr(-6).toUpperCase()}</div>
+      <div class="ref-info">Share & earn ${S.settings.currency}${S.settings.referralBonus} when a new owner registers</div>
+      <button style="background:var(--gold);color:var(--bg);font-size:.68rem;font-weight:800;padding:6px 14px;border-radius:var(--r2);margin-top:8px" onclick="shareCard('${bid}','${esc(b.name||'')}')">🔗 Share Code</button>
+    </div>`;
+}
+
+function ownerLogin(){
+  const phone=document.getElementById('dsh_phone').value.trim();
+  if(!isValidPhone(phone)){T('Valid 10-digit phone number daalo','err');return}
+  const found=Object.entries(S.biz).find(([_,b])=>b.phone===phone);
+  if(!found){T('Is number se koi business registered nahi hai','err');return}
+  if(found[1].status==='pending'){T('Aapka account admin approval pending hai','wrn');return}
+  S.owner={id:found[0],...found[1]};
+  renderDashView();T('✅ Dashboard loaded','suc');
+}
+
+function ownStatus(bid,st){
+  if(S.db)S.db.ref('/businesses/'+bid+'/status').set(st);
+  else if(S.biz[bid])S.biz[bid].status=st;
+  if(S.owner)S.owner.status=st;
+  renderDashView();renderVerified();T(`Status: ${st.toUpperCase()}`,'suc');
+}
+
+function acceptLead(lid,bid){
+  const wal=S.wallets[bid]||{balance:50};
+  if((wal.balance||0)<S.settings.leadPrice){T(`Insufficient balance. Need ${S.settings.currency}${S.settings.leadPrice}`,'err');openWallet(bid);return}
+  if(S.db){
+    S.db.ref('/leads/'+lid+'/status').set('accepted');
+    S.db.ref('/businesses/'+bid+'/leadsCompleted').transaction(v=>(v||0)+1);
+    S.db.ref('/wallets/'+bid).transaction(w=>({...(w||{}),balance:(w?.balance||50)-S.settings.leadPrice,transactions:[...((w||{}).transactions||[]),{desc:'Lead accepted',amount:-S.settings.leadPrice,date:Date.now()}]}));
+  }else{if(S.leads[lid])S.leads[lid].status='accepted';S.wallets[bid]={...(S.wallets[bid]||{}),balance:(wal.balance||50)-S.settings.leadPrice};}
+  T('✅ Lead accepted!','suc');renderDashView();
+}
+
+/* ─── WALLET ─── */
+function openWallet(bid){
+  const wal=S.wallets[bid]||{balance:50,transactions:[]};
+  const txns=(wal.transactions||[]).slice(-5).reverse();
+  document.getElementById('walletMBody').innerHTML=`
+    <div class="wallet-hero">
+      <div class="wallet-l">Available Balance</div>
+      <div class="wallet-n">${S.settings.currency}${wal.balance||0}</div>
+      <button class="wallet-recharge-btn" onclick="closeM('walletM');openRch('${bid}')">+ RECHARGE</button>
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Recent Transactions</div>
+    ${txns.length?txns.map(t=>`<div class="txn-row"><div><div class="txn-desc">${esc(t.desc||'')}</div><div class="txn-date">${new Date(t.date||0).toLocaleDateString()}</div></div><div class="txn-amt ${t.amount>0?'txn-cr':'txn-dr'}">${t.amount>0?'+':''}${S.settings.currency}${Math.abs(t.amount)}</div></div>`).join(''):'<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:12px">No transactions</div>'}`;
+  openM('walletM');
+}
+
+function openRch(bid){
+  document.getElementById('rchMBody').innerHTML=`
+    <div class="upi-box"><div class="upi-lbl">Pay via UPI</div><div class="upi-val">${S.settings.upiId}</div><div class="upi-amt">Min ${S.settings.currency}50 · Max ${S.settings.currency}5000</div></div>
+    <div class="fg"><label class="fl">Amount (₹)</label><input class="fi" id="rch_amt" type="number" placeholder="100" min="50" max="5000"></div>
+    <div class="fg"><label class="fl">Transaction ID / UTR *</label><input class="fi" id="rch_txn" type="text" placeholder="12+ digit UTR Number" maxlength="30"></div>
+    <div class="info-t">Admin 1 ghante mein verify karke credit karega.</div>
+    <button class="btn-gold" onclick="submitRch('${bid}')">SUBMIT RECHARGE</button>`;
+  openM('rchM');
+}
+
+function submitRch(bid){
+  const amt=parseInt(document.getElementById('rch_amt').value)||0;
+  const txn=document.getElementById('rch_txn').value.trim();
+  if(amt<50||amt>5000){T('Amount ₹50 se ₹5000 ke beech honi chahiye','err');return}
+  if(!txn||txn.length<CFG.minUTRLength){T(`Valid UTR daalo (min ${CFG.minUTRLength} characters)`,'err');return}
+  const rid='RQ'+Date.now();
+  if(S.db)S.db.ref('/wallets/'+bid+'/rechargeRequests/'+rid).set({bizId:bid,amount:amt,txnId:txn,status:'pending',createdAt:Date.now()})
+    .then(()=>{closeM('rchM');T('💰 Recharge request submitted!','suc');})
+    .catch(e=>T('Failed: '+e.message,'err'));
+  else{closeM('rchM');T('💰 Request submitted! (Demo)','suc');}
+}
+
+/* ─── TRACKING ─── */
+function openTrackModal(bid){
+  const tracked=S.tracking[bid];
+  document.getElementById('trackMBody').innerHTML=`
+    <div class="track-box">
+      <div style="font-size:.76rem;color:var(--text2);margin-bottom:7px">Share your live GPS with clients</div>
+      <button class="track-tgl${S.trackOn?' on':''}" onclick="toggleTrack('${bid}')">
+        ${S.trackOn?'📍 Tracking ON — Click to Stop':'📍 Start Live Tracking'}</button>
+      ${tracked?`<div class="track-coords">🕒 ${new Date(tracked.updatedAt||0).toLocaleTimeString()}<br>Lat: ${tracked.lat}<br>Lng: ${tracked.lng}</div>`:''}
+    </div>
+    ${tracked?`<a href="https://www.google.com/maps?q=${tracked.lat},${tracked.lng}" target="_blank" style="display:block;text-align:center;padding:9px;border-radius:var(--r2);border:1px solid var(--border2);font-size:.78rem;color:var(--blue2);margin-top:8px">🗺️ View on Google Maps</a>`:''}`;
+  openM('trackM');
+}
+
+function toggleTrack(bid){
+  if(S.trackOn){
+    if(S.trackWid)navigator.geolocation.clearWatch(S.trackWid);
+    S.trackOn=false;
+    if(S.db)S.db.ref('/tracking/'+bid+'/active').set(false);
+    T('📍 Tracking stopped');
+  }else{
+    if(!navigator.geolocation){T('Geolocation not supported','err');return}
+    S.trackWid=navigator.geolocation.watchPosition(pos=>{
+      const d={lat:pos.coords.latitude,lng:pos.coords.longitude,updatedAt:Date.now(),active:true};
+      S.tracking[bid]=d;
+      if(S.db)S.db.ref('/tracking/'+bid).set(d);
+    },err=>T('Location error: '+err.message,'err'),{enableHighAccuracy:true});
+    S.trackOn=true;T('📍 Live tracking started','suc');
+  }
+  openTrackModal(bid);
+}
+
+/* ─── COMPLAINT ─── */
+function submitComplaint(){
+  const name=document.getElementById('comp_name').value.trim();
+  const phone=document.getElementById('comp_phone').value.trim();
+  const text=document.getElementById('comp_text').value.trim();
+  if(!name||name.length<2){T('Apna naam daalo','err');return}
+  if(!isValidPhone(phone)){T('Valid 10-digit phone number daalo','err');return}
+  if(!text||text.length<10){T('Complaint detail mein likhein (min 10 characters)','err');return}
+  const cid='C'+Date.now();
+  const c={name,phone,biz:document.getElementById('comp_biz').value.trim(),text,deviceId:S.devId,ownerUid:S.uid||S.devId,createdAt:Date.now()};
+  if(S.db)S.db.ref('/complaints/'+cid).set(c).then(()=>{closeM('compM');T('⚠️ Complaint submitted. 24h mein jawab milega.','suc');}).catch(e=>T('Failed: '+e.message,'err'));
+  else{S.complaints[cid]=c;closeM('compM');T('⚠️ Complaint submitted.','suc');}
+}
+
+/* ─── VIEW SWITCHING ─── */
+function swV(view,btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('view-'+view).classList.add('on');
+  document.querySelectorAll('.nav-it').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  S.view=view;
+  if(view==='leads')renderLeadsView();
+  if(view==='register'){S._regStep=1;renderRegView();}
+  if(view==='dash')renderDashView();
+}
+
+/* ─── SEARCH (with debounce) ─── */
+let _st;
+const searchIn=document.getElementById('searchIn');
+searchIn.addEventListener('input',function(){
+  clearTimeout(_st);
+  _st=setTimeout(()=>{S.q=this.value;_verifiedPage=1;renderVerified();renderNearby();},300);
+});
+function doSearch(){S.q=searchIn.value;_verifiedPage=1;renderVerified();renderNearby();}
+
+/* ─── OFFLINE / PWA ─── */
+window.addEventListener('offline',()=>{document.getElementById('offline-bar').style.display='block'});
+window.addEventListener('online',()=>{document.getElementById('offline-bar').style.display='none';T('🌐 Back online','suc')});
+if(!navigator.onLine)document.getElementById('offline-bar').style.display='block';
+let _pwa;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_pwa=e;document.getElementById('pwa-bar').classList.add('show')});
+document.getElementById('pwa-btn').onclick=()=>{if(_pwa){_pwa.prompt();_pwa.userChoice.then(()=>{document.getElementById('pwa-bar').classList.remove('show');_pwa=null})}};
+document.getElementById('pwa-x').onclick=()=>document.getElementById('pwa-bar').classList.remove('show');
+
+/* ─── SERVICE WORKER ─── */
+if('serviceWorker'in navigator){
+  const CACHE_NAME='sultan-v12-cache';
+  const sw=`
+    const CACHE='${CACHE_NAME}';
+    self.addEventListener('install',e=>{
+      e.waitUntil(
+        caches.open(CACHE).then(c=>c.addAll(['./','./index.html']))
+      );
+      self.skipWaiting();
+    });
+    self.addEventListener('activate',e=>{
+      e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+    });
+    self.addEventListener('fetch',e=>{
+      e.respondWith(
+        fetch(e.request).then(res=>{
+          const clone=res.clone();
+          caches.open(CACHE).then(c=>c.put(e.request,clone));
+          return res;
+        }).catch(()=>
+          caches.match(e.request).then(cached=>cached||
+            new Response('<html><body style="background:#0b0b0b;color:#d4af37;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;text-align:center"><div><div style="font-size:3rem">👑</div><div style="font-family:Cinzel,serif;font-size:1.2rem;letter-spacing:2px;margin:10px 0;color:#d4af37">SULTAN ENGINE</div><div style="font-size:.8rem;color:#888;margin-top:6px">Offline Mode — Cached data available</div><div style="margin-top:16px;font-size:.75rem;color:#555">Internet aane par refresh karein</div></div></body></html>',
+            {headers:{'Content-Type':'text/html'}})
+          )
+        )
+      );
+    });
+  `;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+/* ─── MANIFEST ─── */
+// UPDATED FIREBASE RULES (paste in Realtime Database > Rules):
+// {
+//   "rules": {
+//     "businesses": { ".read": true, "$bizId": { ".write": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'" } },
+//     "leads": { ".read": true, ".write": true },
+//     "ratings": { ".read": true, ".write": true },
+//     "tracking": { ".read": true, ".write": true },
+//     "wallets": { ".read": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'", ".write": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'" },
+//     "settings": { ".read": true, ".write": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'" },
+//     "complaints": { ".read": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'", ".write": true },
+//     "partners": { ".read": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'", ".write": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'" },
+//     "auditLogs": { ".read": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'", ".write": "auth != null && auth.uid === 'FLmAk9sItLWqOKSbe4N1kFKaJRg2'" }
+//   }
+// }
+
+const mf={name:"Sultan Global Engine V12",short_name:"Sultan Engine",start_url:"./",display:"standalone",background_color:"#0b0b0b",theme_color:"#d4af37",icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230b0b0b'/><text y='.9em' x='10' font-size='75'>⚡</text></svg>",sizes:"192x192",type:"image/svg+xml"}]};
+const mbl=new Blob([JSON.stringify(mf)],{type:'application/json'});
+const ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(mbl);document.head.appendChild(ml);
+
+/* ─── INIT ─── */
+(function init(){
+  renderTabs();
+  getLocation();
+  initFB();
+  renderRegView();
+  renderDashView();
+  renderLeadsView();
+})();
+</script>
+</body>
+</html>
