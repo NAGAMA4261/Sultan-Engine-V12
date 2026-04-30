@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0b0b0b">
+<title>SULTAN ENGINE — Provider</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0b0b0b;--bg2:#101010;--bg3:#161616;--bg4:#1e1e1e;
+--gold:#d4af37;--gold3:#9a7d1a;--gold4:rgba(212,175,55,0.12);
+--orange:#ff7a00;--orange3:rgba(255,122,0,0.12);
+--red:#e53935;--green:#2e7d32;--green2:#43a047;--blue:#1565c0;--blue2:#42a5f5;
+--text:#efefef;--text2:#b0b0b0;--text3:#686868;--text4:#3a3a3a;
+--border:#1f1f1f;--border2:#2a2a2a;
+--r:12px;--r2:8px;--r3:20px;--r4:4px;
+--sh:0 4px 32px rgba(0,0,0,0.7);
+--trans:.22s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:15px}body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+button{font-family:'Rajdhani',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+input,textarea,select{font-family:'Rajdhani',sans-serif;outline:none;border:none}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:2px}
+#topbar{position:fixed;top:0;left:0;right:0;z-index:900;height:54px;background:rgba(11,11,11,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border2);display:flex;align-items:center;padding:0 14px;gap:10px}
+.tb-brand{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);letter-spacing:2px;font-weight:900;flex:1}
+.tb-sub{font-size:.52rem;color:var(--text3);letter-spacing:1px;display:block;margin-top:1px}
+#main{padding-top:54px;padding-bottom:70px;min-height:100vh}
+.fg{margin-bottom:12px}.fl{display:block;font-size:.65rem;color:var(--text2);font-weight:700;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase}
+.fi{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;border-radius:var(--r2);font-size:.86rem;transition:var(--trans)}
+.fi:focus{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold4)}.fi::placeholder{color:var(--text3)}select.fi{appearance:none}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.btn-gold{width:100%;background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);font-family:'Cinzel',serif;font-size:.8rem;font-weight:800;padding:12px;border-radius:var(--r2);letter-spacing:1px;transition:var(--trans);margin-top:4px}
+.btn-ghost{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);font-size:.8rem;font-weight:600;padding:10px;border-radius:var(--r2);transition:var(--trans);margin-top:7px}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-size:.72rem;font-weight:800;padding:8px 14px;border-radius:var(--r2)}
+.btn-red-sm{background:rgba(229,57,53,.12);border:1px solid rgba(229,57,53,.3);color:#ef5350;font-size:.72rem;font-weight:700;padding:8px 14px;border-radius:var(--r2)}
+.btn-blue-sm{background:rgba(21,101,192,.15);border:1px solid rgba(21,101,192,.3);color:var(--blue2);font-size:.72rem;font-weight:700;padding:8px 14px;border-radius:var(--r2)}
+.btn-wa{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:#25d366;font-size:.72rem;font-weight:700;padding:8px 14px;border-radius:var(--r2)}
+.tab-row{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;position:sticky;top:54px;z-index:800}
+.tab-row::-webkit-scrollbar{display:none}
+.tab-item{padding:11px 14px;font-size:.7rem;font-weight:700;color:var(--text3);border-bottom:2px solid transparent;white-space:nowrap;transition:var(--trans);letter-spacing:.3px;cursor:pointer;position:relative}
+.tab-item.on{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-badge{position:absolute;top:6px;right:4px;background:var(--red);color:#fff;font-size:.5rem;font-weight:900;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.dash-header{background:linear-gradient(160deg,#0b0b0b,#120d00);padding:14px;border-bottom:1px solid var(--border)}
+.dh-name{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);font-weight:700}
+.dh-meta{font-size:.65rem;color:var(--text3);margin-top:3px}
+.status-row{display:flex;gap:6px;margin-top:10px}
+.st-btn{flex:1;padding:8px 4px;border-radius:var(--r2);font-size:.65rem;font-weight:800;background:var(--bg3);border:1px solid var(--border2);color:var(--text3);transition:var(--trans);letter-spacing:.3px}
+.st-btn.open{background:rgba(46,125,50,.2);color:#66bb6a;border-color:rgba(46,125,50,.4)}
+.st-btn.busy{background:rgba(255,122,0,.2);color:var(--orange);border-color:rgba(255,122,0,.4)}
+.st-btn.closed{background:rgba(229,57,53,.2);color:#ef5350;border-color:rgba(229,57,53,.4)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:10px 14px}
+.stat-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:9px;text-align:center}
+.stat-n{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold);font-weight:700}
+.stat-l{font-size:.52rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.wallet-card{margin:0 14px 10px;background:linear-gradient(135deg,#0d0800,#1a1000);border:1px solid var(--gold3);border-radius:var(--r);padding:13px;display:flex;align-items:center;justify-content:space-between}
+.wc-bal{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);font-weight:900}
+.wc-label{font-size:.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.wc-sub{font-size:.6rem;color:var(--text3);margin-top:2px}
+.wc-btns{display:flex;flex-direction:column;gap:6px}
+.wc-btn{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);font-family:'Cinzel',serif;font-size:.6rem;font-weight:800;padding:7px 12px;border-radius:var(--r2);letter-spacing:.5px;white-space:nowrap}
+.wc-btn-ghost{background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-size:.6rem;font-weight:700;padding:6px 12px;border-radius:var(--r2)}
+.bk-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:13px;margin:0 14px 9px;position:relative}
+.bk-card.new-bk{border-color:rgba(212,175,55,.4);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 0 5px rgba(212,175,55,.12)}}
+.bk-card.confirmed{border-color:rgba(66,165,245,.3)}
+.bk-card.completed{border-color:rgba(46,125,50,.25);opacity:.8}
+.bk-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.bk-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.bk-id{font-size:.6rem;color:var(--text3)}
+.bks{font-size:.56rem;font-weight:800;padding:3px 9px;border-radius:8px;letter-spacing:.5px}
+.bks-pending{background:rgba(212,175,55,.15);color:var(--gold);border:1px solid rgba(212,175,55,.3)}
+.bks-confirmed{background:rgba(66,165,245,.15);color:var(--blue2);border:1px solid rgba(66,165,245,.3)}
+.bks-completed{background:rgba(46,125,50,.15);color:#66bb6a;border:1px solid rgba(46,125,50,.3)}
+.bks-cancelled{background:rgba(229,57,53,.1);color:#ef5350;border:1px solid rgba(229,57,53,.2)}
+.bk-services{font-size:.72rem;color:var(--text2);margin-bottom:5px;font-weight:600}
+.bk-meta{font-size:.65rem;color:var(--text3);line-height:1.8;margin-bottom:8px}
+.bk-actions{display:flex;gap:6px;flex-wrap:wrap}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 7px}
+.sec-title{font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);letter-spacing:1px}
+.chat-window{display:flex;flex-direction:column;height:calc(100vh - 124px)}
+.chat-header{padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.chat-avatar{width:38px;height:38px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.chat-name{font-size:.82rem;font-weight:700}
+.chat-sub{font-size:.62rem;color:var(--text3)}
+.messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:78%;padding:9px 12px;border-radius:var(--r2);font-size:.78rem;line-height:1.5;word-wrap:break-word}
+.msg-out{background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(255,122,0,.15));border:1px solid rgba(212,175,55,.2);align-self:flex-end;border-radius:var(--r2) var(--r2) 4px var(--r2)}
+.msg-in{background:var(--bg3);border:1px solid var(--border2);align-self:flex-start;border-radius:var(--r2) var(--r2) var(--r2) 4px;color:var(--text2)}
+.msg-time{font-size:.55rem;color:var(--text3);margin-top:4px;text-align:right}
+.msg-in .msg-time{text-align:left}
+.chat-input-row{padding:10px 12px;background:var(--bg2);border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 12px;border-radius:var(--r3);font-size:.84rem}
+.chat-send{background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg);font-weight:800;padding:9px 16px;border-radius:var(--r3);font-size:.82rem}
+.track-tgl{width:100%;padding:11px;border-radius:var(--r2);font-size:.78rem;font-weight:800;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);transition:var(--trans);letter-spacing:.5px}
+.track-tgl.on{background:rgba(46,125,50,.15);color:#66bb6a;border-color:rgba(46,125,50,.4)}
+.txn-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.txn-desc{font-size:.73rem;color:var(--text2);font-weight:600}
+.txn-date{font-size:.6rem;color:var(--text3);margin-top:2px}
+.txn-amt{font-size:.82rem;font-weight:800}
+.txn-cr{color:#66bb6a}.txn-dr{color:#ef5350}
+.slot-item{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:9px;text-align:center;cursor:pointer;transition:var(--trans)}
+.slot-item.avail{border-color:rgba(46,125,50,.4);background:rgba(46,125,50,.08)}
+.slot-time{font-size:.78rem;font-weight:700}
+.slot-status{font-size:.58rem;color:var(--text3);margin-top:2px}
+.modal-ov{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity var(--trans)}
+.modal-ov.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform var(--trans)}
+.modal-ov.open .modal-box{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 15px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-title{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);letter-spacing:1px}
+.modal-x{width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);color:var(--text3);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.modal-body{padding:14px}
+.upi-box{background:linear-gradient(135deg,#0d0800,#1a1000);border:1px solid var(--gold3);border-radius:var(--r2);padding:13px;text-align:center;margin-bottom:12px}
+.upi-lbl{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.upi-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px;font-weight:700}
+.info-t{font-size:.68rem;color:var(--text3);text-align:center;margin:8px 0;line-height:1.6}
+#bot-nav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(11,11,11,.97);backdrop-filter:blur(14px);border-top:1px solid var(--border2);display:none;flex}
+.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px;font-size:.56rem;font-weight:700;color:var(--text3);letter-spacing:.3px;transition:var(--trans);gap:2px;position:relative}
+.nav-it.on{color:var(--gold)}.ni{font-size:1rem}
+.nav-badge{position:absolute;top:5px;right:calc(50% - 14px);background:var(--red);color:#fff;font-size:.5rem;font-weight:900;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+#toast-c{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none;min-width:220px;max-width:90vw}
+.toast{background:var(--bg3);border:1px solid var(--border2);color:var(--text);padding:9px 14px;border-radius:var(--r2);font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:var(--sh);animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.toast.suc{border-color:rgba(46,125,50,.4);background:rgba(46,125,50,.1)}
+.toast.err{border-color:rgba(229,57,53,.4);background:rgba(229,57,53,.1)}
+.toast.wrn{border-color:rgba(255,122,0,.4);background:rgba(255,122,0,.1)}
+.empty-s{text-align:center;padding:28px 14px}
+.empty-ic{font-size:2rem;margin-bottom:8px}
+.empty-t{font-size:.76rem;color:var(--text3);line-height:1.6}
+.loading-spin{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:24px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <div class="tb-brand">⚡ SULTAN PROVIDER<span class="tb-sub">Service Provider Portal</span></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div style="width:8px;height:8px;border-radius:50%" id="statusDot"></div>
+    <span style="font-size:.62rem;color:var(--text3)" id="statusLabel">Offline</span>
+  </div>
+</div>
+<div id="main"><div id="appContent"></div></div>
+<div id="bot-nav">
+  <button class="nav-it on" onclick="showTab('bookings',this)"><span class="ni">📅</span>Bookings<span class="nav-badge" id="bkBadge" style="display:none">0</span></button>
+  <button class="nav-it" onclick="showTab('chat',this)"><span class="ni">💬</span>Chat<span class="nav-badge" id="chatBadge" style="display:none">0</span></button>
+  <button class="nav-it" onclick="showTab('earnings',this)"><span class="ni">💰</span>Earnings</button>
+  <button class="nav-it" onclick="showTab('schedule',this)"><span class="ni">📅</span>Schedule</button>
+  <button class="nav-it" onclick="showTab('track',this)"><span class="ni">📍</span>Track</button>
+  <button class="nav-it" onclick="showTab('profile',this)"><span class="ni">👤</span>Profile</button>
+</div>
+<div id="toast-c"></div>
+<div class="modal-ov" id="walletModal"><div class="modal-box"><div class="modal-hd"><span class="modal-title">💰 WALLET</span><button class="modal-x" onclick="closeModal('walletModal')">✕</button></div><div class="modal-body" id="walletModalBody"></div></div></div>
+<div class="modal-ov" id="rechargeModal"><div class="modal-box"><div class="modal-hd"><span class="modal-title">💳 RECHARGE</span><button class="modal-x" onclick="closeModal('rechargeModal')">✕</button></div><div class="modal-body" id="rechargeModalBody"></div></div></div>
+<div class="modal-ov" id="bookingDetailModal"><div class="modal-box"><div class="modal-hd"><span class="modal-title">📋 BOOKING DETAIL</span><button class="modal-x" onclick="closeModal('bookingDetailModal')">✕</button></div><div class="modal-body" id="bookingDetailBody"></div></div></div>
+<script>
+const FB_CFG={apiKey:"AIzaSyBfVLRSr-kwW0P17Jh0yPkIuLBw8PJg8iQ",authDomain:"sultan-engine-v12-62455.firebaseapp.com",databaseURL:"https://sultan-engine-v12-62455-default-rtdb.firebaseio.com",projectId:"sultan-engine-v12-62455",storageBucket:"sultan-engine-v12-62455.firebasestorage.app",messagingSenderId:"1015551535579",appId:"1:1015551535579:web:08e3ae1e2ab88fa9891ffe"};
+const CFG={leadPrice:10,upiId:"8273214261@ptyes",currency:"₹",commission:10};
+const P={db:null,auth:null,fbReady:false,provider:null,bid:null,wallet:{balance:50,transactions:[]},bookings:{},chats:{},tracking:{},currentTab:'bookings',activeChatKey:null,trackOn:false,trackWid:null,schedule:{},_otpCode:null};
+
+function _lsGet(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}}
+function _lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function tsAgo(ts){const s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'}
+function fmtTime(ts){return new Date(ts).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}
+
+function T(msg,type=''){
+  const ic={suc:'✅',err:'❌',wrn:'⚠️'};
+  const el=document.createElement('div');el.className='toast'+(type?' '+type:'');
+  el.innerHTML=`<span>${ic[type]||'ℹ️'}</span>${esc(msg)}`;
+  document.getElementById('toast-c').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),350)},3500);
+}
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow=''}
+document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
+
+function initFB(){
+  const load=(src,cb)=>{const s=document.createElement('script');s.src=src;s.onload=cb;s.onerror=()=>checkAutoLogin();document.head.appendChild(s);};
+  load('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',()=>
+    load('https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js',()=>
+      load('https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js',()=>{
+        try{firebase.initializeApp(FB_CFG);P.db=firebase.database();P.auth=firebase.auth();P.fbReady=true;P.auth.signInAnonymously().catch(()=>{});checkAutoLogin();}
+        catch(e){checkAutoLogin();}
+      })
+    )
+  );
+}
+
+function checkAutoLogin(){
+  const s=_lsGet('sultan_prov_v2',null);
+  if(s&&s.bid&&s.phone&&P.db){
+    P.db.ref('/businesses/'+s.bid).once('value',snap=>{
+      const b=snap.val();
+      if(b&&b.phone===s.phone){P.provider={id:s.bid,...b};P.bid=s.bid;startSession();}
+      else showLogin();
+    });
+  }else showLogin();
+}
+
+function showLogin(){
+  document.getElementById('bot-nav').style.display='none';
+  document.getElementById('appContent').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 54px);padding:20px">
+      <div style="width:100%;max-width:400px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:24px">
+        <div style="text-align:center;margin-bottom:18px">
+          <div style="font-size:2.2rem;margin-bottom:6px">🔧</div>
+          <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px">PROVIDER LOGIN</div>
+          <div style="font-size:.65rem;color:var(--text3);margin-top:4px">Sultan Engine Service Provider</div>
+        </div>
+        <div id="ls1">
+          <div class="fg"><label class="fl">Registered Phone</label><input class="fi" type="tel" id="l_phone" placeholder="10-digit mobile" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"></div>
+          <button class="btn-gold" onclick="sendOTP()">GET OTP →</button>
+          <p style="font-size:.63rem;color:var(--text3);text-align:center;margin-top:12px">Register on <a href="customer-v2.html" style="color:var(--gold)">Sultan Engine</a> first</p>
+        </div>
+        <div id="ls2" style="display:none">
+          <div style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.2);border-radius:8px;padding:10px;margin-bottom:12px;font-size:.7rem;color:var(--text2);text-align:center">📱 OTP: check toast (demo mode)</div>
+          <div class="fg"><label class="fl">6-Digit OTP</label><input class="fi" type="number" id="l_otp" placeholder="Enter OTP" maxlength="6"></div>
+          <button class="btn-gold" onclick="verifyOTP()">VERIFY & LOGIN →</button>
+          <button class="btn-ghost" onclick="document.getElementById('ls1').style.display='block';document.getElementById('ls2').style.display='none'">← Back</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function sendOTP(){
+  const phone=document.getElementById('l_phone')?.value.trim();
+  if(!/^[6-9]\d{9}$/.test(phone)){T('Valid 10-digit phone daalo','err');return}
+  if(!P.db){T('Firebase not connected','err');return}
+  P.db.ref('/businesses').orderByChild('phone').equalTo(phone).once('value',snap=>{
+    const val=snap.val();
+    if(!val){T('Is number se koi business registered nahi hai','err');return}
+    const [bid,biz]=Object.entries(val)[0];
+    if(biz.status==='pending'){T('Account approval pending hai','wrn');return}
+    P._loginBid=bid;P._loginBiz=biz;P._loginPhone=phone;
+    P._otpCode=Math.floor(100000+Math.random()*900000).toString();
+    T('Demo OTP: '+P._otpCode,'suc');
+    document.getElementById('ls1').style.display='none';
+    document.getElementById('ls2').style.display='block';
+  });
+}
+
+function verifyOTP(){
+  const entered=document.getElementById('l_otp')?.value.trim();
+  if(!entered||entered.length!==6){T('6-digit OTP daalo','err');return}
+  if(entered===P._otpCode){
+    P.provider={id:P._loginBid,...P._loginBiz};P.bid=P._loginBid;
+    _lsSet('sultan_prov_v2',{bid:P._loginBid,phone:P._loginPhone});
+    startSession();T('✅ Login successful!','suc');
+  }else T('Galat OTP','err');
+}
+
+function startSession(){
+  document.getElementById('bot-nav').style.display='flex';
+  updateStatusDot();
+  listenAll();
+  showTab('bookings',document.querySelector('.nav-it'));
+}
+
+function listenAll(){
+  if(!P.db||!P.bid)return;
+  P.db.ref('/bookings').orderByChild('bizId').equalTo(P.bid).on('value',snap=>{
+    P.bookings={};
+    if(snap.val())Object.entries(snap.val()).forEach(([k,v])=>{if(v.bizId===P.bid)P.bookings[k]=v;});
+    updateBkBadge();
+    if(P.currentTab==='bookings')renderBookings();
+  });
+  P.db.ref('/wallets/'+P.bid).on('value',snap=>{P.wallet=snap.val()||{balance:50,transactions:[]};});
+  P.db.ref('/chats').on('value',snap=>{
+    P.chats={};
+    const all=snap.val()||{};
+    Object.entries(all).forEach(([k,v])=>{if(v.bizId===P.bid)P.chats[k]=v;});
+    updateChatBadge();
+    if(P.currentTab==='chat'&&P.activeChatKey)renderChatWindow(P.activeChatKey);
+    else if(P.currentTab==='chat')renderChatList();
+  });
+  P.db.ref('/businesses/'+P.bid).on('value',snap=>{if(snap.val()){P.provider={id:P.bid,...snap.val()};updateStatusDot();}});
+}
+
+function updateStatusDot(){
+  const b=P.provider;if(!b)return;
+  const dot=document.getElementById('statusDot');const lbl=document.getElementById('statusLabel');
+  if(b.status==='open'){dot.style.background='#43a047';dot.style.boxShadow='0 0 8px #43a047';lbl.textContent='Online';}
+  else if(b.status==='busy'){dot.style.background='var(--orange)';dot.style.boxShadow='0 0 8px var(--orange)';lbl.textContent='Busy';}
+  else{dot.style.background='var(--text4)';dot.style.boxShadow='none';lbl.textContent='Offline';}
+}
+
+function updateBkBadge(){
+  const n=Object.values(P.bookings).filter(b=>b.status==='pending').length;
+  const badge=document.getElementById('bkBadge');
+  if(n>0){badge.style.display='flex';badge.textContent=n;}else badge.style.display='none';
+}
+
+function updateChatBadge(){
+  let unread=0;
+  Object.entries(P.chats).forEach(([k,chat])=>{
+    const lastRead=_lsGet('prov_chat_read_'+k,0);
+    Object.values(chat.messages||{}).forEach(m=>{if(m.sender==='customer'&&m.ts>lastRead)unread++;});
+  });
+  const badge=document.getElementById('chatBadge');
+  if(unread>0){badge.style.display='flex';badge.textContent=unread;}else badge.style.display='none';
+}
+
+function showTab(tab,btn){
+  P.currentTab=tab;
+  document.querySelectorAll('.nav-it').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  if(tab==='bookings')renderBookings();
+  else if(tab==='chat'){P.activeChatKey=null;renderChatList();}
+  else if(tab==='earnings')renderEarnings();
+  else if(tab==='schedule')renderSchedule();
+  else if(tab==='track')renderTrack();
+  else if(tab==='profile')renderProfile();
+}
+
+function setStatus(st){
+  if(!P.bid)return;
+  if(P.db)P.db.ref('/businesses/'+P.bid+'/status').set(st);
+  if(P.provider)P.provider.status=st;
+  updateStatusDot();T('Status: '+st.toUpperCase(),'suc');
+  renderBookings();
+}
+
+/* ─── BOOKINGS ─── */
+function renderBookings(){
+  if(!P.provider){showLogin();return}
+  const b=P.provider;
+  const wal=P.wallet||{balance:50};
+  const allBk=Object.entries(P.bookings).sort((a,b_)=>b_[1].createdAt-a[1].createdAt);
+  const pending=allBk.filter(([_,bk])=>bk.status==='pending');
+  const confirmed=allBk.filter(([_,bk])=>bk.status==='confirmed');
+  const completed=allBk.filter(([_,bk])=>bk.status==='completed');
+  const cancelled=allBk.filter(([_,bk])=>bk.status==='cancelled');
+
+  document.getElementById('appContent').innerHTML=`
+    <div class="dash-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="dh-name">${b.avatar||'🏪'} ${esc(b.name||'')}</div>
+          <div class="dh-meta">${(b.category||'').toUpperCase()} · 📍 ${esc(b.area||'')}${b.city?', '+esc(b.city):''}</div>
+        </div>
+        <button onclick="logout()" style="background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.2);color:#ef5350;font-size:.6rem;font-weight:700;padding:5px 10px;border-radius:6px">Logout</button>
+      </div>
+      <div class="status-row">
+        <button class="st-btn${(b.status||'open')==='open'?' open':''}" onclick="setStatus('open')">● OPEN</button>
+        <button class="st-btn${b.status==='busy'?' busy':''}" onclick="setStatus('busy')">◉ BUSY</button>
+        <button class="st-btn${b.status==='closed'?' closed':''}" onclick="setStatus('closed')">○ CLOSED</button>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-n">${pending.length}</div><div class="stat-l">New</div></div>
+      <div class="stat-box"><div class="stat-n">${confirmed.length}</div><div class="stat-l">Active</div></div>
+      <div class="stat-box"><div class="stat-n">${completed.length}</div><div class="stat-l">Done</div></div>
+      <div class="stat-box"><div class="stat-n" style="color:var(--green2)">${CFG.currency}${wal.balance||0}</div><div class="stat-l">Wallet</div></div>
+    </div>
+    <div class="wallet-card">
+      <div><div class="wc-label">Wallet Balance</div><div class="wc-bal">${CFG.currency}${wal.balance||0}</div><div class="wc-sub">Lead cost: ${CFG.currency}${CFG.leadPrice}</div></div>
+      <div class="wc-btns"><button class="wc-btn" onclick="openRecharge()">+ RECHARGE</button><button class="wc-btn-ghost" onclick="openWalletDetail()">History</button></div>
+    </div>
+    <div class="tab-row" id="bkTabRow">
+      <div class="tab-item on" onclick="filterBkTab('pending',this)">🔔 New (${pending.length})</div>
+      <div class="tab-item" onclick="filterBkTab('confirmed',this)">⚡ Active (${confirmed.length})</div>
+      <div class="tab-item" onclick="filterBkTab('completed',this)">✅ Done (${completed.length})</div>
+      <div class="tab-item" onclick="filterBkTab('cancelled',this)">✕ Cancelled (${cancelled.length})</div>
+    </div>
+    <div id="bkContainer" style="padding-top:8px">
+      ${pending.length?pending.map(([id,bk])=>bookingCard(id,bk)).join('')
+      :`<div class="empty-s"><div class="empty-ic">📭</div><div class="empty-t">No new bookings.<br>Stay online to receive requests.</div></div>`}
+    </div>`;
+}
+
+function filterBkTab(status,el){
+  document.querySelectorAll('#bkTabRow .tab-item').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  const filtered=Object.entries(P.bookings).filter(([_,b])=>b.status===status).sort((a,b)=>b[1].createdAt-a[1].createdAt);
+  document.getElementById('bkContainer').innerHTML=filtered.length
+    ?filtered.map(([id,bk])=>bookingCard(id,bk)).join('')
+    :`<div class="empty-s"><div class="empty-ic">📭</div><div class="empty-t">No ${status} bookings.</div></div>`;
+}
+
+function bookingCard(id,bk){
+  const isPending=bk.status==='pending';
+  const isConfirmed=bk.status==='confirmed';
+  const isDone=bk.status==='completed';
+  return `<div class="bk-card${isPending?' new-bk':isConfirmed?' confirmed':isDone?' completed':''}">
+    <div class="bk-top">
+      <div><div class="bk-title">${esc(bk.customerName||'Customer')}</div><div class="bk-id">📞 ${esc(bk.customerPhone||'')} · #${id.slice(-6)}</div></div>
+      <span class="bks bks-${bk.status||'pending'}">${(bk.status||'pending').toUpperCase()}</span>
+    </div>
+    <div class="bk-services">🛠️ ${(bk.services||[]).map(s=>esc(s.name)).join(', ')||'General Service'}</div>
+    <div class="bk-meta">
+      📅 ${bk.date||''} at ${bk.slot||''}<br>
+      📍 ${esc(bk.address||'')}<br>
+      💰 ${CFG.currency}${bk.total||0}${bk.txnId?' · UTR: '+esc(bk.txnId):''}
+      ${bk.notes?`<br>📝 ${esc(bk.notes)}`:''}
+    </div>
+    <div class="bk-actions">
+      ${isPending?`<button class="btn-green" onclick="confirmBooking('${id}')">✅ Confirm</button>`:''}
+      ${isPending?`<button class="btn-red-sm" onclick="rejectBooking('${id}')">✕ Reject</button>`:''}
+      ${isConfirmed?`<button class="btn-green" onclick="completeBooking('${id}')">✅ Complete</button>`:''}
+      ${(isPending||isConfirmed)?`<button class="btn-blue-sm" onclick="callCustomer('${esc(bk.customerPhone||'')}')">📞 Call</button>`:''}
+      ${(isPending||isConfirmed)?`<button class="btn-wa" onclick="waCustomer('${esc(bk.customerPhone||'')}','${esc(bk.customerName||'')}')">💬 WA</button>`:''}
+      <button class="btn-blue-sm" onclick="openChatByPhone('${esc(bk.customerPhone||'')}','${esc(bk.customerName||'')}')">💬 Chat</button>
+    </div>
+  </div>`;
+}
+
+function confirmBooking(id){
+  if(!P.db)return;
+  P.db.ref('/bookings/'+id).update({status:'confirmed',confirmedAt:Date.now()}).then(()=>{T('✅ Booking confirmed!','suc');});
+}
+
+function rejectBooking(id){
+  if(!P.db)return;
+  P.db.ref('/bookings/'+id).update({status:'cancelled',cancelledAt:Date.now()}).then(()=>{T('Booking rejected','wrn');});
+}
+
+function completeBooking(id){
+  if(!P.db)return;
+  const bk=P.bookings[id];
+  // Add commission to revenue tracking
+  P.db.ref('/bookings/'+id).update({status:'completed',completedAt:Date.now()});
+  P.db.ref('/wallets/'+P.bid).transaction(w=>{
+    const base=w||{balance:0,transactions:[]};
+    const txns=(base.transactions||[]);
+    txns.push({desc:'Job completed - '+((bk?.services||[]).map(s=>s.name).join(', ')||'Service'),amount:CFG.commission,date:Date.now()});
+    return{...base,balance:(base.balance||0)+CFG.commission,transactions:txns};
+  });
+  P.db.ref('/businesses/'+P.bid+'/leadsCompleted').transaction(v=>(v||0)+1);
+  T('✅ Job completed! Commission credited.','suc');
+}
+
+function callCustomer(phone){if(phone)window.location.href='tel:+91'+phone;else T('Phone number nahi hai','err');}
+function waCustomer(phone,name){if(phone)window.open(`https://wa.me/91${phone}?text=${encodeURIComponent('Hi '+name+', regarding your Sultan Engine booking...')}`, '_blank');}
+
+/* ─── CHAT ─── */
+function renderChatList(){
+  const chatKeys=Object.keys(P.chats);
+  document.getElementById('appContent').innerHTML=`
+    <div style="padding-top:6px">
+      ${chatKeys.length?chatKeys.map(k=>{const c=P.chats[k];const lastRead=_lsGet('prov_chat_read_'+k,0);const unread=Object.values(c.messages||{}).filter(m=>m.sender==='customer'&&m.ts>lastRead).length;return`
+        <div onclick="openChatByKey('${k}')" style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:13px;margin:0 14px 8px;display:flex;align-items:center;gap:11px;cursor:pointer">
+          <div style="width:42px;height:42px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0">👤</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:6px">${esc(c.customerName||'Customer')}${unread>0?`<span style="background:var(--red);color:#fff;font-size:.52rem;font-weight:900;padding:1px 6px;border-radius:8px">${unread}</span>`:''}</div>
+            <div style="font-size:.68rem;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.lastMsg||'')}</div>
+          </div>
+          <div style="font-size:.6rem;color:var(--text3)">${tsAgo(c.lastTs||0)}</div>
+        </div>`;}).join('')
+      :`<div class="empty-s"><div class="empty-ic">💬</div><div class="empty-t">Koi chat nahi hai abhi.</div></div>`}
+    </div>`;
+}
+
+function openChatByKey(key){
+  P.activeChatKey=key;
+  _lsSet('prov_chat_read_'+key,Date.now());
+  updateChatBadge();
+  renderChatWindow(key);
+}
+
+function openChatByPhone(phone,name){
+  const key=phone+'_'+P.bid;
+  P.activeChatKey=key;
+  P.currentTab='chat';
+  document.querySelectorAll('.nav-it').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.nav-it')[1].classList.add('on');
+  renderChatWindow(key,name);
+}
+
+function renderChatWindow(key,fallbackName){
+  const chat=P.chats[key]||{messages:{}};
+  const msgs=Object.values(chat.messages||{}).sort((a,b)=>a.ts-b.ts);
+  const customerName=chat.customerName||fallbackName||'Customer';
+  _lsSet('prov_chat_read_'+key,Date.now());updateChatBadge();
+  document.getElementById('appContent').innerHTML=`
+    <div class="chat-window">
+      <div class="chat-header">
+        <div class="chat-avatar">👤</div>
+        <div>
+          <div class="chat-name">${esc(customerName)}</div>
+          <div class="chat-sub">${esc(chat.customerPhone||'')}</div>
+        </div>
+        <button onclick="P.activeChatKey=null;renderChatList()" style="margin-left:auto;color:var(--text3);font-size:1rem">✕</button>
+      </div>
+      <div class="messages" id="chatMessages">
+        ${msgs.length?msgs.map(m=>`
+          <div class="msg msg-${m.sender==='provider'?'out':'in'}">
+            ${esc(m.text||'')}
+            <div class="msg-time">${fmtTime(m.ts)}</div>
+          </div>`).join('')
+        :`<div style="text-align:center;padding:20px;font-size:.72rem;color:var(--text3)">Chat started 👋</div>`}
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chatInput" placeholder="Reply karo..." onkeydown="if(event.key==='Enter')sendMsg('${key}')">
+        <button class="chat-send" onclick="sendMsg('${key}')">Send</button>
+      </div>
+    </div>`;
+  setTimeout(()=>{const m=document.getElementById('chatMessages');if(m)m.scrollTop=m.scrollHeight;},100);
+}
+
+function sendMsg(key){
+  const input=document.getElementById('chatInput');
+  const text=input?.value.trim();if(!text)return;
+  if(!P.db){T('Firebase not connected','err');return}
+  const msg={text,sender:'provider',ts:Date.now(),senderName:P.provider?.name||'Provider'};
+  P.db.ref('/chats/'+key+'/messages').push(msg).then(()=>{if(input)input.value='';});
+  P.db.ref('/chats/'+key).update({lastMsg:text,lastTs:Date.now()});
+}
+
+/* ─── EARNINGS ─── */
+function renderEarnings(){
+  const wal=P.wallet||{balance:50,transactions:[]};
+  const b=P.provider||{};
+  const txns=(wal.transactions||[]).slice().reverse().slice(0,20);
+  const monthEarned=txns.filter(t=>t.date>Date.now()-30*86400000&&t.amount>0).reduce((s,t)=>s+t.amount,0);
+  document.getElementById('appContent').innerHTML=`
+    <div class="dash-header"><div class="dh-name">💰 EARNINGS</div><div class="dh-meta">${esc(b.name||'')}</div></div>
+    <div class="stats-grid">
+      <div class="stat-box" style="grid-column:1/3"><div class="stat-n" style="font-size:1.3rem">${CFG.currency}${wal.balance||0}</div><div class="stat-l">Wallet Balance</div></div>
+      <div class="stat-box" style="grid-column:3/5"><div class="stat-n" style="font-size:1.3rem">${CFG.currency}${monthEarned}</div><div class="stat-l">This Month</div></div>
+    </div>
+    <div style="padding:0 14px 10px"><button class="btn-gold" onclick="openRecharge()">+ RECHARGE WALLET</button></div>
+    <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin:0 14px 12px">
+      <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);margin-bottom:10px;letter-spacing:1px">TRANSACTION HISTORY</div>
+      ${txns.length?txns.map(t=>`
+        <div class="txn-row">
+          <div><div class="txn-desc">${esc(t.desc||'Transaction')}</div><div class="txn-date">${new Date(t.date||0).toLocaleDateString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div></div>
+          <div class="txn-amt ${t.amount>0?'txn-cr':'txn-dr'}">${t.amount>0?'+':''}${CFG.currency}${Math.abs(t.amount)}</div>
+        </div>`).join('')
+      :`<div class="empty-s"><div class="empty-ic">💸</div><div class="empty-t">No transactions yet.</div></div>`}
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--gold3);border-radius:var(--r);padding:14px;margin:0 14px;text-align:center">
+      <div style="font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Referral Code</div>
+      <div style="font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);letter-spacing:4px;font-weight:900;margin:6px 0">${(P.bid||'').slice(-6).toUpperCase()}</div>
+      <div style="font-size:.65rem;color:var(--text3)">Share karo — dono ko ₹20 bonus</div>
+      <button onclick="navigator.clipboard?.writeText('${(P.bid||'').slice(-6).toUpperCase()}').then(()=>T('Copied!','suc'))" style="margin-top:8px;background:var(--gold4);border:1px solid var(--gold3);color:var(--gold);font-size:.68rem;font-weight:700;padding:6px 14px;border-radius:var(--r2)">📋 Copy</button>
+    </div>`;
+}
+
+/* ─── SCHEDULE ─── */
+function renderSchedule(){
+  const saved=P.schedule||_lsGet('sultan_sched_'+P.bid,{});
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const slots=['9 AM','10 AM','11 AM','12 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM'];
+  P._schedDays=saved.days||[];P._schedSlots=saved.slots||[];
+  document.getElementById('appContent').innerHTML=`
+    <div class="dash-header"><div class="dh-name">📅 AVAILABILITY</div><div class="dh-meta">Customers ko dikhao kab available ho</div></div>
+    <div style="padding:14px">
+      <div style="font-size:.72rem;color:var(--text2);margin-bottom:8px;font-weight:700">Working Days</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+        ${days.map(d=>`<button onclick="toggleDay('${d}',this)" style="padding:7px 12px;border-radius:20px;font-size:.72rem;font-weight:700;transition:var(--trans);${saved.days?.includes(d)?'background:var(--gold);color:var(--bg);border:none':'background:var(--bg3);border:1px solid var(--border2);color:var(--text3)'}">${d}</button>`).join('')}
+      </div>
+      <div style="font-size:.72rem;color:var(--text2);margin-bottom:8px;font-weight:700">Available Time Slots</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px">
+        ${slots.map(s=>`<div class="slot-item${saved.slots?.includes(s)?' avail':''}" onclick="toggleSlot('${s}',this)"><div class="slot-time">${s}</div><div class="slot-status">${saved.slots?.includes(s)?'Available':'Unavailable'}</div></div>`).join('')}
+      </div>
+      <div class="fg"><label class="fl">Max Bookings Per Day</label>
+        <select class="fi" id="maxBk">${[1,2,3,4,5,6,8,10].map(n=>`<option value="${n}"${(saved.maxPerDay||3)===n?' selected':''}>${n} bookings/day</option>`).join('')}</select>
+      </div>
+      <div class="fg"><label class="fl">Services & Prices</label>
+        <textarea class="fi" id="servicesText" rows="4" placeholder="Haircut ₹150, Beard ₹80, Facial ₹200" style="resize:none">${esc(P.provider?.services||'')}</textarea>
+        <div style="font-size:.62rem;color:var(--text3);margin-top:4px">Format: Service Name ₹Price, ...</div>
+      </div>
+      <button class="btn-gold" onclick="saveSchedule()">SAVE AVAILABILITY</button>
+    </div>`;
+}
+
+function toggleDay(d,el){
+  if(!P._schedDays)P._schedDays=[];
+  if(P._schedDays.includes(d)){P._schedDays=P._schedDays.filter(x=>x!==d);el.style.background='var(--bg3)';el.style.border='1px solid var(--border2)';el.style.color='var(--text3)';}
+  else{P._schedDays.push(d);el.style.background='var(--gold)';el.style.border='none';el.style.color='var(--bg)';}
+}
+
+function toggleSlot(s,el){
+  if(!P._schedSlots)P._schedSlots=[];
+  if(P._schedSlots.includes(s)){P._schedSlots=P._schedSlots.filter(x=>x!==s);el.className='slot-item';el.querySelector('.slot-status').textContent='Unavailable';}
+  else{P._schedSlots.push(s);el.className='slot-item avail';el.querySelector('.slot-status').textContent='Available';}
+}
+
+function saveSchedule(){
+  const maxPerDay=parseInt(document.getElementById('maxBk')?.value)||3;
+  const services=document.getElementById('servicesText')?.value.trim()||'';
+  const sched={days:P._schedDays||[],slots:P._schedSlots||[],maxPerDay};
+  P.schedule=sched;_lsSet('sultan_sched_'+P.bid,sched);
+  if(P.db){
+    P.db.ref('/businesses/'+P.bid+'/schedule').set(sched);
+    P.db.ref('/businesses/'+P.bid+'/services').set(services);
+  }
+  if(P.provider)P.provider.services=services;
+  T('✅ Schedule & services saved!','suc');
+}
+
+/* ─── TRACK ─── */
+function renderTrack(){
+  document.getElementById('appContent').innerHTML=`
+    <div class="dash-header"><div class="dh-name">📍 LIVE TRACKING</div><div class="dh-meta">Share location with customers</div></div>
+    <div style="padding:14px">
+      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div style="font-size:.72rem;color:var(--text2);font-weight:700;margin-bottom:9px">📡 GPS Sharing</div>
+        <button class="track-tgl${P.trackOn?' on':''}" id="trackBtn" onclick="toggleTracking()">${P.trackOn?'📍 Tracking ON — Tap to Stop':'📍 Start Live Tracking'}</button>
+        <div id="trackCoords" style="font-size:.63rem;color:var(--text3);margin-top:8px;line-height:1.7;background:var(--bg4);padding:7px 10px;border-radius:4px;display:${P.trackOn?'block':'none'}">Waiting for GPS...</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;font-size:.68rem;color:var(--text3);line-height:1.9">
+        • Job jaane se pehle ON karo<br>• Customer ko real-time location milegi<br>• Kaam ke baad OFF karo
+      </div>
+    </div>`;
+}
+
+function toggleTracking(){
+  if(P.trackOn){
+    if(P.trackWid)navigator.geolocation.clearWatch(P.trackWid);
+    P.trackOn=false;
+    if(P.db&&P.bid)P.db.ref('/tracking/'+P.bid+'/active').set(false);
+    document.getElementById('trackBtn').className='track-tgl';
+    document.getElementById('trackBtn').textContent='📍 Start Live Tracking';
+    document.getElementById('trackCoords').style.display='none';
+    T('Tracking stopped','wrn');
+  }else{
+    if(!navigator.geolocation){T('GPS supported nahi hai','err');return}
+    P.trackWid=navigator.geolocation.watchPosition(pos=>{
+      const d={lat:pos.coords.latitude,lng:pos.coords.longitude,updatedAt:Date.now(),active:true,providerName:P.provider?.name||''};
+      if(P.db&&P.bid)P.db.ref('/tracking/'+P.bid).set(d);
+      const coords=document.getElementById('trackCoords');
+      if(coords){coords.style.display='block';coords.innerHTML=`🕒 ${new Date().toLocaleTimeString()}<br>Lat: ${d.lat.toFixed(5)}, Lng: ${d.lng.toFixed(5)}`;}
+    },err=>T('GPS error','err'),{enableHighAccuracy:true});
+    P.trackOn=true;
+    document.getElementById('trackBtn').className='track-tgl on';
+    document.getElementById('trackBtn').textContent='📍 Tracking ON — Tap to Stop';
+    T('📍 Live tracking started','suc');
+  }
+}
+
+/* ─── PROFILE ─── */
+function renderProfile(){
+  const b=P.provider||{};
+  document.getElementById('appContent').innerHTML=`
+    <div class="dash-header"><div class="dh-name">👤 PROFILE</div><div class="dh-meta">${esc(b.name||'')} · ${(b.category||'').toUpperCase()}</div></div>
+    <div style="padding:14px">
+      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);letter-spacing:1px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)">Business Info</div>
+        <div class="fg"><label class="fl">Business Name</label><input class="fi" id="p_name" value="${esc(b.name||'')}"></div>
+        <div class="frow">
+          <div class="fg"><label class="fl">Phone</label><input class="fi" value="${esc(b.phone||'')}" readonly style="opacity:.6"></div>
+          <div class="fg"><label class="fl">WhatsApp</label><input class="fi" id="p_wa" value="${esc(b.whatsapp||b.phone||'')}"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label class="fl">City</label><input class="fi" id="p_city" value="${esc(b.city||'')}"></div>
+          <div class="fg"><label class="fl">Area</label><input class="fi" id="p_area" value="${esc(b.area||'')}"></div>
+        </div>
+        <div class="fg"><label class="fl">Staff Names</label><input class="fi" id="p_staff" value="${esc(b.staff||'')}" placeholder="Name1, Name2..."></div>
+        <button class="btn-gold" onclick="saveProfile()">SAVE CHANGES</button>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div style="font-family:'Cinzel',serif;font-size:.72rem;color:var(--gold);letter-spacing:1px;margin-bottom:10px">Stats</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="stat-box"><div class="stat-n">${b.calls||0}</div><div class="stat-l">Calls</div></div>
+          <div class="stat-box"><div class="stat-n">${b.leadsCompleted||0}</div><div class="stat-l">Jobs Done</div></div>
+          <div class="stat-box"><div class="stat-n">${(b.rating||0).toFixed(1)}</div><div class="stat-l">Rating</div></div>
+          <div class="stat-box"><div class="stat-n">${b.ratingCount||0}</div><div class="stat-l">Reviews</div></div>
+        </div>
+      </div>
+      <button onclick="logout()" style="width:100%;background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.25);color:#ef5350;font-size:.8rem;font-weight:700;padding:12px;border-radius:var(--r2)">🚪 Logout</button>
+    </div>`;
+}
+
+function saveProfile(){
+  if(!P.db)return;
+  const updates={name:document.getElementById('p_name')?.value.trim(),whatsapp:document.getElementById('p_wa')?.value.trim(),city:document.getElementById('p_city')?.value.trim(),area:document.getElementById('p_area')?.value.trim(),staff:document.getElementById('p_staff')?.value.trim()};
+  if(!updates.name){T('Business name daalo','err');return}
+  P.db.ref('/businesses/'+P.bid).update(updates).then(()=>{Object.assign(P.provider,updates);T('✅ Profile saved!','suc');}).catch(e=>T('Error: '+e.message,'err'));
+}
+
+function logout(){
+  P.provider=null;P.bid=null;P.wallet={balance:50,transactions:[]};P.bookings={};P.chats={};
+  localStorage.removeItem('sultan_prov_v2');if(P.db){P.db.ref('/bookings').off();P.db.ref('/chats').off();}
+  showLogin();T('Logged out','wrn');
+}
+
+/* ─── WALLET ─── */
+function openWalletDetail(){
+  const wal=P.wallet||{balance:50,transactions:[]};
+  const txns=(wal.transactions||[]).slice().reverse().slice(0,15);
+  document.getElementById('walletModalBody').innerHTML=`
+    <div style="background:linear-gradient(135deg,#0d0800,#1a1000);border:1px solid var(--gold3);border-radius:var(--r);padding:16px;text-align:center;margin-bottom:14px">
+      <div style="font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Available Balance</div>
+      <div style="font-family:'Cinzel',serif;font-size:2rem;color:var(--gold);font-weight:900;margin:4px 0">${CFG.currency}${wal.balance||0}</div>
+      <button class="wc-btn" onclick="closeModal('walletModal');openRecharge()">+ RECHARGE</button>
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Transactions</div>
+    ${txns.length?txns.map(t=>`<div class="txn-row"><div><div class="txn-desc">${esc(t.desc||'')}</div><div class="txn-date">${new Date(t.date||0).toLocaleDateString()}</div></div><div class="txn-amt ${t.amount>0?'txn-cr':'txn-dr'}">${t.amount>0?'+':''}${CFG.currency}${Math.abs(t.amount)}</div></div>`).join(''):`<div style="font-size:.72rem;color:var(--text3);text-align:center;padding:14px">No transactions</div>`}`;
+  openModal('walletModal');
+}
+
+function openRecharge(){
+  document.getElementById('rechargeModalBody').innerHTML=`
+    <div class="upi-box"><div class="upi-lbl">Pay via UPI</div><div class="upi-val">${CFG.upiId}</div><div style="font-size:.72rem;color:var(--orange);margin-top:3px">Min ₹50 · Max ₹5000</div></div>
+    <div class="fg"><label class="fl">Amount (₹)</label><input class="fi" id="rch_amt" type="number" placeholder="Enter amount" min="50" max="5000"></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px">${[50,100,200,500,1000].map(a=>`<button onclick="document.getElementById('rch_amt').value=${a}" style="background:var(--bg3);border:1px solid var(--border2);color:var(--text2);padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:700">₹${a}</button>`).join('')}</div>
+    <div class="fg"><label class="fl">UTR / Transaction ID *</label><input class="fi" id="rch_txn" type="text" placeholder="12+ digit UTR" maxlength="30"></div>
+    <div class="info-t">Admin 1 ghante mein verify karke credit karega.</div>
+    <button class="btn-gold" onclick="submitRecharge()">SUBMIT REQUEST</button>`;
+  openModal('rechargeModal');
+}
+
+function submitRecharge(){
+  const amt=parseInt(document.getElementById('rch_amt')?.value)||0;
+  const txn=document.getElementById('rch_txn')?.value.trim();
+  if(amt<50||amt>5000){T('Amount ₹50 se ₹5000 ke beech hona chahiye','err');return}
+  if(!txn||txn.length<12){T('Valid UTR daalo (min 12 characters)','err');return}
+  const rid='RQ'+Date.now();
+  if(P.db)P.db.ref('/wallets/'+P.bid+'/rechargeRequests/'+rid).set({bizId:P.bid,bizName:P.provider?.name||'',amount:amt,txnId:txn,status:'pending',createdAt:Date.now()}).then(()=>{closeModal('rechargeModal');T('💰 Request submitted! Admin verify karega.','suc');}).catch(e=>T('Error: '+e.message,'err'));
+}
+
+initFB();
+</script>
+</body>
+</html>
