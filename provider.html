@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="theme-color" content="#0b0b0b">
-<title>SULTAN ENGINE — Provider</title>
+<title>Baghpat Services — Provider</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#0b0b0b;--bg2:#101010;--bg3:#161616;--bg4:#1e1e1e;
---gold:#d4af37;--gold3:#9a7d1a;--gold4:rgba(212,175,55,0.12);
---orange:#ff7a00;--orange3:rgba(255,122,0,0.12);
+--bg:#0d0c09;--bg2:#121009;--bg3:#181510;--bg4:#201c14;
+--gold:#c9a84c;--gold3:#8a6f28;--gold4:rgba(201,168,76,0.13);
+--orange:#1a3a6b;--orange3:rgba(26,58,107,0.13);
 --red:#e53935;--green:#2e7d32;--green2:#43a047;--blue:#1565c0;--blue2:#42a5f5;
 --text:#efefef;--text2:#b0b0b0;--text3:#686868;--text4:#3a3a3a;
 --border:#1f1f1f;--border2:#2a2a2a;
@@ -133,11 +133,36 @@ a{color:inherit;text-decoration:none}
 .empty-t{font-size:.76rem;color:var(--text3);line-height:1.6}
 .loading-spin{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;margin:24px auto}
 @keyframes spin{to{transform:rotate(360deg)}}
+#splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0d0c09 0%,#1a1408 50%,#0d0c09 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease}
+#splash.hide{opacity:0;pointer-events:none}
+.splash-logo{width:90px;height:90px;border-radius:24px;background:linear-gradient(135deg,#c9a84c,#8a6f28);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:20px;box-shadow:0 0 40px rgba(201,168,76,.35);animation:splashPulse 1.8s ease-in-out infinite}
+@keyframes splashPulse{0%,100%{box-shadow:0 0 40px rgba(201,168,76,.35)}50%{box-shadow:0 0 60px rgba(201,168,76,.55)}}
+.splash-name{font-family:'Cinzel',serif;font-size:1.4rem;color:#c9a84c;letter-spacing:4px;font-weight:900;text-align:center;margin-bottom:5px}
+.splash-sub{font-size:.62rem;color:#7a7060;letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:30px}
+.splash-bar{width:120px;height:3px;background:#201c14;border-radius:2px;overflow:hidden}
+.splash-fill{height:100%;background:linear-gradient(90deg,#c9a84c,#e8c97a);border-radius:2px;animation:splashLoad 2s ease forwards}
+@keyframes splashLoad{from{width:0}to{width:100%}}
 </style>
 </head>
 <body>
+<div id="splash">
+  <div class="splash-logo">🏛️</div>
+  <div class="splash-name">BAGHPAT SERVICES</div>
+  <div class="splash-sub">Provider Portal</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
 <div id="topbar">
-  <div class="tb-brand">⚡ SULTAN PROVIDER<span class="tb-sub">Service Provider Portal</span></div>
+  <div class="tb-brand" style="display:flex;align-items:center;gap:8px">
+    <a href="https://digitalmenu61.netlify.app/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;flex-shrink:0">
+      <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#c9a84c,#8a6f28);display:flex;align-items:center;justify-content:center;font-size:.85rem">🍽️</div>
+      <span style="font-size:.38rem;color:var(--text3);letter-spacing:.3px">Menu Pro</span>
+    </a>
+    <span style="font-size:.78rem;font-family:'Cinzel',serif;color:var(--gold);font-weight:900;letter-spacing:1px">🏛️ BAGHPAT SERVICES<span class="tb-sub">Provider Portal</span></span>
+    <a href="https://digital-shokeen.netlify.app/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;flex-shrink:0">
+      <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#1a3a6b,#0d1a3a);border:1px solid var(--border3);display:flex;align-items:center;justify-content:center;font-size:.85rem">⚡</div>
+      <span style="font-size:.38rem;color:var(--text3);letter-spacing:.3px">Shokeen</span>
+    </a>
+  </div>
   <div style="display:flex;align-items:center;gap:6px">
     <div style="width:8px;height:8px;border-radius:50%" id="statusDot"></div>
     <span style="font-size:.62rem;color:var(--text3)" id="statusLabel">Offline</span>
@@ -191,6 +216,7 @@ function initFB(){
 }
 
 function checkAutoLogin(){
+  setTimeout(()=>{const sp=document.getElementById('splash');if(sp){sp.classList.add('hide');setTimeout(()=>sp.remove(),700);}},2200);
   const s=_lsGet('sultan_prov_v2',null);
   if(s&&s.bid&&s.phone&&P.db){
     P.db.ref('/businesses/'+s.bid).once('value',snap=>{
@@ -201,6 +227,22 @@ function checkAutoLogin(){
   }else showLogin();
 }
 
+const MAPS_KEY='AIzaSyDIIWbMB8YlcQ_ex8UST6G1Jj5Abi1IOc4';
+let _mapsLoaded=false,_mapsLoading=false,_mapsCbs=[];
+function _loadMapsAPI(cb){
+  if(_mapsLoaded){cb();return;}
+  _mapsCbs.push(cb);
+  if(_mapsLoading)return;
+  _mapsLoading=true;
+  window._mapsReady=function(){_mapsLoaded=true;_mapsCbs.forEach(f=>f());_mapsCbs=[];};
+  const s=document.createElement('script');
+  s.src=`https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&callback=_mapsReady`;
+  s.async=true;s.defer=true;
+  document.head.appendChild(s);
+}
+const _darkMapStyle=[{elementType:'geometry',stylers:[{color:'#0b0b0b'}]},{elementType:'labels.text.fill',stylers:[{color:'#686868'}]},{elementType:'labels.text.stroke',stylers:[{color:'#0b0b0b'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#1e1e1e'}]},{featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#b0b0b0'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#101010'}]},{featureType:'poi',stylers:[{visibility:'off'}]}];
+let _provMap=null,_provMarker=null;
+
 function showLogin(){
   document.getElementById('bot-nav').style.display='none';
   document.getElementById('appContent').innerHTML=`
@@ -208,14 +250,13 @@ function showLogin(){
       <div style="width:100%;max-width:400px">
         <div style="text-align:center;margin-bottom:18px">
           <div style="font-size:2.2rem;margin-bottom:6px">🔧</div>
-          <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px">SULTAN PROVIDER</div>
+          <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px">BAGHPAT SERVICES</div>
           <div style="font-size:.65rem;color:var(--text3);margin-top:4px">Service Provider Portal</div>
         </div>
         <div style="display:flex;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:3px;margin-bottom:16px;gap:3px">
           <button id="tabLogin" onclick="switchAuthTab('login')" style="flex:1;padding:8px;border-radius:6px;font-size:.72rem;font-weight:800;letter-spacing:.5px;transition:var(--trans);background:linear-gradient(135deg,var(--gold),var(--orange));color:var(--bg)">LOGIN</button>
           <button id="tabRegister" onclick="switchAuthTab('register')" style="flex:1;padding:8px;border-radius:6px;font-size:.72rem;font-weight:800;letter-spacing:.5px;transition:var(--trans);background:none;color:var(--text3)">REGISTER</button>
         </div>
-        <!-- LOGIN PANEL -->
         <div id="loginPanel" style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:20px">
           <div id="ls1">
             <div class="fg"><label class="fl">Registered Phone</label><input class="fi" type="tel" id="l_phone" placeholder="10-digit mobile" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')sendOTP()"></div>
@@ -223,16 +264,13 @@ function showLogin(){
             <button class="btn-gold" id="otpBtn" onclick="sendOTP()">GET OTP →</button>
           </div>
           <div id="ls2" style="display:none">
-            <div style="background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.25);border-radius:8px;padding:11px;margin-bottom:14px;font-size:.72rem;color:#66bb6a;text-align:center;line-height:1.6">
-              📱 OTP bheja gaya<br><span style="font-weight:700" id="otpSentTo"></span><br><span style="color:var(--text3)">SMS check karo</span>
-            </div>
+            <div style="background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.25);border-radius:8px;padding:11px;margin-bottom:14px;font-size:.72rem;color:#66bb6a;text-align:center;line-height:1.6">📱 OTP bheja gaya<br><span style="font-weight:700" id="otpSentTo"></span><br><span style="color:var(--text3)">SMS check karo</span></div>
             <div class="fg"><label class="fl">6-Digit OTP</label><input class="fi" type="number" id="l_otp" placeholder="Enter OTP" maxlength="6" oninput="if(this.value.length>6)this.value=this.value.slice(0,6)" onkeydown="if(event.key==='Enter')verifyOTP()"></div>
             <button class="btn-gold" id="verifyBtn" onclick="verifyOTP()">VERIFY & LOGIN →</button>
             <button class="btn-ghost" onclick="resetOTPFlow()">← Change Number</button>
             <div style="text-align:center;margin-top:10px"><button onclick="resendOTP()" style="font-size:.65rem;color:var(--gold);background:none;text-decoration:underline">OTP nahi aaya? Resend karo</button></div>
           </div>
         </div>
-        <!-- REGISTER PANEL -->
         <div id="registerPanel" style="display:none;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:20px">
           <div id="rs1">
             <div class="fg"><label class="fl">Business Name *</label><input class="fi" id="r_name" placeholder="Aapke business ka naam"></div>
@@ -241,17 +279,7 @@ function showLogin(){
               <div class="fg"><label class="fl">WhatsApp</label><input class="fi" type="tel" id="r_wa" placeholder="Same ya alag" maxlength="10" oninput="this.value=this.value.replace(/\D/g,'')"></div>
             </div>
             <div class="fg"><label class="fl">Category *</label>
-              <select class="fi" id="r_cat">
-                <option value="">-- Select Category --</option>
-                <option value="barber">✂️ Barber</option>
-                <option value="doctor">🏥 Doctor</option>
-                <option value="electrician">⚡ Electrician</option>
-                <option value="cab">🚕 Cab</option>
-                <option value="restaurant">🍛 Restaurant</option>
-                <option value="shop">🛍️ Shop</option>
-                <option value="plumber">🔧 Plumber</option>
-                <option value="others">➕ Others</option>
-              </select>
+              <select class="fi" id="r_cat"><option value="">-- Select Category --</option><option value="ac_repair">❄️ AC Repair</option><option value="accounting">📊 Accounting</option><option value="advertising">📢 Advertising</option><option value="ambulance">🚑 Ambulance</option><option value="architect">🏗️ Architect</option><option value="astrologer">🔮 Astrologer</option><option value="auto_rickshaw">🛺 Auto Rickshaw</option><option value="ayurveda">🌿 Ayurveda</option><option value="babysitting">👶 Baby Sitting</option><option value="bakery">🎂 Bakery</option><option value="banking">🏦 Banking</option><option value="barber">✂️ Barber</option><option value="beautician">💅 Beautician</option><option value="bike_repair">🏍️ Bike Repair</option><option value="blood_test">🩸 Blood Test</option><option value="borewell">💧 Borewell</option><option value="building_material">🧱 Building Material</option><option value="bus_hire">🚌 Bus Hire</option><option value="cab">🚕 Cab / Taxi</option><option value="cake_delivery">🎂 Cake Delivery</option><option value="camera_repair">📷 Camera Repair</option><option value="carpenter">🪚 Carpenter</option><option value="car_rental">🚗 Car Rental</option><option value="car_wash">🚿 Car Wash</option><option value="caterer">🍽️ Caterer</option><option value="cctv">📹 CCTV</option><option value="ca">💼 CA / Chartered Accountant</option><option value="chemist">💊 Chemist / Pharmacy</option><option value="civil_contractor">🏚️ Civil Contractor</option><option value="home_cleaning">🧹 Home Cleaning</option><option value="clothes_alteration">🪡 Clothes Alteration</option><option value="computer_repair">💻 Computer Repair</option><option value="construction">🏗️ Construction</option><option value="consultant">👔 Business Consultant</option><option value="cooking_gas">🔥 Cooking Gas</option><option value="courier">📦 Courier / Delivery</option><option value="dance_class">💃 Dance Class</option><option value="data_entry">⌨️ Data Entry</option><option value="dental">🦷 Dental Clinic</option><option value="designer">🎨 Graphic Designer</option><option value="dhol_band">🥁 Dhol / Band</option><option value="dietitian">🥗 Dietitian</option><option value="doctor">🏥 Doctor</option><option value="dog_grooming">🐕 Dog Grooming</option><option value="driver">🚘 Driver</option><option value="dry_cleaning">👕 Dry Cleaning</option><option value="loan_agent">💳 Loan Agent</option><option value="electrician">⚡ Electrician</option><option value="event_decoration">🎊 Event Decoration</option><option value="event_management">🎪 Event Management</option><option value="eye_clinic">👁️ Eye Clinic</option><option value="fabrication">🔩 Fabrication</option><option value="facility_mgmt">🏢 Facility Management</option><option value="fashion_designer">👗 Fashion Designer</option><option value="fire_safety">🔥 Fire Safety</option><option value="florist">💐 Florist</option><option value="food_delivery">🛵 Food Delivery</option><option value="freight">🚛 Freight / Cargo</option><option value="furniture">🪑 Furniture</option><option value="gas_stove_repair">🔧 Gas Stove Repair</option><option value="generator">⚡ Generator / Inverter</option><option value="grocery">🛒 Grocery</option><option value="gym">🏋️ Gym / Fitness</option><option value="hardware">🔨 Hardware Shop</option><option value="home_tutor">📚 Home Tutor</option><option value="hospital">🏥 Hospital</option><option value="hotel">🏨 Hotel / Lodge</option><option value="housekeeping">🧺 Housekeeping</option><option value="hr_placement">👥 HR / Placement</option><option value="hvac">🌡️ HVAC</option><option value="insurance">🛡️ Insurance</option><option value="interior_designer">🛋️ Interior Designer</option><option value="internet_wifi">📶 Internet / WiFi</option><option value="jewellery">💍 Jewellery</option><option value="junk_removal">🗑️ Junk Removal</option><option value="kirana">🏪 Kirana Store</option><option value="landscaping">🌳 Landscaping</option><option value="laptop_repair">💻 Laptop Repair</option><option value="laundry">👕 Laundry</option><option value="lawyer">⚖️ Lawyer</option><option value="lift_elevator">🛗 Lift / Elevator</option><option value="liquor">🍾 Liquor Shop</option><option value="makeup_artist">💄 Makeup Artist</option><option value="mandap">🏕️ Mandap / Tent House</option><option value="massage_spa">💆 Massage / Spa</option><option value="media_pr">📰 Media / PR</option><option value="medical_equipment">🩺 Medical Equipment</option><option value="mehendi">🌸 Mehendi Artist</option><option value="milk_delivery">🥛 Milk Delivery</option><option value="mobile_repair">📱 Mobile Repair</option><option value="movers_packers">📦 Movers & Packers</option><option value="music_class">🎵 Music Class</option><option value="notary">📜 Notary</option><option value="nursing">🩺 Nursing / Home Care</option><option value="office_supply">🖊️ Office Supply</option><option value="painting">🖌️ Painting</option><option value="pandit">🪔 Pandit / Puja</option><option value="pest_control">🐛 Pest Control</option><option value="veterinary">🐾 Veterinary</option><option value="photography">📸 Photography</option><option value="physiotherapy">🏃 Physiotherapy</option><option value="plumber">🔧 Plumber</option><option value="govt_documents">📋 Govt Documents</option><option value="pool_maintenance">🏊 Pool Maintenance</option><option value="printing">🖨️ Printing / Xerox</option><option value="real_estate">🏠 Property / Real Estate</option><option value="psychologist">🧠 Psychologist</option><option value="tv_repair">📺 TV / Radio Repair</option><option value="refrigerator_repair">❄️ Refrigerator Repair</option><option value="restaurant">🍛 Restaurant</option><option value="rto">🪪 RTO / Licence</option><option value="security">💂 Security Guard</option><option value="shoe_repair">👟 Shoe Repair</option><option value="shop">🛍️ General Shop</option><option value="skin_care">✨ Skin Care</option><option value="solar">☀️ Solar Panel</option><option value="sports_academy">⚽ Sports / Academy</option><option value="steel_iron">🔩 Steel / Iron</option><option value="studio">🎙️ Recording Studio</option><option value="supermarket">🏬 Supermarket</option><option value="sweeper">🧹 Sweeper / Safai</option><option value="tailor">🪡 Tailor</option><option value="tax_gst">📊 Tax / GST</option><option value="tent_shamiana">⛺ Tent / Shamiana</option><option value="tyre_puncture">🔧 Tyre / Puncture</option><option value="tow_truck">🚛 Tow Truck</option><option value="travel_agent">✈️ Travel Agent</option><option value="tuition">📚 Tuition / Coaching</option><option value="csc_typing">🖥️ CSC / Typing Center</option><option value="upholstery">🛋️ Sofa / Upholstery</option><option value="skill_trainer">🎓 Skill Trainer</option><option value="video_editing">🎬 Video Editing</option><option value="wall_putty">🏠 Wall Putty / Plaster</option><option value="washing_machine_repair">🫧 Washing Machine Repair</option><option value="water_purifier">💧 Water Purifier / RO</option><option value="water_tanker">🚰 Water Tanker</option><option value="web_developer">💻 Web / App Developer</option><option value="wedding_planner">💒 Wedding Planner</option><option value="welding">🔥 Welding</option><option value="yoga">🧘 Yoga / Meditation</option><option value="others">➕ Others</option></select>
             </div>
             <div class="frow">
               <div class="fg"><label class="fl">City *</label><input class="fi" id="r_city" placeholder="Aapka sheher"></div>
@@ -263,13 +291,28 @@ function showLogin(){
             </div>
             <div id="recaptcha-container-reg" style="margin-bottom:8px"></div>
             <button class="btn-gold" id="regOtpBtn" onclick="sendRegOTP()">VERIFY PHONE & REGISTER →</button>
-            <div style="font-size:.63rem;color:var(--text3);text-align:center;margin-top:10px;line-height:1.6">Admin approval ke baad login kar paoge.<br>Processing: 24 ghante tak</div>
+            <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 12px;margin-top:10px">
+              <div style="font-size:.65rem;font-weight:700;color:var(--gold);margin-bottom:6px">💳 Registration Fee</div>
+              <div style="font-size:.62rem;color:var(--text3);line-height:1.7;margin-bottom:8px">Listing fee: <strong style="color:var(--text2)">₹199/year</strong> — UPI ya Cash dono accepted</div>
+              <div style="display:flex;gap:6px;margin-bottom:8px">
+                <button id="payUpiBtn" onclick="selectPayMode('upi')" style="flex:1;padding:7px;border-radius:6px;font-size:.68rem;font-weight:700;border:1px solid var(--gold3);background:var(--gold4);color:var(--gold)">📲 UPI</button>
+                <button id="payCashBtn" onclick="selectPayMode('cash')" style="flex:1;padding:7px;border-radius:6px;font-size:.68rem;font-weight:700;border:1px solid var(--border2);background:none;color:var(--text3)">💵 Cash</button>
+              </div>
+              <div id="upiPayBox" style="display:none;background:var(--bg4);border:1px solid var(--border3);border-radius:8px;padding:10px;text-align:center;margin-bottom:8px">
+                <div style="font-size:.6rem;color:var(--text3);margin-bottom:4px">UPI ID pe ₹199 bhejo</div>
+                <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);letter-spacing:1px;font-weight:700">${CFG.upiId}</div>
+                <div style="font-size:.6rem;color:var(--text3);margin-top:6px;margin-bottom:6px">Payment ke baad UTR number daalo</div>
+                <input class="fi" id="r_utr" placeholder="UTR / Transaction ID" maxlength="30" style="font-size:.7rem">
+              </div>
+              <div id="cashPayBox" style="display:none;background:var(--bg4);border:1px solid var(--border3);border-radius:8px;padding:10px;text-align:center;margin-bottom:8px">
+                <div style="font-size:.68rem;color:var(--text3);line-height:1.8">₹199 cash seedha humse milke do.<br><strong style="color:var(--text2)">Admin verify karega aur account activate karega.</strong></div>
+              </div>
+            </div>
+            <div style="font-size:.6rem;color:var(--text3);text-align:center;margin-top:8px;line-height:1.6">Admin approval ke baad login kar paoge.<br>Processing: 24 ghante tak</div>
           </div>
           <div id="rs2" style="display:none">
-            <div style="background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.25);border-radius:8px;padding:11px;margin-bottom:14px;font-size:.72rem;color:#66bb6a;text-align:center;line-height:1.6">
-              📱 OTP bheja gaya<br><span style="font-weight:700" id="regOtpSentTo"></span>
-            </div>
-            <div class="fg"><label class="fl">6-Digit OTP</label><input class="fi" type="number" id="r_otp" placeholder="Enter OTP" maxlength="6" oninput="if(this.value.length>6)this.value=this.value.slice(0,6)" onkeydown="if(event.key==='Enter')verifyRegOTP()"></div>
+            <div style="background:rgba(46,125,50,.08);border:1px solid rgba(46,125,50,.25);border-radius:8px;padding:11px;margin-bottom:14px;font-size:.72rem;color:#66bb6a;text-align:center;line-height:1.6">📱 OTP bheja gaya<br><span style="font-weight:700" id="regOtpSentTo"></span></div>
+            <div class="fg"><label class="fl">6-Digit OTP</label><input class="fi" type="number" id="r_otp" placeholder="Enter OTP" maxlength="6" oninput="if(this.value.length>6)this.value=this.value.slice(0,6)"></div>
             <button class="btn-gold" id="regVerifyBtn" onclick="verifyRegOTP()">CONFIRM & SUBMIT →</button>
             <button class="btn-ghost" onclick="resetRegFlow()">← Go Back</button>
           </div>
@@ -286,9 +329,38 @@ function switchAuthTab(tab){
   document.getElementById('tabLogin').style.color=isLogin?'var(--bg)':'var(--text3)';
   document.getElementById('tabRegister').style.background=isLogin?'none':'linear-gradient(135deg,var(--gold),var(--orange))';
   document.getElementById('tabRegister').style.color=isLogin?'var(--text3)':'var(--bg)';
+  if(!isLogin)setTimeout(_loadProvCats,100);
 }
 
 let _regRcv=null,_regConfirmRes=null,_regData={};
+
+function _loadProvCats(){
+  const sel=document.getElementById('r_cat');
+  if(!sel)return;
+  if(P.db){
+    P.db.ref('/settings/categories').once('value',snap=>{
+      const cats=snap.val();
+      if(cats&&Array.isArray(cats)&&cats.length>0){
+        const enabled=cats.filter(c=>c.enabled!==false);
+        sel.innerHTML='<option value="">-- Select Category --</option>'+
+          enabled.map(c=>`<option value="${c.id}">${c.icon||'📌'} ${c.name}</option>`).join('');
+      }
+    });
+  }
+}
+
+let _payMode='';
+function selectPayMode(mode){
+  _payMode=mode;
+  document.getElementById('upiPayBox').style.display=mode==='upi'?'block':'none';
+  document.getElementById('cashPayBox').style.display=mode==='cash'?'block':'none';
+  document.getElementById('payUpiBtn').style.background=mode==='upi'?'var(--gold4)':'none';
+  document.getElementById('payUpiBtn').style.borderColor=mode==='upi'?'var(--gold3)':'var(--border2)';
+  document.getElementById('payUpiBtn').style.color=mode==='upi'?'var(--gold)':'var(--text3)';
+  document.getElementById('payCashBtn').style.background=mode==='cash'?'rgba(46,125,50,.1)':'none';
+  document.getElementById('payCashBtn').style.borderColor=mode==='cash'?'rgba(46,125,50,.4)':'var(--border2)';
+  document.getElementById('payCashBtn').style.color=mode==='cash'?'#66bb6a':'var(--text3)';
+}
 
 function sendRegOTP(){
   const name=document.getElementById('r_name')?.value.trim();
@@ -296,16 +368,20 @@ function sendRegOTP(){
   const cat=document.getElementById('r_cat')?.value;
   const city=document.getElementById('r_city')?.value.trim();
   const area=document.getElementById('r_area')?.value.trim();
+  if(!_payMode){T('Payment method select karo — UPI ya Cash','err');return}
+  if(_payMode==='upi'){
+    const utr=document.getElementById('r_utr')?.value.trim();
+    if(!utr||utr.length<8){T('UTR/Transaction ID daalo','err');return}
+  }
   if(!name||name.length<2){T('Business name daalo','err');return}
   if(!/^[6-9]\d{9}$/.test(phone)){T('Valid phone number daalo','err');return}
   if(!cat){T('Category select karo','err');return}
   if(!city){T('City daalo','err');return}
   if(!area){T('Area daalo','err');return}
-  if(!P.auth){T('Firebase not connected','err');return}
-  // Check if phone already registered
+  if(!P.db){T('Firebase not connected','err');return}
   P.db.ref('/businesses').orderByChild('phone').equalTo(phone).once('value',snap=>{
     if(snap.val()){T('Is number se pehle se account hai. Login karo.','err');switchAuthTab('login');return}
-    _regData={name,phone,wa:document.getElementById('r_wa')?.value.trim()||phone,category:cat,city,area,services:document.getElementById('r_services')?.value.trim()||'',status:'pending',createdAt:Date.now(),rating:0,ratingCount:0};
+    _regData={name,phone,whatsapp:document.getElementById('r_wa')?.value.trim()||phone,category:cat,city,area,services:document.getElementById('r_services')?.value.trim()||'',status:'pending',createdAt:Date.now(),rating:0,ratingCount:0,paymentMode:_payMode,paymentUTR:_payMode==='upi'?(document.getElementById('r_utr')?.value.trim()||''):'cash_pending',registrationFee:199};
     _fireRegOTP(phone);
   });
 }
@@ -324,15 +400,8 @@ function _fireRegOTP(phone){
         const el=document.getElementById('regOtpSentTo');if(el)el.textContent='+91-'+phone;
         T('📱 OTP bheja gaya','suc');
       })
-      .catch(err=>{
-        T('OTP fail: '+err.message,'err');
-        if(_regRcv){_regRcv.clear();_regRcv=null;}
-        if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}
-      });
-  }catch(e){
-    T('Error: '+e.message,'err');
-    if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}
-  }
+      .catch(err=>{T('OTP fail: '+err.message,'err');if(_regRcv){_regRcv.clear();_regRcv=null;}if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}});
+  }catch(e){T('Error: '+e.message,'err');if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}}
 }
 
 function verifyRegOTP(){
@@ -346,20 +415,12 @@ function verifyRegOTP(){
       const newId='biz_'+Date.now();
       P.db.ref('/businesses/'+newId).set(_regData)
         .then(()=>{
-          document.getElementById('registerPanel').innerHTML=`
-            <div style="text-align:center;padding:20px 0">
-              <div style="font-size:2.5rem;margin-bottom:10px">🎉</div>
-              <div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:8px">REGISTRATION SUBMITTED!</div>
-              <div style="font-size:.72rem;color:var(--text3);line-height:1.8">Admin 24 ghante mein verify karega.<br>Approve hone ke baad login kar paoge.</div>
-            </div>`;
+          document.getElementById('registerPanel').innerHTML=`<div style="text-align:center;padding:20px 0"><div style="font-size:2.5rem;margin-bottom:10px">🎉</div><div style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:8px">REGISTRATION SUBMITTED!</div><div style="font-size:.72rem;color:var(--text3);line-height:1.8">Admin 24 ghante mein verify karega.<br>Approve hone ke baad login kar paoge.</div></div>`;
           T('✅ Registration submitted! Admin verify karega.','suc');
         })
-        .catch(e=>T('Error saving: '+e.message,'err'));
+        .catch(e=>T('Error: '+e.message,'err'));
     })
-    .catch(()=>{
-      T('❌ Galat OTP ya expire ho gaya','err');
-      if(btn){btn.textContent='CONFIRM & SUBMIT →';btn.disabled=false;}
-    });
+    .catch(()=>{T('❌ Galat OTP ya expire ho gaya','err');if(btn){btn.textContent='CONFIRM & SUBMIT →';btn.disabled=false;}});
 }
 
 function resetRegFlow(){
@@ -367,8 +428,7 @@ function resetRegFlow(){
   _regConfirmRes=null;
   document.getElementById('rs1').style.display='block';
   document.getElementById('rs2').style.display='none';
-  const btn=document.getElementById('regOtpBtn');
-  if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}
+  const btn=document.getElementById('regOtpBtn');if(btn){btn.textContent='VERIFY PHONE & REGISTER →';btn.disabled=false;}
 }
 
 let _rcv=null,_confirmRes=null;
@@ -625,7 +685,7 @@ function completeBooking(id){
 }
 
 function callCustomer(phone){if(phone)window.location.href='tel:+91'+phone;else T('Phone number nahi hai','err');}
-function waCustomer(phone,name){if(phone)window.open(`https://wa.me/91${phone}?text=${encodeURIComponent('Hi '+name+', regarding your Sultan Engine booking...')}`, '_blank');}
+function waCustomer(phone,name){if(phone)window.open(`https://wa.me/91${phone}?text=${encodeURIComponent('Hi '+name+', regarding your Baghpat Services booking...')}`, '_blank');}
 
 /* ─── CHAT ─── */
 function renderChatList(){
@@ -785,21 +845,6 @@ function saveSchedule(){
 }
 
 /* ─── TRACK ─── */
-const MAPS_KEY='AIzaSyDIIWbMB8YlcQ_ex8UST6G1Jj5Abi1IOc4';
-let _mapsLoaded=false,_mapsLoading=false,_mapsCbs=[];
-function _loadMapsAPI(cb){
-  if(_mapsLoaded){cb();return;}
-  _mapsCbs.push(cb);
-  if(_mapsLoading)return;
-  _mapsLoading=true;
-  window._mapsReady=function(){_mapsLoaded=true;_mapsCbs.forEach(f=>f());_mapsCbs=[];};
-  const s=document.createElement('script');
-  s.src=`https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&callback=_mapsReady`;
-  s.async=true;s.defer=true;
-  document.head.appendChild(s);
-}
-let _provMap=null,_provMarker=null;
-
 function renderTrack(){
   document.getElementById('appContent').innerHTML=`
     <div class="dash-header"><div class="dh-name">📍 LIVE TRACKING</div><div class="dh-meta">Share location with customers</div></div>
@@ -852,21 +897,11 @@ function _initProvMap(){
   _loadMapsAPI(()=>{
     const el=document.getElementById('provTrackMap');
     if(!el||_provMap)return;
-    _provMap=new google.maps.Map(el,{
-      center:{lat:28.6139,lng:77.2090},zoom:15,
-      styles:[{elementType:'geometry',stylers:[{color:'#0b0b0b'}]},{elementType:'labels.text.fill',stylers:[{color:'#686868'}]},{elementType:'labels.text.stroke',stylers:[{color:'#0b0b0b'}]},{featureType:'road',elementType:'geometry',stylers:[{color:'#1e1e1e'}]},{featureType:'road',elementType:'geometry.stroke',stylers:[{color:'#161616'}]},{featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#b0b0b0'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#101010'}]},{featureType:'poi',stylers:[{visibility:'off'}]}],
-      disableDefaultUI:true,zoomControl:true
-    });
-    _provMarker=new google.maps.Marker({
-      map:_provMap,
-      icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#d4af37',fillOpacity:1,strokeColor:'#ff7a00',strokeWeight:2},
-      title:P.provider?.name||'You'
-    });
-    // center on current position immediately
+    _provMap=new google.maps.Map(el,{center:{lat:28.6139,lng:77.2090},zoom:15,styles:_darkMapStyle,disableDefaultUI:true,zoomControl:true});
+    _provMarker=new google.maps.Marker({map:_provMap,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:'#c9a84c',fillOpacity:1,strokeColor:'#1a3a6b',strokeWeight:2},title:P.provider?.name||'You'});
     navigator.geolocation.getCurrentPosition(pos=>{
       const latlng={lat:pos.coords.latitude,lng:pos.coords.longitude};
-      _provMap.setCenter(latlng);
-      _provMarker.setPosition(latlng);
+      _provMap.setCenter(latlng);_provMarker.setPosition(latlng);
     },()=>{});
   });
 }
@@ -874,8 +909,7 @@ function _initProvMap(){
 function _updateProvMap(lat,lng){
   if(!_provMap||!_provMarker)return;
   const pos={lat:parseFloat(lat),lng:parseFloat(lng)};
-  _provMarker.setPosition(pos);
-  _provMap.panTo(pos);
+  _provMarker.setPosition(pos);_provMap.panTo(pos);
 }
 
 /* ─── PROFILE ─── */
@@ -908,6 +942,26 @@ function renderProfile(){
         </div>
       </div>
       <button onclick="logout()" style="width:100%;background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.25);color:#ef5350;font-size:.8rem;font-weight:700;padding:12px;border-radius:var(--r2)">🚪 Logout</button>
+
+      <div style="margin-top:14px">
+        <div style="font-size:.6rem;font-weight:800;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px">🌐 HAMARE PLATFORMS</div>
+        <a href="https://digitalmenu61.netlify.app/" target="_blank" style="display:flex;align-items:center;gap:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px 12px;margin-bottom:7px;text-decoration:none">
+          <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#c9a84c,#8a6f28);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">🍽️</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.73rem;font-weight:800;color:var(--gold)">Digital Menu Pro</div>
+            <div style="font-size:.6rem;color:var(--text3)">Restaurant, Cafe, Salon ki website banwao</div>
+          </div>
+          <div style="font-size:.6rem;color:var(--gold)">↗</div>
+        </a>
+        <a href="https://digital-shokeen.netlify.app/" target="_blank" style="display:flex;align-items:center;gap:11px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:11px 12px;margin-bottom:4px;text-decoration:none">
+          <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#1a3a6b,#0d1a3a);border:1px solid var(--border3);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">⚡</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.73rem;font-weight:800;color:var(--gold)">Digital Shokeen</div>
+            <div style="font-size:.6rem;color:var(--text3)">Premium web development & digital marketing</div>
+          </div>
+          <div style="font-size:.6rem;color:var(--gold)">↗</div>
+        </a>
+      </div>
     </div>`;
 }
 
