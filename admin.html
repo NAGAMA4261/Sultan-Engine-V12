@@ -558,9 +558,11 @@ function renderWallets(){
 
 function approveRecharge(bid,rid,amt,bizName){
   if(!A.db)return;
+  const txnKey='txn_'+Date.now();
   A.db.ref('/wallets/'+bid).transaction(w=>{
     if(!w)return w;
-    const txns=(w.transactions||[]);txns.push({desc:'Recharge approved by admin',amount:amt,date:Date.now()});
+    const txns=w.transactions&&!Array.isArray(w.transactions)?w.transactions:{};
+    txns[txnKey]={desc:'Recharge approved by admin',amount:amt,date:Date.now()};
     const reqs=w.rechargeRequests||{};if(reqs[rid])reqs[rid].status='approved';
     return{...w,balance:(w.balance||0)+amt,transactions:txns,rechargeRequests:reqs};
   }).then(()=>{T(`✅ ₹${amt} credited to ${bizName}!`);audit('APPROVE_RECHARGE',bizName+' ₹'+amt);});
@@ -586,9 +588,12 @@ function submitWalletAdjust(bid,bizName){
   const reason=document.getElementById('wa_reason').value.trim()||'Admin adjustment';
   if(!amt){T('Amount daalo');return}
   if(!A.db)return;
+  const txnKey='txn_'+Date.now();
   A.db.ref('/wallets/'+bid).transaction(w=>{
-    const b=w||{balance:0,transactions:[]};
-    b.transactions=(b.transactions||[]);b.transactions.push({desc:reason,amount:amt,date:Date.now()});b.balance=(b.balance||0)+amt;return b;
+    const b=w||{balance:0,transactions:{}};
+    const txns=b.transactions&&!Array.isArray(b.transactions)?b.transactions:{};
+    txns[txnKey]={desc:reason,amount:amt,date:Date.now()};
+    b.transactions=txns;b.balance=(b.balance||0)+amt;return b;
   }).then(()=>{closeSheet('walletSheet');T(`₹${Math.abs(amt)} ${amt>0?'added':'deducted'} — ${bizName}`);audit('WALLET_ADJUST',bizName+': '+(amt>0?'+':'')+amt);});
 }
 
