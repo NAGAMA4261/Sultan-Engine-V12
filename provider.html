@@ -581,6 +581,7 @@ async function logout(){
     P.db.ref('/chats').off();
     P.db.ref('/wallets/'+P.bid).off();
     P.db.ref('/businesses/'+P.bid).off();
+    P.db.ref('/businesses/'+P.bid+'/catalog').off();
     if(P.trackOn){
       if(P.trackWid)navigator.geolocation.clearWatch(P.trackWid);
       P.db.ref('/tracking/'+P.bid+'/active').set(false);
