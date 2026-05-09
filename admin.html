@@ -494,7 +494,17 @@ function renderBookings(){
 function changeBkStatus(id,status){
   if(!A.db)return;
   A.db.ref('/bookings/'+id+'/status').set(status).then(()=>{
-    if(status==='completed'){const bk=A.bookings[id];if(bk?.bizId)A.db.ref('/wallets/'+bk.bizId).transaction(w=>{const b=w||{balance:0,transactions:[]};b.transactions=(b.transactions||[]);b.transactions.push({desc:'Job completed',amount:CFG.commission,date:Date.now()});b.balance=(b.balance||0)+CFG.commission;return b;});}
+    if(status==='completed'){
+  const bk=A.bookings[id];
+  if(bk?.bizId){
+    A.db.ref('/wallets/'+bk.bizId+'/transactions').push({
+      desc:'Job completed - Admin',
+      amount:CFG.commission,
+      date:Date.now()
+    });
+    A.db.ref('/wallets/'+bk.bizId+'/balance').transaction(bal=>(bal||0)+CFG.commission);
+  }
+  }
     T('Status: '+status);audit('BK_STATUS',id+' → '+status);renderBookings();
   });
 }
