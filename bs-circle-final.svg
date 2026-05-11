@@ -1,0 +1,43 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5D98B"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="url(#bg)"/>
+
+  <!-- Outer border -->
+  <rect x="12" y="12" width="488" height="488" rx="90" fill="none" stroke="url(#gold)" stroke-width="7"/>
+
+  <!-- Inner border -->
+  <rect x="28" y="28" width="456" height="456" rx="78" fill="none" stroke="#C9A84C" stroke-width="2" opacity="0.3"/>
+
+  <!-- Corner marks -->
+  <g stroke="url(#gold)" stroke-width="4" fill="none">
+    <path d="M 70 35 L 35 35 L 35 70"/>
+    <path d="M 442 35 L 477 35 L 477 70"/>
+    <path d="M 70 477 L 35 477 L 35 442"/>
+    <path d="M 442 477 L 477 477 L 477 442"/>
+  </g>
+
+  <!-- BS text -->
+  <text x="256" y="310" text-anchor="middle" font-family="Georgia, serif" font-size="230" font-weight="bold" fill="url(#gold)">BS</text>
+
+  <!-- Divider line -->
+  <line x1="90" y1="352" x2="422" y2="352" stroke="#C9A84C" stroke-width="1.5" opacity="0.45"/>
+
+  <!-- BAGHPAT -->
+  <text x="256" y="402" text-anchor="middle" font-family="Georgia, serif" font-size="38" letter-spacing="10" fill="#C9A84C" opacity="0.9">BAGHPAT</text>
+
+  <!-- SERVICES -->
+  <text x="256" y="442" text-anchor="middle" font-family="Georgia, serif" font-size="24" letter-spacing="8" fill="#C9A84C" opacity="0.55">SERVICES</text>
+
+</svg>
