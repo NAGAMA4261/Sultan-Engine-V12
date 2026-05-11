@@ -381,7 +381,7 @@ select.fi{appearance:none}
 
 <!-- SPLASH SCREEN -->
 <div id="splash">
-  <div class="splash-logo">🏛️</div>
+  <div class="splash-logo"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"></div>
   <div class="splash-name">BAGHPAT SERVICES</div>
   <div class="splash-sub">Your City. Your Services.</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
@@ -389,7 +389,7 @@ select.fi{appearance:none}
 
 <div id="topbar">
   <div class="tb-brand">
-    <span class="b1">🏛️ BAGHPAT SERVICES</span>
+    <span class="b1"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"> BAGHPAT SERVICES</span>
     <span class="b2">Service Marketplace</span>
   </div>
   <div class="tb-right">
@@ -409,7 +409,7 @@ select.fi{appearance:none}
         <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#c9a84c,#8a6f28);display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 12px rgba(201,168,76,.3)">🍽️</div>
         <span style="font-size:.45rem;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;line-height:1">Menu Pro</span>
       </a>
-      <span class="hero-crown">🏛️</span>
+      <span class="hero-crown"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"></span>
       <a href="https://digital-shokeen.netlify.app/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;opacity:.9">
         <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#1a3a6b,#0d1a3a);border:1px solid var(--border3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 12px rgba(26,58,107,.4)">⚡</div>
         <span style="font-size:.45rem;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;line-height:1">Shokeen</span>
@@ -964,7 +964,7 @@ function cardRate(bizId,bizName){
 }
 
 function cardShare(bizName,catLabel,loc,phone,bizId){
-  const text=`🏛️ ${bizName}\n📌 ${catLabel}${loc?'\n📍 '+loc:''}${phone?'\n📞 +91-'+phone:''}\n\nFound on Baghpat Services`;
+  const text=`<img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"> ${bizName}\n📌 ${catLabel}${loc?'\n📍 '+loc:''}${phone?'\n📞 +91-'+phone:''}\n\nFound on Baghpat Services`;
   const url=window.location.href;
   if(navigator.share){
     navigator.share({title:bizName,text,url}).catch(()=>{});
@@ -1751,7 +1751,7 @@ function openLoginModal(callback){
   const googleSvg=`<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.7 2.5 30.2 0 24 0 14.6 0 6.5 5.4 2.5 13.3l7.8 6C12.2 13.1 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17z"/><path fill="#FBBC05" d="M10.3 28.7c-.6-1.7-.9-3.4-.9-5.2s.3-3.6.9-5.2l-7.8-6C.9 15.2 0 19.5 0 24s.9 8.8 2.5 12.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2.1 1.4-4.7 2.2-7.7 2.2-6.4 0-11.8-3.6-13.7-8.8l-7.8 6C6.5 42.6 14.6 48 24 48z"/></svg>`;
   body.innerHTML=`
     <div style="text-align:center;padding:10px 0 6px">
-      <div style="font-size:3rem;margin-bottom:10px">🏛️</div>
+      <div style="font-size:3rem;margin-bottom:10px"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"></div>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px;margin-bottom:4px">LOGIN / SIGNUP</div>
       <div style="font-size:.68rem;color:var(--text3);margin-bottom:20px">Sign in to book, chat and track services</div>
       <button type="button" id="gSignInBtn" onclick="signInWithGoogle()"
