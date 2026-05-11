@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="400" height="520">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5D98B"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#A0782A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circle -->
+  <circle cx="100" cy="100" r="98" fill="#0d0d0d"/>
+  <circle cx="100" cy="100" r="93" fill="none" stroke="url(#g)" stroke-width="2"/>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+
+  <!-- BS text -->
+  <text x="100" y="118" text-anchor="middle" font-family="Georgia, serif" font-size="80" font-weight="bold" fill="url(#g)">BS</text>
+
+  <!-- Divider line -->
+  <line x1="40" y1="212" x2="160" y2="212" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- BAGHPAT SERVICES -->
+  <text x="100" y="232" text-anchor="middle" font-family="Georgia, serif" font-size="16" letter-spacing="4" fill="#C9A84C" opacity="0.95">BAGHPAT</text>
+  <text x="100" y="252" text-anchor="middle" font-family="Georgia, serif" font-size="11" letter-spacing="5" fill="#C9A84C" opacity="0.6">SERVICES</text>
+
+</svg>
