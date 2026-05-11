@@ -217,7 +217,7 @@ function checkSession(){
 
 function showLogin(){
   document.getElementById('tabBar').style.display='none';
-  document.getElementById('appContent').innerHTML=`<div id="loginWrap"><div class="login-card"><div class="login-icon">🏛️</div><div class="login-title">Admin Login</div><div class="login-sub">Baghpat Services Control Panel</div><div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="a_pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"></div><button class="btn-primary" onclick="doLogin()">Login →</button></div></div>`;
+  document.getElementById('appContent').innerHTML=`<div id="loginWrap"><div class="login-card"><img src="bs-circle-final.svg" width="64" height="64" style="border-radius:50%;"><div class="login-title">Admin Login</div><div class="login-sub">Baghpat Services Control Panel</div><div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="a_pass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"></div><button class="btn-primary" onclick="doLogin()">Login →</button></div></div>`;
 }
 
 function doLogin(){
