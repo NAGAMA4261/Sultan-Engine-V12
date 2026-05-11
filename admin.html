@@ -283,7 +283,7 @@ function renderOverview(){
   const dayRev=days7.map(d=>{const s=new Date(d.toISOString().split('T')[0]).getTime();return bkArr.filter(b=>b.status==='completed'&&(b.createdAt||0)>=s&&(b.createdAt||0)<s+86400000).length*CFG.commission;});
   const maxRev=Math.max(...dayRev,1);
   document.getElementById('appContent').innerHTML=`
-    <div class="topbar"><div class="topbar-title">🏛️ Baghpat Services Admin</div><button onclick="doLogout()" style="font-size:11px;color:var(--red-text);font-weight:700;background:var(--red-bg);padding:5px 11px;border-radius:20px">Logout</button></div>
+    <div class="topbar"><div class="topbar-title"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"> Baghpat Services Admin</div><button onclick="doLogout()" style="font-size:11px;color:var(--red-text);font-weight:700;background:var(--red-bg);padding:5px 11px;border-radius:20px">Logout</button></div>
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-n">${bArr.length}</div><div class="stat-l">Businesses</div></div>
       <div class="stat-card"><div class="stat-n" style="color:var(--amber)">${pending}</div><div class="stat-l">Pending</div></div>
