@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="400" height="400">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5D98B"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#A0782A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="200" height="200" rx="40" fill="#0d0d0d"/>
+
+  <!-- Outer circle -->
+  <circle cx="100" cy="100" r="88" fill="none" stroke="url(#g)" stroke-width="3"/>
+
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#C9A84C" stroke-width="0.8" opacity="0.35"/>
+
+  <!-- BS text -->
+  <text x="100" y="108" text-anchor="middle" font-family="Georgia, serif" font-size="68" font-weight="bold" fill="url(#g)">BS</text>
+
+  <!-- Divider -->
+  <line x1="55" y1="122" x2="145" y2="122" stroke="#C9A84C" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Baghpat -->
+  <text x="100" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="14" letter-spacing="3" fill="#C9A84C" opacity="0.9">BAGHPAT</text>
+
+  <!-- Services -->
+  <text x="100" y="156" text-anchor="middle" font-family="Georgia, serif" font-size="9" letter-spacing="3" fill="#C9A84C" opacity="0.6">SERVICES</text>
+
+</svg>
