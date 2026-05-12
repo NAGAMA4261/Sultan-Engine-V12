@@ -32,7 +32,7 @@ a{color:inherit;text-decoration:none}
 /* SPLASH */
 #splash{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0d0c09 0%,#1a1408 50%,#0d0c09 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-logo{width:150px;height:150px;border-radius:24px;background:linear-gradient(135deg,#c9a84c,#8a6f28);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:20px;box-shadow:0 0 40px rgba(201,168,76,.35);animation:splashPulse 1.8s ease-in-out infinite}
+.splash-logo{width:150px;height:150px;border-radius:24px;background:none;display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:20px;box-shadow:0 0 40px rgba(201,168,76,.35);animation:splashPulse 1.8s ease-in-out infinite}
 @keyframes splashPulse{0%,100%{box-shadow:0 0 40px rgba(201,168,76,.35)}50%{box-shadow:0 0 60px rgba(201,168,76,.55)}}
 .splash-name{font-family:'Cinzel',serif;font-size:1.4rem;color:#c9a84c;letter-spacing:4px;font-weight:900;text-align:center;margin-bottom:5px}
 .splash-sub{font-size:.62rem;color:#7a7060;letter-spacing:3px;text-transform:uppercase;text-align:center;margin-bottom:30px}
@@ -381,7 +381,7 @@ select.fi{appearance:none}
 
 <!-- SPLASH SCREEN -->
 <div id="splash">
-  <div class="splash-logo"><img src="bs-circle-final.svg" width="28" height="28" style="border-radius:50%;vertical-align:middle;"></div>
+  <div class="splash-logo"><img src="bs-circle-final.svg" width="150" height="150" style="border-radius:24px;"></div>
   <div class="splash-name">BAGHPAT SERVICES</div>
   <div class="splash-sub">Your City. Your Services.</div>
   <div class="splash-bar"><div class="splash-fill"></div></div>
